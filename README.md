@@ -13,6 +13,17 @@ A simple, no-backend job search helper. Plain HTML/CSS/JS, so it runs on GitHub 
 
 All data stays in your browser. Use **Profile → Data → Export** to back it up.
 
+## Deploy (GitHub Pages)
+`.github/workflows/pages.yml` publishes the site automatically every time `main` changes.
+
+One-time setup:
+1. The repo must be **public** (or you need a paid GitHub plan for Pages on private repos): Settings → General → Danger Zone → Change visibility.
+2. Settings → Pages → Build and deployment → **Source: GitHub Actions**.
+3. Merge to `main`. Watch the **Actions** tab; when "Deploy to GitHub Pages" goes green the site is live at
+   **https://camrenee.github.io/my-first-claude-project/**
+
+To redeploy without changing code: Actions → Deploy to GitHub Pages → Run workflow.
+
 ## Run locally
 Open `index.html` in a browser, or run `python3 -m http.server` in this folder and visit http://localhost:8000.
 
