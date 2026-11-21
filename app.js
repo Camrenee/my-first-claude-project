@@ -34,7 +34,9 @@ Best regards,
     { name: '', email: '', phone: '', titles: '', workPref: 'remote', location: '', resume: '', template: DEFAULT_TEMPLATE },
     load(KEYS.profile, {})
   );
-  let tracker = load(KEYS.tracker, {}); // { [jobId]: { job, status, letter, updated } }
+  let tracker = load(KEYS.tracker, {}); // { [jobId]: { job, status, letter, resume, updated } }
+  // Older versions called "save for later" Liked.
+  Object.values(tracker).forEach((e) => { if (e.status === 'Liked') e.status = 'Saved'; });
   let jobs = [];
   let currentJob = null;
   let trackerFilter = 'all';
@@ -230,7 +232,7 @@ Best regards,
         </div>
         ${entry ? '' : `<p class="snippet">${esc(job.text.slice(0, 220))}</p>`}
         <div class="card-actions">
-          <button class="btn primary" data-apply="${esc(job.id)}">Apply</button>
+          <button class="btn primary" data-apply="${esc(job.id)}">${entry?.status === 'Applying' ? 'Finish applying' : entry ? 'Open' : 'Apply'}</button>
           ${entry ? '' : `<button class="btn ghost" data-skip="${esc(job.id)}">Skip</button>`}
           ${badge}
           <span class="source">${esc(job.source)}</span>
@@ -262,20 +264,23 @@ Best regards,
       .sort((a, b) => b.updated - a.updated);
     $('#trackerList').innerHTML = entries.length
       ? entries.map((e) => jobCard(e.job, e)).join('')
-      : `<li class="empty">Nothing here yet. Swipe right on jobs you like, or open one and mark it Applied, Interviewing or Skipped.</li>`;
+      : `<li class="empty">Nothing here yet. Swipe right to apply, up to save for later, or left to skip.</li>`;
     const n = Object.values(tracker).filter((e) => e.status !== 'Skipped').length;
     $('#trackerCount').textContent = n || '';
   }
 
   // ---------- Tracker ----------
-  function setStatus(job, status, letter) {
+  // docs = { letter, resume } — the (possibly edited) documents for this job
+  function setStatus(job, status, docs = {}) {
     if (!status) {
       delete tracker[job.id];
     } else {
+      const prev = tracker[job.id] || {};
       tracker[job.id] = {
         job,
         status,
-        letter: letter ?? tracker[job.id]?.letter ?? '',
+        letter: docs.letter ?? prev.letter ?? '',
+        resume: docs.resume ?? prev.resume ?? '',
         updated: Date.now(),
       };
     }
@@ -293,20 +298,24 @@ Best regards,
     'html', 'css', 'figma', 'ux', 'ui design', 'user research', 'product management', 'agile', 'scrum', 'jira', 'excel',
     'tableau', 'power bi', 'machine learning', 'data analysis', 'seo', 'content marketing', 'copywriting', 'salesforce',
     'hubspot', 'customer support', 'customer success', 'zendesk', 'sales', 'accounting', 'project management', 'recruiting',
-    'communication', 'leadership'];
+    'communication', 'leadership', 'jest', 'cypress', 'testing', 'accessibility', 'design systems', 'design system', 'next.js',
+    'tailwind', 'redux', 'webpack', 'responsive design', 'performance', 'analytics', 'a/b testing', 'stakeholder management',
+    'data visualization', 'pandas', 'spark', 'airflow', 'snowflake', 'dbt', 'etl', 'ios', 'android', 'react native', 'flutter',
+    'security', 'devops', 'microservices', 'api design', 'onboarding', 'crm', 'negotiation', 'budgeting', 'forecasting',
+    'quickbooks', 'photoshop', 'illustrator', 'wireframing', 'prototyping', 'social media', 'email marketing', 'google ads']; 
 
   const escRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const termRegex = (term) => new RegExp(`(^|[^a-z0-9])${escRe(term)}([^a-z0-9]|$)`, 'i');
   const hasTerm = (text, term) => termRegex(term).test(text);
 
-  function matchedSkills(job) {
+  function matchedSkills(job, limit = 5) {
     const resume = profile.resume.toLowerCase();
     if (!resume) return [];
     const jobText = `${job.title} ${job.tags.join(' ')} ${job.text}`.toLowerCase();
     const candidates = [...new Set([...job.tags.map((t) => t.toLowerCase()), ...SKILLS])];
     return candidates
       .filter((s) => s.length > 1 && hasTerm(jobText, s) && hasTerm(resume, s))
-      .slice(0, 5)
+      .slice(0, limit)
       .map((s) => { // use the casing from the resume, e.g. "React" not "react"
         const i = resume.search(termRegex(s));
         const m = i >= 0 ? profile.resume.slice(i).match(new RegExp(escRe(s), 'i')) : null;
@@ -350,34 +359,271 @@ Best regards,
       .trim();
   }
 
+  // ---------- Resume tailoring ----------
+  // Only re-orders and emphasises what's already in the resume. It never invents experience or skills.
+  const HEADING_RE = /^(professional\s+|career\s+|work\s+|relevant\s+|technical\s+|core\s+|key\s+|selected\s+)?(summary|profile|objective|about( me)?|experience|history|employment( history)?|skills( summary)?|competencies|expertise|education|projects|certifications?|licen[sc]es( (and|&) certifications)?|awards|honou?rs|publications|volunteer(ing| experience)?|languages|interests|training|tools|qualifications|achievements|accomplishments)\s*:?$/i;
+  const BULLET_RE = /^\s*([-•*▪◦·‣–]|\d+[.)])\s+/;
+  const STOP = new Set(('the and for with you your our are will have this that from they their about into who what when where which while within ' +
+    'across able also more most such than then them these those been being both each other over only very just must should could would can ' +
+    'may using use used work working team teams role job company including include strong experience years year plus well like make help ' +
+    'new based etc all any per its one two three you\'ll we\'re looking join ideal candidate position opportunity benefits salary').split(' '));
+
+  function isHeading(line) {
+    const t = line.trim();
+    if (!t || t.length > 45 || BULLET_RE.test(t)) return false;
+    if (HEADING_RE.test(t)) return true;
+    return /[A-Z]/.test(t) && t === t.toUpperCase() && /^[A-Z &/,'-]+:?$/.test(t) && t.split(/\s+/).length <= 6;
+  }
+
+  function sectionKind(heading) {
+    const h = heading.toLowerCase();
+    if (/summary|profile|objective|about/.test(h) && !/skill/.test(h)) return 'summary';
+    if (/skill|competenc|expertise|tools|qualifications/.test(h)) return 'skills';
+    if (/experience|history|employment|projects|volunteer/.test(h)) return 'experience';
+    return 'other';
+  }
+
+  function parseResume(text) {
+    const sections = [{ heading: '', kind: 'header', lines: [] }];
+    let seenContent = false;
+    for (const raw of text.replace(/\r/g, '').split('\n')) {
+      const line = raw.replace(/\s+$/, '');
+      if (seenContent && isHeading(line)) {
+        const heading = line.trim().replace(/:$/, '');
+        sections.push({ heading, kind: sectionKind(heading), lines: [] });
+        continue;
+      }
+      if (line.trim()) seenContent = true;
+      sections[sections.length - 1].lines.push(line);
+    }
+    return sections;
+  }
+
+  function jobKeywords(job) {
+    const text = `${job.title} ${job.tags.join(' ')} ${job.text}`.toLowerCase();
+    const skills = [...new Set([...job.tags.map((t) => t.toLowerCase()), ...SKILLS])].filter((k) => k.length > 1 && hasTerm(text, k));
+    const counts = {};
+    (text.match(/[a-z][a-z+#]{3,}/g) || []).forEach((w) => { if (!STOP.has(w)) counts[w] = (counts[w] || 0) + 1; });
+    const titleWords = (job.title.toLowerCase().match(/[a-z][a-z+#]{3,}/g) || []).filter((w) => !STOP.has(w));
+    const terms = [...new Set([...titleWords, ...Object.entries(counts).filter(([, c]) => c >= 2)
+      .sort((a, b) => b[1] - a[1]).slice(0, 40).map(([w]) => w)])];
+    return { skills, terms };
+  }
+
+  const scoreLine = (line, kw) =>
+    kw.skills.reduce((n, k) => n + (hasTerm(line, k) ? 3 : 0), 0) + kw.terms.reduce((n, t) => n + (hasTerm(line, t) ? 1 : 0), 0);
+
+  // A line like "Senior Engineer — Nimbus Co (2020–Present)" starts a new job entry.
+  const isEntryHead = (line) => /\b(19|20)\d{2}\b|\bpresent\b|\bcurrent\b/i.test(line) || (line.length < 70 && /\s[—–|@]\s|\sat\s/.test(line) && !/[.;]$/.test(line));
+
+  // Split an experience section into entries (heading lines + bullets) and sort each entry's bullets by relevance.
+  // PDFs often draw bullet symbols as graphics, so sentences under a job heading count as bullets too.
+  function tailorExperience(lines, kw, stats) {
+    const entries = [];
+    let cur = null;
+    let lastWasBullet = false;
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) { lastWasBullet = false; continue; }
+      if (BULLET_RE.test(line)) {
+        if (!cur) { cur = { head: [], bullets: [] }; entries.push(cur); }
+        cur.bullets.push(line.replace(BULLET_RE, ''));
+        lastWasBullet = true;
+      } else if (lastWasBullet && /^[a-z0-9(]/.test(line)) {
+        cur.bullets[cur.bullets.length - 1] += ` ${line}`; // wrapped bullet from a PDF
+      } else if (cur && cur.head.length && !isEntryHead(line)) {
+        cur.bullets.push(line); // bullet whose symbol was lost
+        lastWasBullet = true;
+      } else {
+        if (!cur || cur.bullets.length) { cur = { head: [], bullets: [] }; entries.push(cur); }
+        cur.head.push(line);
+        lastWasBullet = false;
+      }
+    }
+    const out = [];
+    entries.forEach((e, i) => {
+      if (i) out.push('');
+      out.push(...e.head);
+      const sorted = e.bullets.map((b, idx) => ({ b, idx, sc: scoreLine(b, kw) }))
+        .sort((a, b) => b.sc - a.sc || a.idx - b.idx);
+      if (sorted.some((x, pos) => x.idx !== pos)) stats.reordered += 1;
+      out.push(...sorted.map((x) => `• ${x.b}`));
+    });
+    return out;
+  }
+
+  // Put job-relevant skills first on each skills line.
+  function tailorSkills(lines, kw, stats) {
+    return lines.filter((l) => l.trim()).map((raw) => {
+      const line = raw.trim().replace(BULLET_RE, '');
+      const bullet = BULLET_RE.test(raw.trim()) ? '• ' : '';
+      const m = line.match(/^([^:,]{1,30}):\s*(.+)$/);
+      const label = m ? `${m[1]}: ` : '';
+      const items = (m ? m[2] : line).split(/\s*[,|;•·]\s*/).filter(Boolean);
+      if (items.length < 2) return `${bullet}${line}`;
+      const hit = (it) => kw.skills.some((k) => hasTerm(it, k)) || kw.terms.some((t) => hasTerm(it, t));
+      const sorted = [...items.filter(hit), ...items.filter((it) => !hit(it))];
+      if (sorted.some((it, i) => it !== items[i])) stats.skillsReordered = true;
+      return `${bullet}${label}${sorted.join(', ')}`;
+    });
+  }
+
+  function tailorResume(job) {
+    const resume = profile.resume.trim();
+    if (!resume) return null;
+    const kw = jobKeywords(job);
+    const matched = matchedSkills(job, 10);
+    const lowerResume = resume.toLowerCase();
+    const missing = kw.skills.filter((k) => !hasTerm(lowerResume, k)).slice(0, 8);
+    const stats = { reordered: 0, skillsReordered: false, addedSummary: false, addedCore: false };
+    const sections = parseResume(resume);
+
+    const out = [];
+    const push = (...lines) => out.push(...lines);
+    const coreLine = () => {
+      if (matched.length < 2) return;
+      push('', 'CORE SKILLS FOR THIS ROLE', matched.join(' · '));
+      stats.addedCore = true;
+    };
+
+    const hasSummary = sections.some((sec) => sec.kind === 'summary');
+    sections.forEach((sec, i) => {
+      if (sec.kind === 'header') {
+        push(...sec.lines.map((l) => l.trim()).filter((l, idx, arr) => l || (idx > 0 && arr[idx - 1])));
+        while (out.length && !out[out.length - 1]) out.pop();
+        if (!hasSummary && matched.length >= 2) {
+          const title = targetTitles()[0] || job.title;
+          push('', 'SUMMARY', `${title} with hands-on experience in ${listJoin(matched.slice(0, 4))}.`);
+          stats.addedSummary = true;
+        }
+        if (!hasSummary) coreLine();
+        return;
+      }
+      push('', sec.heading.toUpperCase());
+      if (sec.kind === 'experience') push(...tailorExperience(sec.lines, kw, stats));
+      else if (sec.kind === 'skills') push(...tailorSkills(sec.lines, kw, stats));
+      else push(...sec.lines.map((l) => l.trim().replace(BULLET_RE, '• ')).filter((l, idx, arr) => l || (idx > 0 && arr[idx - 1])));
+      while (out.length && !out[out.length - 1]) out.pop();
+      if (sec.kind === 'summary' && !sections.slice(0, i).some((x) => x.kind === 'summary')) coreLine();
+    });
+
+    return { text: out.join('\n').replace(/\n{3,}/g, '\n\n').trim(), matched, missing, stats };
+  }
+
+  function renderResumeNotes(t) {
+    const notes = [];
+    if (t.matched.length) notes.push(`<div><span class="label">✓ You match:</span> <span class="skill-row inline">${t.matched.map((k) => `<span class="skill">${esc(k)}</span>`).join(' ')}</span></div>`);
+    const did = [];
+    if (t.stats.reordered) did.push(`moved your most relevant bullet points to the top of ${t.stats.reordered} role${t.stats.reordered > 1 ? 's' : ''}`);
+    if (t.stats.skillsReordered) did.push('listed matching skills first');
+    if (t.stats.addedCore) did.push('added a “Core skills for this role” line');
+    if (t.stats.addedSummary) did.push('added a short summary (edit it to sound like you)');
+    if (did.length) notes.push(`<div><span class="label">✎ Tailored:</span> ${esc(listJoin(did))}.</div>`);
+    if (t.missing.length) notes.push(`<div><span class="label">The posting also mentions</span> <span class="skill-row inline">${t.missing.map((k) => `<span class="skill missing">${esc(k)}</span>`).join(' ')}</span> <span class="label">— add these only if you really have them.</span></div>`);
+    $('#resumeNotes').innerHTML = notes.join('');
+  }
+
   // ---------- Apply panel ----------
+  let saveDocsTimer;
   function openApply(job) {
     currentJob = job;
     const entry = tracker[job.id];
     $('#applyTitle').textContent = job.title;
     $('#applyMeta').textContent = `${job.company} · ${job.remote ? 'Remote' : job.location} · via ${job.source}`;
+
+    const skills = matchedSkills(job, 6);
+    $('#matchBanner').hidden = skills.length < 2;
+    $('#matchText').textContent = `Your resume and ${job.company} both mention ${listJoin(skills)}.`;
+
+    const t = tailorResume(job);
+    $('#noResume').hidden = !!t;
+    $('#resumeNotes').innerHTML = '';
+    if (t) renderResumeNotes(t);
+    $('#tailoredResume').value = entry?.resume || (t ? t.text : '');
     $('#coverLetter').value = entry?.letter || buildLetter(job);
+    showDoc('resume');
+
     $('#applyLink').href = job.url;
     $$('.status-btn').forEach((b) => b.classList.toggle('selected', !!entry && b.dataset.mark === entry.status));
     $('#applyPanel').hidden = false;
+    $('.sheet-body').scrollTop = 0;
     document.body.classList.add('no-scroll');
   }
 
   function closeApply() {
+    saveDocs();
     $('#applyPanel').hidden = true;
     document.body.classList.remove('no-scroll');
     currentJob = null;
   }
 
-  async function copyLetter() {
-    const text = $('#coverLetter').value;
+  const currentDocs = () => ({ letter: $('#coverLetter').value, resume: $('#tailoredResume').value });
+
+  // Keep edits to the resume / letter for jobs that are in the tracker.
+  function saveDocs() {
+    clearTimeout(saveDocsTimer);
+    if (!currentJob || !tracker[currentJob.id]) return;
+    Object.assign(tracker[currentJob.id], currentDocs());
+    save(KEYS.tracker, tracker);
+  }
+
+  function showDoc(which) {
+    $$('[data-doc]').forEach((b) => { const on = b.dataset.doc === which; b.classList.toggle('active', on); b.setAttribute('aria-selected', on); });
+    $('#docResume').hidden = which !== 'resume';
+    $('#docLetter').hidden = which !== 'letter';
+  }
+
+  async function copyText(id, label) {
+    const ta = $(`#${id}`);
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(ta.value);
     } catch {
-      const ta = $('#coverLetter'); ta.focus(); ta.select();
+      ta.focus(); ta.select();
       document.execCommand('copy');
     }
-    toast('Cover letter copied');
+    toast(`${label} copied`);
+  }
+
+  const fileSafe = (str) => String(str).replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, ' ').trim().slice(0, 80);
+  const docName = (kind) => fileSafe(`${profile.name || 'My'} ${kind} - ${currentJob?.company || ''}`);
+
+  function downloadText(text, filename) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
+    a.download = filename;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  function resumeToHtml(text) {
+    const lines = text.split('\n');
+    let html = '';
+    let inList = false;
+    let first = true;
+    let inBody = false; // past the name/contact block
+    const close = () => { if (inList) { html += '</ul>'; inList = false; } };
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) { close(); continue; }
+      if (first) { html += `<h1>${esc(line)}</h1>`; first = false; continue; }
+      if (BULLET_RE.test(line)) {
+        if (!inList) { html += '<ul>'; inList = true; }
+        html += `<li>${esc(line.replace(BULLET_RE, ''))}</li>`;
+      } else if (isHeading(line)) { close(); inBody = true; html += `<h2>${esc(line)}</h2>`; }
+      else if (inBody && isEntryHead(line)) { close(); html += `<p class="role"><strong>${esc(line)}</strong></p>`; }
+      else { close(); html += `<p>${esc(line)}</p>`; }
+    }
+    close();
+    return html;
+  }
+
+  function printDoc(html, title) {
+    $('#printArea').innerHTML = html;
+    const oldTitle = document.title;
+    document.title = title; // most browsers use this as the PDF file name
+    const restore = () => { document.title = oldTitle; $('#printArea').innerHTML = ''; window.removeEventListener('afterprint', restore); };
+    window.addEventListener('afterprint', restore);
+    window.print();
   }
 
   // ---------- Swipe deck ----------
@@ -407,9 +653,9 @@ Best regards,
           <p class="desc">${esc(job.text.slice(0, 600))}</p>
           <span class="source">via ${esc(job.source)}</span>
         </div>
-        <span class="stamp like">LIKE</span>
+        <span class="stamp like">APPLY</span>
         <span class="stamp nope">NOPE</span>
-        <span class="stamp super">APPLY</span>
+        <span class="stamp super">SAVE</span>
       </article>`;
   }
 
@@ -487,16 +733,19 @@ Best regards,
     if (undoStack.length > 30) undoStack.shift();
     if (dir === 'left') {
       setStatus(job, 'Skipped');
+    } else if (dir === 'up') {
+      setStatus(job, 'Saved');
+      toast('Saved for later ★');
     } else {
-      setStatus(job, 'Liked');
-      if (dir === 'up') openApply(job);
-      else showMatchOrToast(job);
+      setStatus(job, 'Applying'); // stays in Tracker as "To finish" until marked Applied
+      openApply(job);
     }
   }
 
   function undoSwipe() {
     const last = undoStack.pop();
     if (!last) return;
+    if (currentJob && currentJob.id === last.job.id) { currentJob = null; closeApply(); }
     if (last.prev) tracker[last.job.id] = last.prev; else delete tracker[last.job.id];
     save(KEYS.tracker, tracker);
     renderTracker();
@@ -504,26 +753,119 @@ Best regards,
     toast('Undone');
   }
 
-  let matchJob = null;
-  function showMatchOrToast(job) {
-    const skills = matchedSkills(job);
-    if (skills.length < 2) { toast('Saved to Liked ♥'); return; }
-    matchJob = job;
-    $('#matchText').textContent = `Your resume and ${job.company} both mention:`;
-    $('#matchSkills').innerHTML = skills.map((k) => `<span class="skill">${esc(k)}</span>`).join('');
-    $('#matchOverlay').hidden = false;
-    $('#matchApply').focus();
-  }
-  function closeMatch() { $('#matchOverlay').hidden = true; matchJob = null; }
-
   function setView(v) {
     view = v;
     save(KEYS.view, v);
     document.body.classList.toggle('view-swipe', v === 'swipe');
-    $$('.seg button').forEach((b) => b.classList.toggle('active', b.dataset.view === v));
+    $$('[data-view]').forEach((b) => b.classList.toggle('active', b.dataset.view === v));
     $('#swipeView').hidden = v !== 'swipe';
     $('#jobList').hidden = v === 'swipe';
     renderJobs();
+  }
+
+  // ---------- Resume upload ----------
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+      const el = document.createElement('script');
+      el.src = src;
+      el.onload = () => resolve();
+      el.onerror = () => reject(new Error(`Could not load ${src}`));
+      document.head.appendChild(el);
+    });
+  }
+
+  // Rebuild lines from PDF text pieces using their positions on the page.
+  function pdfItemsToText(items) {
+    const rows = [];
+    for (const it of items) {
+      if (!it.str) continue;
+      const x = it.transform[4], y = it.transform[5];
+      let row = rows.find((r) => Math.abs(r.y - y) < 3);
+      if (!row) { row = { y, parts: [] }; rows.push(row); }
+      row.parts.push({ x, w: it.width || 0, str: it.str });
+    }
+    rows.sort((a, b) => b.y - a.y);
+    const lines = [];
+    let lastY = null;
+    for (const r of rows) {
+      if (lastY !== null && lastY - r.y > 22) lines.push(''); // big vertical gap = new block
+      r.parts.sort((a, b) => a.x - b.x);
+      let line = '', end = null;
+      for (const pt of r.parts) {
+        if (end !== null && pt.x - end > 1.5 && !line.endsWith(' ') && !pt.str.startsWith(' ')) line += ' ';
+        line += pt.str;
+        end = pt.x + pt.w;
+      }
+      lines.push(line);
+      lastY = r.y;
+    }
+    return lines.join('\n');
+  }
+
+  function htmlToLines(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const out = [];
+    const walk = (el) => {
+      for (const node of el.children) {
+        const tag = node.tagName.toLowerCase();
+        if (tag === 'ul' || tag === 'ol') { [...node.children].forEach((li) => out.push(`• ${li.textContent.trim()}`)); out.push(''); }
+        else if (/^h[1-6]$/.test(tag)) { out.push('', node.textContent.trim()); }
+        else if (tag === 'table' || tag === 'div') walk(node);
+        else out.push(node.textContent.trim());
+      }
+    };
+    walk(doc.body);
+    return out.join('\n');
+  }
+
+  async function extractResumeText(file) {
+    const name = file.name.toLowerCase();
+    if (name.endsWith('.pdf') || file.type === 'application/pdf') {
+      await loadScript('vendor/pdf.min.js');
+      const lib = window.pdfjsLib;
+      lib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
+      const pdf = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+      const pages = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        pages.push(pdfItemsToText((await page.getTextContent()).items));
+      }
+      return pages.join('\n\n');
+    }
+    if (name.endsWith('.docx')) {
+      await loadScript('vendor/mammoth.browser.min.js');
+      const result = await window.mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
+      return htmlToLines(result.value);
+    }
+    if (name.endsWith('.doc')) throw new Error('Old .doc files aren’t supported. Save it as .docx or PDF and try again.');
+    return file.text();
+  }
+
+  const cleanResumeText = (t) => t
+    .replace(/\r/g, '')
+    .replace(/[●▪■•]\s*/g, '• ') // odd bullet glyphs from Word/PDF fonts
+    .replace(/[ \t]+/g, ' ')
+    .split('\n').map((l) => l.trim()).join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  async function handleResumeUpload(e) {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    const msg = $('#uploadMsg');
+    msg.textContent = `Reading ${file.name}…`;
+    try {
+      const text = cleanResumeText(await extractResumeText(file));
+      if (!text) throw new Error('No text found. If it’s a scanned image, paste the text instead.');
+      $('#profileForm').elements.resume.value = text;
+      profile.resume = text;
+      save(KEYS.profile, profile);
+      msg.textContent = `Loaded ${file.name} and saved ✓. Give it a quick check below.`;
+    } catch (err) {
+      msg.textContent = `Couldn't read that file: ${err.message}`;
+    }
   }
 
   // ---------- Profile ----------
@@ -579,15 +921,12 @@ Best regards,
     });
 
     // Swipe deck
-    $$('.seg button').forEach((b) => b.addEventListener('click', () => setView(b.dataset.view)));
+    $$('[data-view]').forEach((b) => b.addEventListener('click', () => setView(b.dataset.view)));
     $$('[data-swipe]').forEach((b) => b.addEventListener('click', () => swipe(b.dataset.swipe)));
     $('#undoBtn').addEventListener('click', undoSwipe);
     $('#deck').addEventListener('click', handleCardClick);
-    $('#matchKeep').addEventListener('click', closeMatch);
-    $('#matchApply').addEventListener('click', () => { const j = matchJob; closeMatch(); if (j) openApply(j); });
     document.addEventListener('keydown', (e) => {
       if (view !== 'swipe' || $('#tab-jobs').hidden || !$('#applyPanel').hidden) return;
-      if (!$('#matchOverlay').hidden) { if (e.key === 'Escape') closeMatch(); return; }
       if (e.target.closest('input, textarea, select')) return;
       const dir = { ArrowRight: 'right', ArrowLeft: 'left', ArrowUp: 'up' }[e.key];
       if (dir) { e.preventDefault(); swipe(dir); }
@@ -603,18 +942,39 @@ Best regards,
 
     $$('[data-close]').forEach((el) => el.addEventListener('click', closeApply));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#applyPanel').hidden) closeApply(); });
-    $('#copyBtn').addEventListener('click', copyLetter);
+    $('#applyPanel').addEventListener('click', (e) => {
+      const go = e.target.closest('[data-goto]');
+      if (go) { closeApply(); showTab(go.dataset.goto); }
+    });
+    $$('[data-doc]').forEach((b) => b.addEventListener('click', () => showDoc(b.dataset.doc)));
+    $$('[data-copy]').forEach((b) => b.addEventListener('click', () =>
+      copyText(b.dataset.copy, b.dataset.copy === 'coverLetter' ? 'Cover letter' : 'Resume')));
+    ['#tailoredResume', '#coverLetter'].forEach((id) => $(id).addEventListener('input', () => {
+      clearTimeout(saveDocsTimer); saveDocsTimer = setTimeout(saveDocs, 400);
+    }));
+    $('#downloadResume').addEventListener('click', () => downloadText($('#tailoredResume').value, `${docName('Resume')}.txt`));
+    $('#printResume').addEventListener('click', () => printDoc(resumeToHtml($('#tailoredResume').value), docName('Resume')));
+    $('#printLetter').addEventListener('click', () => printDoc(
+      `<div class="letter">${$('#coverLetter').value.split(/\n{2,}/).map((p) => `<p>${esc(p)}</p>`).join('')}</div>`, docName('Cover Letter')));
+    $('#regenResume').addEventListener('click', () => {
+      if (!currentJob) return;
+      const t = tailorResume(currentJob);
+      if (t) { $('#tailoredResume').value = t.text; renderResumeNotes(t); saveDocs(); toast('Re-tailored from your profile resume'); }
+    });
     $('#applyLink').addEventListener('click', () => {
-      // Remember the (possibly edited) letter for this job when they head to the application page.
-      if (currentJob && tracker[currentJob.id]) { tracker[currentJob.id].letter = $('#coverLetter').value; save(KEYS.tracker, tracker); }
+      // Heading to the real application: make sure it's tracked and the documents are kept.
+      if (currentJob && !tracker[currentJob.id]) setStatus(currentJob, 'Applying', currentDocs());
+      saveDocs();
     });
     $$('.status-btn').forEach((b) => b.addEventListener('click', () => {
       if (!currentJob) return;
-      const s = b.dataset.mark;
-      setStatus(currentJob, s, $('#coverLetter').value);
-      toast(s ? `Marked ${s}` : 'Removed from tracker');
+      const st = b.dataset.mark;
+      setStatus(currentJob, st, currentDocs());
+      toast({ Applied: 'Applied ✓ Good luck!', Saved: 'Saved for later ★', '': 'Removed from tracker' }[st] || `Marked ${st}`);
       closeApply();
     }));
+
+    $('#resumeFile').addEventListener('change', handleResumeUpload);
 
     $('#profileForm').addEventListener('submit', saveProfile);
     $('#resetTemplate').addEventListener('click', () => { $('#profileForm').elements.template.value = DEFAULT_TEMPLATE; });

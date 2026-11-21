@@ -42,10 +42,10 @@
         <div class="swipe-actions">
           <button id="undoBtn" class="round mini" aria-label="Undo last swipe" title="Undo (Z)">↺</button>
           <button data-swipe="left" class="round nope" aria-label="Skip" title="Skip (←)">✕</button>
-          <button data-swipe="up" class="round super" aria-label="Apply now" title="Apply now (↑)">★</button>
-          <button data-swipe="right" class="round like" aria-label="Save to Liked" title="Like (→)">♥</button>
+          <button data-swipe="up" class="round super" aria-label="Save for later" title="Save for later (↑)">★</button>
+          <button data-swipe="right" class="round like" aria-label="Apply" title="Apply (→)">♥</button>
         </div>
-        <p class="hint center">Right = save ♥ · Left = skip · Up = apply now</p>
+        <p class="hint center">Right ♥ = apply · Left ✕ = skip · Up ★ = save for later</p>
       </div>
       <ul id="jobList" class="cards" hidden></ul>
     </section>
@@ -54,7 +54,8 @@
     <section id="tab-tracker" class="panel" hidden>
       <div class="chips" id="trackerFilters">
         <button class="chip active" data-status="all">All</button>
-        <button class="chip" data-status="Liked">Liked ♥</button>
+        <button class="chip" data-status="Applying">To finish</button>
+        <button class="chip" data-status="Saved">Saved ★</button>
         <button class="chip" data-status="Applied">Applied</button>
         <button class="chip" data-status="Interviewing">Interviewing</button>
         <button class="chip" data-status="Skipped">Skipped</button>
@@ -87,8 +88,16 @@
         <label>Location <span class="hint">(city or country, e.g. "Berlin" or "USA")</span>
           <input name="location" placeholder="USA">
         </label>
-        <label>Resume <span class="hint">(paste plain text)</span>
-          <textarea name="resume" rows="10" placeholder="Paste your resume here…"></textarea>
+        <div class="upload">
+          <span class="label">Resume</span>
+          <label class="btn upload-btn">
+            📄 Upload resume (PDF, Word or .txt)
+            <input type="file" id="resumeFile" accept=".pdf,.docx,.txt,.md,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden>
+          </label>
+          <span id="uploadMsg" class="hint"></span>
+        </div>
+        <label>Resume text <span class="hint">(filled in from your upload, or paste it — check it looks right)</span>
+          <textarea name="resume" rows="12" placeholder="Upload a file above, or paste your resume here…"></textarea>
         </label>
         <details>
           <summary>Cover letter template</summary>
@@ -121,32 +130,60 @@
         </div>
         <button class="icon-btn" data-close aria-label="Close">✕</button>
       </div>
-      <label class="muted small" for="coverLetter">Cover letter (editable)</label>
-      <textarea id="coverLetter" rows="14"></textarea>
-      <div class="row wrap">
-        <button id="copyBtn" class="btn">Copy cover letter</button>
-        <a id="applyLink" class="btn primary" target="_blank" rel="noopener noreferrer">Open application page ↗</a>
+
+      <div id="matchBanner" class="match-banner" hidden>
+        <strong>💘 It's a match!</strong>
+        <span id="matchText"></span>
       </div>
-      <p class="muted small">Mark this job:</p>
-      <div class="row wrap">
-        <button class="btn status-btn" data-mark="Applied">Applied</button>
-        <button class="btn status-btn" data-mark="Interviewing">Interviewing</button>
-        <button class="btn status-btn" data-mark="Skipped">Skipped</button>
-        <button class="btn ghost status-btn" data-mark="">Remove from tracker</button>
+
+      <ol class="steps">
+        <li><strong>Grab your tailored resume</strong> and cover letter below.</li>
+        <li><strong>Open the application page</strong> and paste or upload them.</li>
+        <li>Come back and tap <strong>I applied ✓</strong>.</li>
+      </ol>
+
+      <div class="seg wide" role="tablist" aria-label="Documents">
+        <button class="active" data-doc="resume" role="tab">Tailored resume</button>
+        <button data-doc="letter" role="tab">Cover letter</button>
+      </div>
+
+      <div id="docResume" class="doc">
+        <div id="noResume" class="notice" hidden>
+          You haven't added a resume yet. <button class="linklike" data-goto="profile">Upload one in Profile</button> and it'll be tailored to every job automatically.
+        </div>
+        <div id="resumeNotes" class="notes"></div>
+        <textarea id="tailoredResume" rows="16" aria-label="Tailored resume (editable)"></textarea>
+        <div class="row wrap">
+          <button class="btn" data-copy="tailoredResume">Copy</button>
+          <button class="btn" id="downloadResume">Download .txt</button>
+          <button class="btn" id="printResume">Save as PDF</button>
+          <button class="btn ghost" id="regenResume" title="Discard edits and re-tailor">↺ Re-tailor</button>
+        </div>
+      </div>
+
+      <div id="docLetter" class="doc" hidden>
+        <textarea id="coverLetter" rows="16" aria-label="Cover letter (editable)"></textarea>
+        <div class="row wrap">
+          <button class="btn" data-copy="coverLetter">Copy</button>
+          <button class="btn" id="printLetter">Save as PDF</button>
+        </div>
+      </div>
+
+      <div class="apply-footer">
+        <a id="applyLink" class="btn primary big" target="_blank" rel="noopener noreferrer">Open application page ↗</a>
+        <button class="btn applied-btn status-btn" data-mark="Applied">I applied ✓</button>
+      </div>
+      <div class="row wrap small-actions">
+        <button class="btn ghost status-btn" data-mark="Interviewing">Interviewing</button>
+        <button class="btn ghost status-btn" data-mark="Saved">Save for later</button>
+        <button class="btn ghost status-btn" data-mark="Skipped">Skip</button>
+        <button class="btn ghost status-btn" data-mark="">Remove</button>
       </div>
     </div>
   </div>
 
-  <!-- MATCH SCREEN -->
-  <div id="matchOverlay" class="match" hidden role="dialog" aria-modal="true" aria-labelledby="matchTitle">
-    <div class="match-inner">
-      <h2 id="matchTitle">It's a match!</h2>
-      <p id="matchText"></p>
-      <div id="matchSkills" class="skill-row center"></div>
-      <button id="matchApply" class="btn primary">Write cover letter</button>
-      <button id="matchKeep" class="btn ghost">Keep swiping</button>
-    </div>
-  </div>
+  <!-- Filled in just before printing so "Save as PDF" prints only the document -->
+  <div id="printArea" aria-hidden="true"></div>
 
   <div id="toast" class="toast" hidden></div>
   <script src="app.js"></script>
