@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2f5bea">
+  <title>Job Finder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Job Finder</h1>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="jobs">Jobs</button>
+      <button class="tab" role="tab" data-tab="tracker">Tracker <span id="trackerCount" class="count"></span></button>
+      <button class="tab" role="tab" data-tab="profile">Profile</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- JOBS -->
+    <section id="tab-jobs" class="panel" hidden>
+      <div class="toolbar">
+        <input id="jobSearch" type="search" placeholder="Filter results (company, keyword…)" aria-label="Filter results">
+        <button id="refreshBtn" class="btn">Refresh</button>
+      </div>
+      <div class="toolbar small">
+        <label><input type="checkbox" id="hideTracked" checked> Hide jobs already in tracker</label>
+        <label><input type="checkbox" id="showAll"> Ignore my title filter</label>
+      </div>
+      <p id="feedStatus" class="status"></p>
+      <ul id="jobList" class="cards"></ul>
+    </section>
+
+    <!-- TRACKER -->
+    <section id="tab-tracker" class="panel" hidden>
+      <div class="chips" id="trackerFilters">
+        <button class="chip active" data-status="all">All</button>
+        <button class="chip" data-status="Applied">Applied</button>
+        <button class="chip" data-status="Interviewing">Interviewing</button>
+        <button class="chip" data-status="Skipped">Skipped</button>
+      </div>
+      <ul id="trackerList" class="cards"></ul>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="tab-profile" class="panel" hidden>
+      <form id="profileForm" class="form">
+        <label>Name
+          <input name="name" autocomplete="name" required>
+        </label>
+        <label>Email
+          <input name="email" type="email" autocomplete="email">
+        </label>
+        <label>Phone <span class="hint">(optional, used in cover letters)</span>
+          <input name="phone" type="tel" autocomplete="tel">
+        </label>
+        <label>Target job titles <span class="hint">(comma-separated)</span>
+          <input name="titles" placeholder="Frontend Developer, UX Designer">
+        </label>
+        <label>Work preference
+          <select name="workPref">
+            <option value="remote">Remote only</option>
+            <option value="any">Remote or on-site</option>
+            <option value="onsite">On-site / hybrid only</option>
+          </select>
+        </label>
+        <label>Location <span class="hint">(city or country, e.g. "Berlin" or "USA")</span>
+          <input name="location" placeholder="USA">
+        </label>
+        <label>Resume <span class="hint">(paste plain text)</span>
+          <textarea name="resume" rows="10" placeholder="Paste your resume here…"></textarea>
+        </label>
+        <details>
+          <summary>Cover letter template</summary>
+          <p class="hint">Placeholders: {{name}} {{email}} {{phone}} {{jobTitle}} {{company}} {{location}} {{matchedSkills}} {{highlights}} {{date}}</p>
+          <textarea name="template" rows="14"></textarea>
+          <button type="button" id="resetTemplate" class="btn ghost">Reset to default template</button>
+        </details>
+        <div class="row">
+          <button type="submit" class="btn primary">Save profile</button>
+          <span id="saveMsg" class="status"></span>
+        </div>
+      </form>
+      <details class="danger">
+        <summary>Data</summary>
+        <p class="hint">Everything is stored only in this browser (localStorage). Nothing is sent anywhere except the job API requests.</p>
+        <button id="exportBtn" class="btn ghost">Export data</button>
+        <button id="clearBtn" class="btn ghost">Clear all data</button>
+      </details>
+    </section>
+  </main>
+
+  <!-- APPLY PANEL -->
+  <div id="applyPanel" class="sheet" hidden>
+    <div class="sheet-backdrop" data-close></div>
+    <div class="sheet-body" role="dialog" aria-modal="true" aria-labelledby="applyTitle">
+      <div class="sheet-head">
+        <div>
+          <h2 id="applyTitle"></h2>
+          <p id="applyMeta" class="muted"></p>
+        </div>
+        <button class="icon-btn" data-close aria-label="Close">✕</button>
+      </div>
+      <label class="muted small" for="coverLetter">Cover letter (editable)</label>
+      <textarea id="coverLetter" rows="14"></textarea>
+      <div class="row wrap">
+        <button id="copyBtn" class="btn">Copy cover letter</button>
+        <a id="applyLink" class="btn primary" target="_blank" rel="noopener noreferrer">Open application page ↗</a>
+      </div>
+      <p class="muted small">Mark this job:</p>
+      <div class="row wrap">
+        <button class="btn status-btn" data-mark="Applied">Applied</button>
+        <button class="btn status-btn" data-mark="Interviewing">Interviewing</button>
+        <button class="btn status-btn" data-mark="Skipped">Skipped</button>
+        <button class="btn ghost status-btn" data-mark="">Remove from tracker</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
