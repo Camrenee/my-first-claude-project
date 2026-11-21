@@ -3,7 +3,7 @@
   'use strict';
 
   // ---------- Storage ----------
-  const KEYS = { profile: 'jf.profile', tracker: 'jf.tracker', cache: 'jf.jobsCache', tab: 'jf.tab' };
+  const KEYS = { profile: 'jf.profile', tracker: 'jf.tracker', cache: 'jf.jobsCache', tab: 'jf.tab', view: 'jf.view' };
   const CACHE_MS = 60 * 60 * 1000; // reuse fetched jobs for an hour to be kind to the free APIs
 
   const load = (key, fallback) => {
@@ -38,6 +38,9 @@ Best regards,
   let jobs = [];
   let currentJob = null;
   let trackerFilter = 'all';
+  let view = load(KEYS.view, 'swipe') === 'list' ? 'list' : 'swipe';
+  const undoStack = []; // [{ job, prev }] so a swipe can be taken back
+  let busy = false;     // true while a card is flying off screen
 
   // ---------- Helpers ----------
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -201,7 +204,7 @@ Best regards,
 
   function filteredJobs() {
     const q = $('#jobSearch').value.trim().toLowerCase();
-    const hideTracked = $('#hideTracked').checked;
+    const hideTracked = view === 'swipe' || $('#hideTracked').checked;
     return jobs.filter((j) =>
       matchesTitle(j) &&
       matchesLocation(j) &&
@@ -240,11 +243,14 @@ Best regards,
     const status = $('#feedStatus');
     const parts = [];
     if (!profile.name || !targetTitles().length) parts.push('Tip: fill in your Profile (name + target titles) for better matches and cover letters.');
-    parts.push(`${list.length} matching job${list.length === 1 ? '' : 's'} (of ${jobs.length} fetched).`);
+    parts.push(view === 'swipe'
+      ? `${list.length} job${list.length === 1 ? '' : 's'} left to swipe.`
+      : `${list.length} matching job${list.length === 1 ? '' : 's'} (of ${jobs.length} fetched).`);
     if (errors.length) parts.push(`Couldn't reach ${errors.join(' and ')} — try Refresh later.`);
     status.textContent = parts.join(' ');
     status.className = errors.length && !jobs.length ? 'status error' : 'status';
 
+    if (view === 'swipe') { renderDeck(list); return; }
     $('#jobList').innerHTML = list.length
       ? list.slice(0, 200).map((j) => jobCard(j, tracker[j.id])).join('')
       : `<li class="empty">No matching jobs. Try broader titles in your Profile, change your work preference, or tick “Ignore my title filter”.</li>`;
@@ -256,7 +262,7 @@ Best regards,
       .sort((a, b) => b.updated - a.updated);
     $('#trackerList').innerHTML = entries.length
       ? entries.map((e) => jobCard(e.job, e)).join('')
-      : `<li class="empty">Nothing here yet. Open a job and mark it Applied, Interviewing or Skipped.</li>`;
+      : `<li class="empty">Nothing here yet. Swipe right on jobs you like, or open one and mark it Applied, Interviewing or Skipped.</li>`;
     const n = Object.values(tracker).filter((e) => e.status !== 'Skipped').length;
     $('#trackerCount').textContent = n || '';
   }
@@ -374,6 +380,152 @@ Best regards,
     toast('Cover letter copied');
   }
 
+  // ---------- Swipe deck ----------
+  const initials = (name) => (String(name || '?').match(/[A-Za-z0-9]+/g) || ['?']).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+  const hueFor = (str) => [...String(str)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
+  const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+  function swipeCard(job, depth) {
+    const skills = matchedSkills(job);
+    const facts = [
+      `📍 ${job.remote ? `Remote · ${job.location || 'Anywhere'}` : job.location || 'Location n/a'}`,
+      `💰 ${job.salary || 'Salary not listed'}`,
+      `🗓 ${fmtDate(job.date) || 'Date n/a'}`,
+      job.type && `⏱ ${job.type}`,
+    ].filter(Boolean);
+    return `
+      <article class="swipe-card ${depth ? `behind-${depth}` : 'top'}" data-id="${esc(job.id)}" style="--h:${hueFor(job.company)}"
+        ${depth ? 'aria-hidden="true"' : ''}>
+        <div class="hero">
+          <div class="avatar">${esc(initials(job.company))}</div>
+          <h3>${esc(job.title)}</h3>
+          <div class="company">${esc(job.company)}</div>
+        </div>
+        <div class="body">
+          <div class="facts">${facts.map((f) => `<span class="fact">${esc(f)}</span>`).join('')}</div>
+          ${skills.length ? `<div class="skill-row">${skills.map((k) => `<span class="skill">✓ ${esc(k)}</span>`).join('')}</div>` : ''}
+          <p class="desc">${esc(job.text.slice(0, 600))}</p>
+          <span class="source">via ${esc(job.source)}</span>
+        </div>
+        <span class="stamp like">LIKE</span>
+        <span class="stamp nope">NOPE</span>
+        <span class="stamp super">APPLY</span>
+      </article>`;
+  }
+
+  function renderDeck(list) {
+    const deck = $('#deck');
+    const top3 = list.slice(0, 3);
+    $$('[data-swipe]').forEach((b) => { b.disabled = !top3.length; });
+    $('#undoBtn').disabled = !undoStack.length;
+    if (!top3.length) {
+      deck.innerHTML = `
+        <div class="deck-empty">
+          <div class="big">🎉</div>
+          <strong>You've seen every match</strong>
+          <span>${jobs.length ? 'Check your Tracker, try broader titles in your Profile, or refresh later for new jobs.' : 'No jobs loaded yet. Tap ↻ to fetch jobs.'}</span>
+          <button class="btn" data-goto="tracker">Open Tracker</button>
+        </div>`;
+      return;
+    }
+    // Render back-to-front so the top card is last in the DOM (and on top).
+    deck.innerHTML = top3.map((j, i) => swipeCard(j, i)).reverse().join('');
+    attachDrag($('.swipe-card.top', deck));
+  }
+
+  function setCardPose(card, dx, dy) {
+    card.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 18}deg)`;
+    const vertical = -dy > Math.abs(dx);
+    $('.stamp.like', card).style.opacity = vertical ? 0 : clamp01(dx / 90);
+    $('.stamp.nope', card).style.opacity = vertical ? 0 : clamp01(-dx / 90);
+    $('.stamp.super', card).style.opacity = vertical ? clamp01(-dy / 90) : 0;
+    card._dx = dx; card._dy = dy;
+  }
+
+  function attachDrag(card) {
+    if (!card) return;
+    let startX = 0, startY = 0, dragging = false;
+    card.addEventListener('pointerdown', (e) => {
+      if (busy || e.button > 0) return;
+      dragging = true; startX = e.clientX; startY = e.clientY;
+      card.setPointerCapture(e.pointerId);
+      card.style.transition = 'none';
+    });
+    card.addEventListener('pointermove', (e) => {
+      if (dragging) setCardPose(card, e.clientX - startX, e.clientY - startY);
+    });
+    const end = () => {
+      if (!dragging) return;
+      dragging = false;
+      const dx = card._dx || 0, dy = card._dy || 0, limit = Math.min(120, card.offsetWidth * 0.28);
+      if (-dy > 110 && -dy > Math.abs(dx)) swipe('up');
+      else if (dx > limit) swipe('right');
+      else if (dx < -limit) swipe('left');
+      else { card.style.transition = 'transform .25s ease'; setCardPose(card, 0, 0); }
+    };
+    card.addEventListener('pointerup', end);
+    card.addEventListener('pointercancel', end);
+  }
+
+  function swipe(dir) {
+    const card = $('#deck .swipe-card.top');
+    if (!card || busy) return;
+    const job = findJob(card.dataset.id);
+    if (!job) return;
+    busy = true;
+    const w = window.innerWidth, h = window.innerHeight;
+    const dy = card._dy || 0;
+    card.style.transition = 'transform .32s ease-out';
+    if (dir === 'right') setCardPose(card, w * 1.1, dy + 40);
+    else if (dir === 'left') setCardPose(card, -w * 1.1, dy + 40);
+    else setCardPose(card, card._dx || 0, -h);
+    setTimeout(() => { busy = false; commitSwipe(job, dir); }, 300);
+  }
+
+  function commitSwipe(job, dir) {
+    undoStack.push({ job, prev: tracker[job.id] ? { ...tracker[job.id] } : null });
+    if (undoStack.length > 30) undoStack.shift();
+    if (dir === 'left') {
+      setStatus(job, 'Skipped');
+    } else {
+      setStatus(job, 'Liked');
+      if (dir === 'up') openApply(job);
+      else showMatchOrToast(job);
+    }
+  }
+
+  function undoSwipe() {
+    const last = undoStack.pop();
+    if (!last) return;
+    if (last.prev) tracker[last.job.id] = last.prev; else delete tracker[last.job.id];
+    save(KEYS.tracker, tracker);
+    renderTracker();
+    renderJobs();
+    toast('Undone');
+  }
+
+  let matchJob = null;
+  function showMatchOrToast(job) {
+    const skills = matchedSkills(job);
+    if (skills.length < 2) { toast('Saved to Liked ♥'); return; }
+    matchJob = job;
+    $('#matchText').textContent = `Your resume and ${job.company} both mention:`;
+    $('#matchSkills').innerHTML = skills.map((k) => `<span class="skill">${esc(k)}</span>`).join('');
+    $('#matchOverlay').hidden = false;
+    $('#matchApply').focus();
+  }
+  function closeMatch() { $('#matchOverlay').hidden = true; matchJob = null; }
+
+  function setView(v) {
+    view = v;
+    save(KEYS.view, v);
+    document.body.classList.toggle('view-swipe', v === 'swipe');
+    $$('.seg button').forEach((b) => b.classList.toggle('active', b.dataset.view === v));
+    $('#swipeView').hidden = v !== 'swipe';
+    $('#jobList').hidden = v === 'swipe';
+    renderJobs();
+  }
+
   // ---------- Profile ----------
   function fillProfileForm() {
     const f = $('#profileForm');
@@ -410,6 +562,7 @@ Best regards,
     const skipId = e.target.closest('[data-skip]')?.dataset.skip;
     if (applyId) { const job = findJob(applyId); if (job) openApply(job); }
     if (skipId) { const job = findJob(skipId); if (job) { setStatus(job, 'Skipped'); toast('Skipped — see Tracker'); } }
+    if (e.target.closest('[data-goto]')) showTab(e.target.closest('[data-goto]').dataset.goto);
   }
 
   function init() {
@@ -420,6 +573,26 @@ Best regards,
     $('#jobSearch').addEventListener('input', () => renderJobs());
     $('#hideTracked').addEventListener('change', () => renderJobs());
     $('#showAll').addEventListener('change', () => renderJobs());
+    $('#filtersBtn').addEventListener('click', () => {
+      const f = $('#filters'); f.hidden = !f.hidden;
+      $('#filtersBtn').setAttribute('aria-expanded', String(!f.hidden));
+    });
+
+    // Swipe deck
+    $$('.seg button').forEach((b) => b.addEventListener('click', () => setView(b.dataset.view)));
+    $$('[data-swipe]').forEach((b) => b.addEventListener('click', () => swipe(b.dataset.swipe)));
+    $('#undoBtn').addEventListener('click', undoSwipe);
+    $('#deck').addEventListener('click', handleCardClick);
+    $('#matchKeep').addEventListener('click', closeMatch);
+    $('#matchApply').addEventListener('click', () => { const j = matchJob; closeMatch(); if (j) openApply(j); });
+    document.addEventListener('keydown', (e) => {
+      if (view !== 'swipe' || $('#tab-jobs').hidden || !$('#applyPanel').hidden) return;
+      if (!$('#matchOverlay').hidden) { if (e.key === 'Escape') closeMatch(); return; }
+      if (e.target.closest('input, textarea, select')) return;
+      const dir = { ArrowRight: 'right', ArrowLeft: 'left', ArrowUp: 'up' }[e.key];
+      if (dir) { e.preventDefault(); swipe(dir); }
+      else if (e.key === 'z' || e.key === 'Backspace') { e.preventDefault(); undoSwipe(); }
+    });
 
     $('#trackerFilters').addEventListener('click', (e) => {
       const chip = e.target.closest('.chip'); if (!chip) return;
@@ -459,6 +632,7 @@ Best regards,
 
     fillProfileForm();
     renderTracker();
+    setView(view);
     const startTab = load(KEYS.tab, null) || (profile.name ? 'jobs' : 'profile');
     showTab(['jobs', 'tracker', 'profile'].includes(startTab) ? startTab : 'jobs');
     loadJobs();
