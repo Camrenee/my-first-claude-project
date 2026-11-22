@@ -50,26 +50,22 @@ test('card shows up to 2 reasons, each quoting a real resume line', async () => 
   await ctx.close();
 });
 
-test('details show every reason with the resume line and the job sentence, plus gaps', async () => {
+test('details show at most 4 short bullets, each tied to a resume line, plus gaps', async () => {
   const { ctx, page } = await openApp(env, { jobs: [BILLING], profile: PROFILE });
   await page.click('#deck .job-card.is-top .jc-more');
   const sheet = page.locator('#job-sheet');
   await sheet.waitFor({ state: 'visible' });
   const reasons = sheet.locator('.js-reasons .reason');
   const n = await reasons.count();
-  assert.ok(n >= 2, `reasons in details: ${n}`);
-  const jobQuotes = new Set();
+  assert.ok(n >= 2 && n <= 4, `reasons in details: ${n}`);
   for (let i = 0; i < n; i++) {
     const r = reasons.nth(i);
-    assert.ok(isVerbatim(await r.locator('.reason-resume').textContent()));
-    const jq = r.locator('.reason-job');
-    if (await jq.count()) {
-      const t = await jq.textContent();
-      assert.ok(!jobQuotes.has(t), 'each job sentence is quoted once');
-      jobQuotes.add(t);
-    }
+    assert.ok((await r.locator('.reason-label').textContent()).length > 0);
+    assert.ok(isVerbatim((await r.locator('.reason-line').textContent()).replace(/^“|”$/g, '')));
   }
-  assert.match(await reasons.first().locator('.reason-job').textContent(), /billing platform/);
+  assert.match(await reasons.first().locator('.reason-label').textContent(), /Billing & invoicing/);
+  // Uncluttered: no per-reason job quotes or sub-labels
+  assert.equal(await sheet.locator('.reason-job, .reason-src').count(), 0);
   // Things the job asks for that the resume doesn't show
   assert.equal(await sheet.locator('.js-gaps').isVisible(), true);
   assert.match(await sheet.locator('.js-gap-list').textContent(), /Crypto|Custody/);
@@ -94,7 +90,7 @@ test('no overlap: says so plainly instead of inventing reasons', async () => {
 test('saved jobs show the same reasons from the Tracker', async () => {
   const { ctx, page } = await openApp(env, { jobs: [BILLING], profile: PROFILE });
   await page.click('#btn-save');
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(900);
   await page.click('a[data-nav="tracker"]');
   await page.click('.queue-item .qi-details');
   await page.locator('#job-sheet').waitFor({ state: 'visible' });
@@ -106,9 +102,9 @@ test('saved jobs show the same reasons from the Tracker', async () => {
 test('Profile → Start over clears swipes and the queue so every job shows again', async () => {
   const { ctx, page } = await openApp(env, { jobs: [BILLING, UNRELATED], profile: PROFILE });
   await page.click('#btn-save');
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(900);
   await page.click('#btn-pass');
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(900);
   assert.equal(await page.textContent('#deck .deck-panel h2'), 'You’re all caught up!');
   await page.click('a[data-nav="profile"]');
   await page.click('#btn-start-over');

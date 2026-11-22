@@ -277,7 +277,7 @@ export function fitFor(job) {
     const jobParagraphs = roleParagraphs(htmlToParagraphs(job.descriptionHtml));
     fitCache.set(key, {
       score: m.score,
-      reasons: buildReasons({ matched: m.matched, resumeLines, jobParagraphs, max: 5 }),
+      reasons: buildReasons({ matched: m.matched, resumeLines, jobParagraphs, max: 4 }),
       gaps: gapsFrom(m.missing, 3),
     });
   }
@@ -410,21 +410,57 @@ function decide(action, { fromSwipe = false, dx = 0 } = {}) {
   flyOut(top, action === 'queued' ? 1 : -1, fromSwipe ? dx : 0);
 }
 
+// Timing is deliberately unhurried so the person sees what happened:
+// the SAVE/PASS stamp holds on the card, the card glides off, then a confirmation pops up.
+const HOLD_MS = 220; // stamp visible before the card moves (button/keyboard only)
+const FLY_MS = 480;
+
 function flyOut(el, dir, fromDx) {
-  if (reduceMotion()) return render();
+  const action = dir > 0 ? 'queued' : 'passed';
+  if (reduceMotion()) {
+    render();
+    return showFeedback(action);
+  }
   busy = true;
   const w = el.offsetWidth;
   el.classList.add(dir > 0 ? 'show-save' : 'show-pass');
-  el.style.transition = 'transform 260ms cubic-bezier(.2,.7,.3,1), opacity 260ms';
-  el.style.transform = `translateX(${dir * (w * 1.4)}px) rotate(${dir * 18}deg)`;
-  el.style.opacity = '0';
-  const next = els.deck.querySelector('.job-card.is-next');
-  next?.classList.add('is-promoting');
+  const hold = fromDx ? 0 : HOLD_MS;
+  if (hold) {
+    el.style.transition = 'transform 160ms ease';
+    el.style.transform = `scale(1.02) rotate(${dir * 2}deg)`;
+  }
+  setTimeout(() => {
+    el.style.transition = `transform ${FLY_MS}ms cubic-bezier(.3,.6,.3,1), opacity ${FLY_MS}ms ease-in`;
+    el.style.transform = `translateX(${dir * (w * 1.3)}px) rotate(${dir * 16}deg)`;
+    el.style.opacity = '0';
+    els.deck.querySelector('.job-card.is-next')?.classList.add('is-promoting');
+    showFeedback(action);
+  }, hold);
   setTimeout(() => {
     busy = false;
     render();
     els.deck.querySelector('.job-card.is-top')?.focus({ preventScroll: true });
-  }, fromDx ? 200 : 260);
+  }, hold + FLY_MS);
+}
+
+/** A short confirmation over the deck: "Saved to apply · 2 of 5 in your queue" or "Passed". */
+function showFeedback(action) {
+  let fb = document.getElementById('deck-feedback');
+  if (!fb) {
+    fb = document.createElement('div');
+    fb.id = 'deck-feedback';
+    fb.className = 'deck-feedback';
+    fb.setAttribute('aria-hidden', 'true'); // the live region already announces it
+    els.screen.append(fb);
+  }
+  const saved = action === 'queued';
+  const n = queuedJobs().length;
+  fb.className = `deck-feedback ${saved ? 'is-save' : 'is-pass'}`;
+  fb.innerHTML = saved
+    ? `<span class="fb-icon"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><strong>Saved to apply</strong><span class="fb-sub">${n} of ${QUEUE_MAX} in your queue</span>`
+    : `<span class="fb-icon"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span><strong>Passed</strong><span class="fb-sub">You won't see this one again</span>`;
+  void fb.offsetWidth; // restart the animation
+  fb.classList.add('is-on');
 }
 
 function undo() {

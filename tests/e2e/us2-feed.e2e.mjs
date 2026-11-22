@@ -110,7 +110,7 @@ async function swipe(page, dir) {
   await page.mouse.move(x + dir * 40, y, { steps: 4 });
   await page.mouse.move(x + dir * box.width * 0.6, y + 10, { steps: 8 });
   await page.mouse.up();
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(900);
 }
 
 // ---------- Tests ----------
@@ -170,7 +170,7 @@ test('✓ and ✕ buttons and keyboard arrows do the same; Undo restores the car
   const { ctx, page } = await open({ jobs: [PAYMENTS, job(1), job(2)] });
   assert.equal(await page.isDisabled('#btn-undo'), true);
   await page.click('#btn-save');
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(900);
   assert.equal((await store(page, 'jf.tracker'))[PAYMENTS.id] !== undefined, true);
   await page.click('#btn-undo');
   assert.equal(await topId(page), PAYMENTS.id);
@@ -178,12 +178,12 @@ test('✓ and ✕ buttons and keyboard arrows do the same; Undo restores the car
   assert.equal((await store(page, 'jf.decisions')).byId[PAYMENTS.id], undefined);
 
   await page.click('#btn-pass');
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(900);
   assert.equal((await store(page, 'jf.decisions')).byId[PAYMENTS.id].action, 'passed');
   await page.locator('#deck .job-card.is-top').focus();
   const id = await topId(page);
   await page.keyboard.press('ArrowRight');
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(900);
   assert.equal((await store(page, 'jf.decisions')).byId[id].action, 'queued');
   await ctx.close();
 });
@@ -193,7 +193,7 @@ test('queue holds 5: swiping pauses with a prompt; removing one resumes', async 
   const { ctx, page } = await open({ jobs });
   for (let i = 0; i < 5; i++) {
     await page.click('#btn-save');
-    await page.waitForTimeout(320);
+    await page.waitForTimeout(900);
   }
   assert.equal(await page.textContent('#deck .deck-panel h2'), 'Your queue is full');
   assert.equal(await page.isDisabled('#btn-save'), true);
@@ -220,9 +220,9 @@ test('queue holds 5: swiping pauses with a prompt; removing one resumes', async 
 test('"All caught up" after the last card; deck is capped at 15 a day', async () => {
   let { ctx, page } = await open({ jobs: [job(1), job(2)] });
   await page.click('#btn-pass');
-  await page.waitForTimeout(320);
+  await page.waitForTimeout(900);
   await page.click('#btn-save');
-  await page.waitForTimeout(320);
+  await page.waitForTimeout(900);
   assert.equal(await page.textContent('#deck .deck-panel h2'), 'You’re all caught up!');
   assert.match(await page.textContent('#deck .deck-panel p'), /1 saved, 1 passed/);
   await ctx.close();
@@ -338,13 +338,13 @@ test('Save to apply and Pass work from the details sheet', async () => {
   await page.click('#deck .job-card.is-top .jc-more');
   await page.click('#job-sheet .js-save');
   await page.locator('#job-sheet').waitFor({ state: 'hidden' });
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(900);
   assert.equal((await store(page, 'jf.decisions')).byId[RICH.id].action, 'queued');
   assert.equal(await topId(page), job(1).id);
 
   await page.click('#deck .job-card.is-top .jc-more');
   await page.click('#job-sheet .js-pass');
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(900);
   assert.equal((await store(page, 'jf.decisions')).byId[job(1).id].action, 'passed');
   assert.equal(await page.textContent('#deck .deck-panel h2'), 'You’re all caught up!');
 
@@ -357,5 +357,22 @@ test('Save to apply and Pass work from the details sheet', async () => {
   await page.click('#job-sheet [data-close]');
   await page.locator('#job-sheet').waitFor({ state: 'hidden' });
   assert.equal(await page.locator('#screen-tracker').isVisible(), true);
+  await ctx.close();
+});
+
+test('saving and passing show a confirmation the user can see', async () => {
+  const { ctx, page } = await open({ jobs: [PAYMENTS, job(1), job(2)] });
+  await page.click('#btn-save');
+  const fb = page.locator('#deck-feedback');
+  await fb.waitFor({ state: 'attached' });
+  await page.waitForTimeout(300); // mid-animation: card still leaving, badge showing
+  assert.equal(await page.locator('#deck .job-card.is-top').getAttribute('data-id'), PAYMENTS.id);
+  assert.match(await fb.textContent(), /Saved to apply\s*1 of 5 in your queue/);
+  assert.ok(Number(await fb.evaluate((e) => getComputedStyle(e).opacity)) > 0.5);
+  await page.waitForTimeout(900);
+  assert.notEqual(await page.locator('#deck .job-card.is-top').getAttribute('data-id'), PAYMENTS.id);
+  await page.click('#btn-pass');
+  await page.waitForTimeout(300);
+  assert.match(await fb.textContent(), /Passed/);
   await ctx.close();
 });

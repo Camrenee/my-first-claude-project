@@ -82,22 +82,17 @@ function renderFit(d, fit) {
   list.replaceChildren();
   none.textContent = '';
   if (fit?.reasons.length) {
-    for (const r of fit.reasons) {
+    // At most 4 short bullets: the skill, and the resume line that shows it.
+    for (const r of fit.reasons.slice(0, 4)) {
       const li = document.createElement('li');
       li.className = 'reason';
-      li.innerHTML = `<p class="reason-label"></p>
-        <p class="reason-src">From your resume</p><blockquote class="reason-quote reason-resume"></blockquote>`;
-      li.querySelector('.reason-label').textContent = r.label;
-      li.querySelector('.reason-resume').textContent = r.resumeLine;
-      if (r.jobLine) {
-        const src = document.createElement('p');
-        src.className = 'reason-src';
-        src.textContent = 'What the job says';
-        const q = document.createElement('blockquote');
-        q.className = 'reason-quote reason-job';
-        q.textContent = r.jobLine;
-        li.append(src, q);
-      }
+      const label = document.createElement('strong');
+      label.className = 'reason-label';
+      label.textContent = r.label;
+      const line = document.createElement('span');
+      line.className = 'reason-line';
+      line.textContent = `“${r.resumeLine}”`;
+      li.append(label, line);
       list.append(li);
     }
   } else if (fit) {
