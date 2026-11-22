@@ -1,9 +1,11 @@
 # Data test — 2026-11-22
 
-Boards: 173 (0 failed). Postings scanned: 19783.
+> **PM decision (2026-11-22):** bar lowered from 30 to 15 matching jobs/week (goal is 2 applications/week; queue holds 5). Keep Ashby. Proceed to US1. First run measured about 14.5/wk for all three sources — just under the bar. Proceeding anyway is a deliberate call; growing the company list toward 300 is the follow-up.
+
+Boards: 173 (0 failed). Postings scanned: 19780.
 Filters: PM / Senior PM titles, NYC (incl. hybrid) or US-remote, salary max > $170K or not listed. Duplicate copies of the same role (company + title) counted once.
 
-| Source | Last 7 days | 28-day avg / week | of which no salary (7d) | Hidden by floor (7d) | Go/no-go (≥30/wk, 7d) |
+| Source | Last 7 days | 28-day avg / week | of which no salary (7d) | Hidden by floor (7d) | Go/no-go (≥15/wk, 28-day avg) |
 |---|---|---|---|---|---|
 | Greenhouse + Lever (PRD scope) | **8** | 12.5 | 4 | 2 | ⛔ NO-GO |
 | Ashby only | **2** | 2 | 0 | 0 | ⛔ NO-GO |
