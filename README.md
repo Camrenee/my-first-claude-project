@@ -18,8 +18,9 @@ python3 -m http.server 8000     # then open http://localhost:8000
 |---|---|
 | Data test (job sources, company list) | PR #1 |
 | US1 Profile: resume upload/paste, roles, locations, salary floor | PR #2 |
-| US2 Swipe feed: daily deck, match score, queue of 5, undo, pull to refresh | ✅ this branch |
-| US4 Tracking, US3 Tailoring, US5 Why I fit | later |
+| US2 Swipe feed: daily deck, match score, queue of 5, undo, pull to refresh | PR #3 |
+| US5 Why I fit: reasons tied to resume lines on the card and in details | ✅ this branch |
+| US4 Tracking, US3 Tailoring | next |
 
 ## Layout
 ```
@@ -35,7 +36,8 @@ js/match.js         match score: share of a posting's skills your resume shows
 js/skills.js        PM skills lexicon used by the match score
 js/tracker.js       "To apply" queue (US4 adds the rest of the tracker)
 js/job-details.js   job details sheet: full description, Pass / Save to apply
-js/job-text.js      safe description HTML + card preview text
+js/job-text.js      safe description HTML, card preview text, boilerplate filter
+js/fit.js           US5 "Why you're a great fit": reasons quoting your resume lines
 data/jobs.json      this week's matching jobs, refreshed by .github/workflows/refresh-jobs.yml
 js/resume-parse.js  PDF (pdf.js) / Word (mammoth) → text, in the browser
 vendor/             pinned copies of pdf.js 4.10.38 and mammoth 1.12.3 (with licenses)

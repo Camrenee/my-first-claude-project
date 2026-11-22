@@ -129,3 +129,64 @@ test('card preview starts at the role section and trims cleanly', async () => {
   const long = previewFromParagraphs(paras, 80);
   assert.ok(long.length <= 81 && long.endsWith('…'), long);
 });
+
+// ---------- US5: why you fit ----------
+test('fit reasons quote resume lines word for word, strongest first, never the same line twice', async () => {
+  const { buildReasons } = await import('../../js/fit.js');
+  const resumeLines = [
+    'Alex Rivera',
+    'Senior Product Manager, Acme Payments — 2021–Present',
+    '• Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months',
+    '• Ran pricing experiments and A/B tests with SQL and Amplitude',
+    'Skills: SQL, Figma, billing',
+  ];
+  const jobParagraphs = [
+    'Acme builds software for finance teams everywhere in the world today.',
+    'You will own our billing platform end to end. You have experience running A/B tests and writing SQL.',
+  ];
+  const matched = [
+    { id: 'billing', label: 'Billing & invoicing' },
+    { id: 'roadmap', label: 'Roadmapping & prioritization' },
+    { id: 'experimentation', label: 'Experimentation / A/B testing' },
+    { id: 'sql', label: 'SQL' },
+  ];
+  const reasons = buildReasons({ matched, resumeLines, jobParagraphs, max: 3 });
+  // A/B testing and SQL are proven by the same bullet, so they share one reason; the generic
+  // "roadmap" skill isn't repeated on the billing line.
+  assert.deepEqual(reasons.map((r) => r.label), ['Billing & invoicing', 'Experimentation / A/B testing · SQL']);
+  // Verbatim, bullet stripped
+  assert.equal(reasons[0].resumeLine, 'Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months');
+  assert.equal(reasons[1].resumeLine, 'Ran pricing experiments and A/B tests with SQL and Amplitude');
+  for (const r of reasons) assert.ok(resumeLines.some((l) => l.includes(r.resumeLine)), r.resumeLine);
+  assert.match(reasons[0].jobLine, /^You will own our billing platform/);
+});
+
+test('fit: generic skills only fill in; no shared skills means no reasons', async () => {
+  const { buildReasons, gapsFrom, excerpt } = await import('../../js/fit.js');
+  const lines = ['• Owned the roadmap and prioritization for three squads across the org'];
+  const r = buildReasons({ matched: [{ id: 'roadmap', label: 'Roadmapping & prioritization' }], resumeLines: lines });
+  assert.equal(r.length, 1);
+  assert.deepEqual(buildReasons({ matched: [], resumeLines: lines }), []);
+  assert.deepEqual(gapsFrom([{ id: 'roadmap', label: 'x' }, { id: 'custody', label: 'Custody' }]).map((g) => g.id), ['custody']);
+  const long = `${'word '.repeat(60)}billing platform ${'more '.repeat(60)}`;
+  const ex = excerpt(long, 'billing', 80);
+  assert.ok(ex.startsWith('…') && ex.endsWith('…') && ex.includes('billing') && ex.length <= 82, ex);
+  assert.ok(long.includes(ex.replace(/…/g, '').trim()));
+});
+
+test('boilerplate (EEO, pay, benefits, recruiting) never counts as what the job asks for', async () => {
+  const { isBoilerplate, roleParagraphs } = await import('../../js/job-text.js');
+  for (const t of [
+    'We are an equal opportunity employer and value diversity.',
+    'Marital and civil partnership status, sexual orientation, gender identity.',
+    'For sales roles, the range provided is On Target Earnings ("OTE").',
+    'We never ask for payment or financial details to apply.',
+    'Benefits include 401(k) matching and paid parental leave.',
+  ]) assert.equal(isBoilerplate(t), true, t);
+  for (const t of ['You will own our billing platform.', 'Partner with Sales and Marketing to launch new products.'])
+    assert.equal(isBoilerplate(t), false, t);
+  assert.deepEqual(
+    roleParagraphs(['You will own billing. We are an equal opportunity employer.', 'Salary range: $150k to $200k.']),
+    ['You will own billing.']
+  );
+});

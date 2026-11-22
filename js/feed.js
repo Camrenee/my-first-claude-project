@@ -8,7 +8,9 @@ import {
 } from './feed-logic.js';
 import { buildMatcher } from './match.js';
 import { openJobDetails, isDetailsOpen } from './job-details.js';
-import { htmlToParagraphs, previewFromParagraphs } from './job-text.js';
+import { htmlToParagraphs, previewFromParagraphs, roleParagraphs } from './job-text.js';
+import { buildReasons, gapsFrom } from './fit.js';
+import { toLines } from './resume-parse.js';
 
 const JOBS_URL = 'data/jobs.json';
 const STALE_MS = 60 * 60 * 1000; // re-check the server copy at most hourly unless pulled
@@ -85,7 +87,7 @@ function setJobs({ jobs, generatedAt }) {
 function getMatcher(profile) {
   const key = `${profile.resume.updatedAt}|${state.jobs.length}|${state.generatedAt}`;
   if (state.matcherKey !== key) {
-    const docs = state.jobs.map((j) => ({ id: j.id, text: `${j.title}\n${htmlToText(j.descriptionHtml)}` }));
+    const docs = state.jobs.map((j) => ({ id: j.id, text: roleText(j) }));
     state.matcher = buildMatcher(profile.resume.text, docs);
     state.matcherKey = key;
   }
@@ -93,12 +95,13 @@ function getMatcher(profile) {
 }
 
 const textCache = new Map();
-function htmlToText(html = '') {
-  if (!textCache.has(html)) {
-    // DOMParser never runs scripts; we only read the text.
-    textCache.set(html, new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '');
+/** Title + description without legal/pay/benefits boilerplate: what the match score reads. */
+function roleText(job) {
+  if (!textCache.has(job.id)) {
+    // DOMParser (inside htmlToParagraphs) never runs scripts; we only read the text.
+    textCache.set(job.id, `${job.title}\n${roleParagraphs(htmlToParagraphs(job.descriptionHtml)).join('\n')}`);
   }
-  return textCache.get(html);
+  return textCache.get(job.id);
 }
 
 // ---------- Render ----------
@@ -213,6 +216,7 @@ function cardEl(card, matcher, isTop) {
       <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg><span class="jc-salary"></span></li>
     </ul>
     <div class="jc-tags"></div>
+    <section class="fit-box"><h3 class="fit-title">Why you're a great fit</h3><ul class="fit-list"></ul></section>
     <p class="jc-preview"></p>
     <button type="button" class="jc-more">More details<span class="visually-hidden">: ${''}</span></button>`;
   // Text from job boards goes in as text, never as HTML.
@@ -227,6 +231,7 @@ function cardEl(card, matcher, isTop) {
   if (card.updated) el.querySelector('.jc-tags').append(tag('Updated', 'tag-accent'));
   if (!el.querySelector('.jc-tags').children.length) el.querySelector('.jc-tags').remove();
   const preview = previewOf(job);
+  renderFitBox(el.querySelector('.fit-box'), fitFor(job).reasons.slice(0, 2));
   if (preview) el.querySelector('.jc-preview').textContent = preview;
   else el.querySelector('.jc-preview').remove();
   const more = el.querySelector('.jc-more');
@@ -242,6 +247,57 @@ function cardEl(card, matcher, isTop) {
   return el;
 }
 
+// ---------- Why you fit (US5) ----------
+
+const fitCache = new Map();
+/** Match score, reasons tied to resume lines, and gaps for one job. Exported for the Tracker. */
+export function fitFor(job) {
+  const profile = loadProfile();
+  if (!isProfileComplete(profile)) return { score: null, reasons: [], gaps: [] };
+  if (!state.jobsById.has(job.id) && !state.jobs.length) {
+    const cached = loadJobsCache();
+    if (cached?.jobs) setJobs(cached);
+  }
+  const matcher = getMatcher(profile);
+  const key = `${state.matcherKey}|${job.id}`;
+  if (!fitCache.has(key)) {
+    // Jobs no longer in this week's list (e.g. saved earlier) are scored against the current set.
+    const m = state.jobsById.has(job.id)
+      ? matcher(job.id)
+      : buildMatcher(profile.resume.text, [...state.jobs, job].map((j) => ({ id: j.id, text: roleText(j) })))(job.id);
+    const resumeLines = profile.resume.lines?.length ? profile.resume.lines : toLines(profile.resume.text);
+    const jobParagraphs = roleParagraphs(htmlToParagraphs(job.descriptionHtml));
+    fitCache.set(key, {
+      score: m.score,
+      reasons: buildReasons({ matched: m.matched, resumeLines, jobParagraphs, max: 5 }),
+      gaps: gapsFrom(m.missing, 3),
+    });
+  }
+  return fitCache.get(key);
+}
+
+function renderFitBox(box, reasons) {
+  const list = box.querySelector('.fit-list');
+  if (!reasons.length) {
+    box.classList.add('is-empty');
+    box.querySelector('.fit-title').textContent = 'Fit check';
+    list.replaceWith(Object.assign(document.createElement('p'), {
+      className: 'fit-none',
+      textContent: 'We didn’t find a clear match with your resume. Open the details to see what this job asks for.',
+    }));
+    return;
+  }
+  for (const r of reasons) {
+    const li = document.createElement('li');
+    const label = document.createElement('strong');
+    label.textContent = r.label;
+    const quote = document.createElement('q');
+    quote.textContent = r.resumeLine;
+    li.append(label, ' ', quote);
+    list.append(li);
+  }
+}
+
 const previewCache = new Map();
 function previewOf(job) {
   if (!previewCache.has(job.id)) previewCache.set(job.id, previewFromParagraphs(htmlToParagraphs(job.descriptionHtml)));
@@ -249,11 +305,11 @@ function previewOf(job) {
 }
 
 function openDetails(job) {
-  const profile = loadProfile();
-  const score = isProfileComplete(profile) ? getMatcher(profile)(job.id).score : null;
+  const fit = fitFor(job);
   const full = queuedJobs().length >= QUEUE_MAX;
   openJobDetails(job, {
-    score,
+    score: fit.score,
+    fit,
     actions: {
       onPass: () => decide('passed'),
       onSave: () => decide('queued'),

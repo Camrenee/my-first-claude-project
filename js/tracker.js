@@ -2,6 +2,7 @@
 // US4 adds Applied / Referred / All tabs, statuses and the weekly goal.
 import { queuedJobs, removeFromQueue, loadJobsCache } from './store.js';
 import { openJobDetails } from './job-details.js';
+import { fitFor } from './feed.js';
 import { QUEUE_MAX, formatSalary, formatLocation, companyInitial } from './feed-logic.js';
 
 const $ = (s) => document.querySelector(s);
@@ -52,7 +53,11 @@ function itemEl({ id, job, queuedAt }) {
   // Prefer the latest copy of the posting; fall back to the one saved with the job.
   el.querySelector('.qi-details').addEventListener('click', () => {
     const full = loadJobsCache()?.jobs?.find((j) => j.id === id);
-    openJobDetails(full ?? job, {
+    const theJob = full ?? job;
+    const fit = fitFor(theJob);
+    openJobDetails(theJob, {
+      score: fit.score,
+      fit,
       onClose: () => document.querySelector(`.queue-item[data-id="${CSS.escape(id)}"] .qi-details`)?.focus({ preventScroll: true }),
     });
   });

@@ -94,3 +94,12 @@ export function skillCounts(text) {
 }
 
 export const SKILL_BY_ID = new Map(SKILLS.map((s) => [s.id, s]));
+
+/** Where a skill is first mentioned in text: {index, length} or null. */
+export function findSkill(id, text) {
+  const s = SKILL_BY_ID.get(id);
+  if (!s) return null;
+  const re = new RegExp(s.re.source, 'i');
+  const m = re.exec(String(text));
+  return m ? { index: m.index, length: m[0].length } : null;
+}

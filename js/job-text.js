@@ -56,7 +56,9 @@ function copyChildren(from, to) {
 
 /** Block-level text pieces in reading order (paragraphs, list items, headings). */
 export function htmlToParagraphs(html = '') {
-  const body = new DOMParser().parseFromString(String(html), 'text/html').body;
+  // Make sure adjacent blocks don't glue together ("forums</li><li>Experience").
+  const spaced = String(html).replace(/<\/(p|li|div|h[1-6]|td|blockquote)>/gi, '$& ').replace(/<br\s*\/?>/gi, ' ');
+  const body = new DOMParser().parseFromString(spaced, 'text/html').body;
   const blocks = body.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6, div:not(:has(p, li, div, h1, h2, h3, h4, h5, h6))');
   const seen = new Set();
   const out = [];
@@ -90,4 +92,37 @@ export function previewFromParagraphs(paragraphs, max = 300) {
   if (text.length <= max) return text;
   const cut = text.slice(0, max);
   return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), max - 30)).replace(/[,;:\s]+$/, '')}…`;
+}
+
+// ---------- Boilerplate ----------
+// Legal, pay, benefits and application text that every posting carries. It says nothing about
+// the role, so it must not count toward the match score or be quoted as "what the job says".
+const BOILERPLATE = new RegExp(
+  [
+    'equal (employment )?opportunit', 'affirmative action', 'sexual orientation', 'gender identity', 'national origin',
+    'protected (veteran|class|characteristic)', 'disabilit', 'reasonable accommodation', 'e-verify', 'background check',
+    'arrest (and|or) conviction', 'fair chance', 'pay transparency', 'salary range', 'base (salary|pay)', 'on target earnings',
+    '\\bote\\b', 'compensation (package|range)', 'total compensation', 'equity (and|or) benefits', 'benefits (include|package)',
+    '401\\(?k\\)?', 'paid time off', '\\bpto\\b', 'parental leave', 'health(care)? (insurance|coverage|benefits)', 'wellness stipend',
+    'we never ask', 'recruiting scam', 'fraudulent', 'only careers site', 'privacy (notice|policy)', 'applicant',
+    'new hires', 'in-person onboarding', 'e-?mail .* (accommodation|recruit)', 'visa sponsorship', 'relocation assistance',
+  ].join('|'),
+  'i'
+);
+
+export function isBoilerplate(sentence) {
+  return BOILERPLATE.test(sentence);
+}
+
+/** The posting's paragraphs with boilerplate sentences removed. */
+export function roleParagraphs(paragraphs) {
+  return paragraphs
+    .map((p) =>
+      p
+        .split(/(?<=[.!?])\s+(?=[A-Z])/)
+        .filter((sent) => !isBoilerplate(sent))
+        .join(' ')
+        .trim()
+    )
+    .filter(Boolean);
 }

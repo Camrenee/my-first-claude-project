@@ -48,6 +48,10 @@ textarea {
   padding: 24px var(--gutter) calc(var(--nav-h) + 32px + env(safe-area-inset-bottom));
 }
 
+.screen-today {
+  padding-bottom: calc(var(--nav-h) + 8px + env(safe-area-inset-bottom));
+}
+
 .screen[hidden] {
   display: none;
 }
@@ -855,7 +859,13 @@ h1 {
   justify-content: center;
   align-items: flex-start;
   gap: 28px;
-  margin-top: 20px;
+  margin-top: 8px;
+  /* Always reachable: sticks just above the bottom nav when the card is taller than the screen. */
+  position: sticky;
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  padding: 14px 0 10px;
+  background: linear-gradient(to bottom, rgb(9 21 64 / 0), var(--bg) 30%);
 }
 
 .deck-actions[hidden] {
@@ -1264,4 +1274,134 @@ h1 {
 
 .sheet-blocked:empty {
   display: none;
+}
+
+/* =====================================================================
+   US5: Why you're a great fit
+   ===================================================================== */
+.fit-box {
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: var(--tint-fit);
+}
+
+.fit-title {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.fit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fit-list li {
+  font-size: 15px;
+  line-height: 1.4;
+  /* Label and quote share one 2-line block */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fit-list strong {
+  color: var(--card-text);
+  font-weight: 800;
+}
+
+.fit-list q {
+  color: var(--card-text-muted);
+}
+
+.fit-none {
+  margin: 0;
+  color: var(--card-text-muted);
+  font-size: 15px;
+}
+
+/* The card is tighter with the fit box; keep the description preview short. */
+.job-card .jc-preview {
+  -webkit-line-clamp: 2;
+}
+
+/* Details sheet */
+.sheet-fit[hidden],
+.sheet-gaps[hidden] {
+  display: none;
+}
+
+.reason-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reason {
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: var(--tint-fit);
+}
+
+.reason-label {
+  margin: 0 0 8px;
+  color: var(--card-text);
+  font-weight: 900;
+}
+
+.reason-src {
+  margin: 8px 0 2px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.reason-quote {
+  margin: 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--tint-badge);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.reason-resume {
+  color: var(--card-text);
+}
+
+.reason-job {
+  color: var(--card-text-muted);
+}
+
+.gaps-note {
+  margin: 6px 0 10px;
+  color: var(--card-text-muted);
+  font-size: 15px;
+}
+
+.gap-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Location and salary share a row on the card to keep it short. */
+.job-card .jc-facts {
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 18px;
+  row-gap: 6px;
 }

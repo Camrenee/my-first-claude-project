@@ -27,9 +27,9 @@ function ensureDialog() {
 
 /**
  * @param job normalized job
- * @param opts {score?: number, actions?: {onPass, onSave, saveBlocked?: string}, onClose?: fn}
+ * @param opts {score?: number, fit?: {reasons, gaps}, actions?: {onPass, onSave, saveBlocked?: string}, onClose?: fn}
  */
-export function openJobDetails(job, { score, actions, onClose } = {}) {
+export function openJobDetails(job, { score, fit, actions, onClose } = {}) {
   const d = ensureDialog();
   onCloseCb = onClose ?? null;
 
@@ -42,6 +42,8 @@ export function openJobDetails(job, { score, actions, onClose } = {}) {
   d.querySelector('.js-title').textContent = job.title;
   d.querySelector('.js-loc').textContent = formatLocation(job);
   d.querySelector('.js-salary').textContent = formatSalary(job.salary) ?? 'Salary not listed';
+
+  renderFit(d, fit);
 
   const body = d.querySelector('.js-description');
   const safe = job.descriptionHtml ? sanitizeHtml(job.descriptionHtml) : null;
@@ -70,6 +72,44 @@ export function openJobDetails(job, { score, actions, onClose } = {}) {
   if (!d.open) d.showModal();
   if (location.hash !== '#job') location.hash = 'job';
   d.querySelector('[data-close]').focus({ preventScroll: true });
+}
+
+function renderFit(d, fit) {
+  const section = d.querySelector('.js-fit');
+  const list = d.querySelector('.js-reasons');
+  const none = d.querySelector('.js-fit-none');
+  section.hidden = !fit;
+  list.replaceChildren();
+  none.textContent = '';
+  if (fit?.reasons.length) {
+    for (const r of fit.reasons) {
+      const li = document.createElement('li');
+      li.className = 'reason';
+      li.innerHTML = `<p class="reason-label"></p>
+        <p class="reason-src">From your resume</p><blockquote class="reason-quote reason-resume"></blockquote>`;
+      li.querySelector('.reason-label').textContent = r.label;
+      li.querySelector('.reason-resume').textContent = r.resumeLine;
+      if (r.jobLine) {
+        const src = document.createElement('p');
+        src.className = 'reason-src';
+        src.textContent = 'What the job says';
+        const q = document.createElement('blockquote');
+        q.className = 'reason-quote reason-job';
+        q.textContent = r.jobLine;
+        li.append(src, q);
+      }
+      list.append(li);
+    }
+  } else if (fit) {
+    none.textContent = 'We didn’t find lines in your resume that match what this job asks for. Read the description below to judge for yourself.';
+  }
+
+  const gaps = d.querySelector('.js-gaps');
+  const gapList = d.querySelector('.js-gap-list');
+  gapList.replaceChildren(
+    ...(fit?.gaps ?? []).map((g) => Object.assign(document.createElement('li'), { className: 'tag tag-muted', textContent: g.label }))
+  );
+  gaps.hidden = !gapList.children.length;
 }
 
 export function isDetailsOpen() {
