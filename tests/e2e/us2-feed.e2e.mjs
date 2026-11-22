@@ -127,7 +127,6 @@ test('card shows logo letter, title, company, location, salary, date and match; 
   assert.equal(await card.locator('.jc-posted').textContent(), 'Posted yesterday');
   const pct = Number((await card.locator('.match-badge strong').textContent()).replace('%', ''));
   assert.ok(pct >= 60, `match ${pct}`);
-  assert.equal(await card.locator('.jc-link').getAttribute('href'), PAYMENTS.url);
   assert.match(await page.textContent('#deck-status'), /3 of 3 left today · 0 of 5 in your queue/);
   assert.deepEqual(errors, []);
   await ctx.close();
@@ -274,5 +273,89 @@ test('no horizontal scroll and 44px targets at 320px with a card showing', async
     els.filter((e) => e.offsetParent !== null && !e.closest('[aria-hidden="true"]')).map((e) => [e.id || e.textContent.trim().slice(0, 20), Math.round(e.getBoundingClientRect().height)]).filter(([, h]) => h < 44)
   );
   assert.deepEqual(small, []);
+  await ctx.close();
+});
+
+// ---------- Description preview + details sheet ----------
+const RICH = job(77, {
+  company: 'Ramp',
+  title: 'Product Manager, Bill Pay',
+  descriptionHtml: `<div class="content-intro"><p>Ramp is the finance automation platform built to save businesses time and money. We are a fast-growing team.</p></div>
+    <h2 style="color:red">About the role</h2>
+    <p onclick="alert(1)">You will own Bill Pay end to end, from invoice capture to payment, working with design and engineering to ship weekly.</p>
+    <ul><li>Lead the roadmap for <strong>accounts payable</strong> automation</li><li>Run experiments with SQL</li></ul>
+    <script>window.__pwned = true</script><img src="https://example.com/x.png" onerror="window.__pwned=true">
+    <p>Learn more on <a href="https://ramp.com/careers">our site</a> or <a href="javascript:window.__pwned=true">here</a>.</p>`,
+});
+
+test('card previews the role section of the description', async () => {
+  const { ctx, page } = await open({ jobs: [RICH] });
+  const preview = await topCard(page).locator('.jc-preview').textContent();
+  assert.match(preview, /^You will own Bill Pay end to end/);
+  assert.doesNotMatch(preview, /finance automation platform/);
+  await ctx.close();
+});
+
+test('tapping the card opens the full, sanitized description; Back and Escape close it', async () => {
+  const { ctx, page, errors } = await open({ jobs: [RICH, job(1)] });
+  const box = await topCard(page).boundingBox();
+  await page.mouse.click(box.x + box.width / 2, box.y + 60);
+  const sheet = page.locator('#job-sheet');
+  await sheet.waitFor({ state: 'visible' });
+  assert.equal(await page.evaluate(() => location.hash), '#job');
+  assert.equal(await sheet.locator('.js-title').textContent(), RICH.title);
+  const desc = sheet.locator('.js-description');
+  assert.match(await desc.textContent(), /accounts payable/);
+  assert.equal(await desc.locator('h3').first().textContent(), 'About the role');
+  assert.equal(await desc.locator('li').count(), 2);
+  // Nothing unsafe survives
+  assert.equal(await desc.locator('script, img, [onclick], [onerror], [style]').count(), 0);
+  assert.equal(await desc.locator('a').count(), 1);
+  assert.equal(await desc.locator('a').getAttribute('href'), 'https://ramp.com/careers');
+  assert.equal(await desc.locator('a').getAttribute('target'), '_blank');
+  assert.equal(await page.evaluate(() => window.__pwned ?? false), false);
+  assert.equal(await sheet.locator('.js-original').getAttribute('href'), RICH.url);
+
+  await page.goBack(); // phone Back button
+  await sheet.waitFor({ state: 'hidden' });
+  assert.equal(await topId(page), RICH.id); // still on the same card
+
+  await page.click('#deck .job-card.is-top .jc-more');
+  await sheet.waitFor({ state: 'visible' });
+  await page.keyboard.press('Escape');
+  await sheet.waitFor({ state: 'hidden' });
+  assert.notEqual(await page.evaluate(() => location.hash), '#job');
+
+  await page.locator('#deck .job-card.is-top').focus();
+  await page.keyboard.press('Enter');
+  await sheet.waitFor({ state: 'visible' });
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('Save to apply and Pass work from the details sheet', async () => {
+  const { ctx, page } = await open({ jobs: [RICH, job(1)] });
+  await page.click('#deck .job-card.is-top .jc-more');
+  await page.click('#job-sheet .js-save');
+  await page.locator('#job-sheet').waitFor({ state: 'hidden' });
+  await page.waitForTimeout(400);
+  assert.equal((await store(page, 'jf.decisions')).byId[RICH.id].action, 'queued');
+  assert.equal(await topId(page), job(1).id);
+
+  await page.click('#deck .job-card.is-top .jc-more');
+  await page.click('#job-sheet .js-pass');
+  await page.waitForTimeout(400);
+  assert.equal((await store(page, 'jf.decisions')).byId[job(1).id].action, 'passed');
+  assert.equal(await page.textContent('#deck .deck-panel h2'), 'You’re all caught up!');
+
+  // Saved jobs open from the Tracker too (read-only: no Pass/Save there)
+  await page.click('a[data-nav="tracker"]');
+  await page.click('.queue-item .qi-details');
+  await page.locator('#job-sheet').waitFor({ state: 'visible' });
+  assert.match(await page.textContent('#job-sheet .js-description'), /accounts payable/);
+  assert.equal(await page.locator('#job-sheet .js-actions').isVisible(), false);
+  await page.click('#job-sheet [data-close]');
+  await page.locator('#job-sheet').waitFor({ state: 'hidden' });
+  assert.equal(await page.locator('#screen-tracker').isVisible(), true);
   await ctx.close();
 });

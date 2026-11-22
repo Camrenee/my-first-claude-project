@@ -115,3 +115,17 @@ test('match terms: stopwords out, stems and phrases in', () => {
   assert.ok(t.includes('launch'));
   assert.ok(!t.includes('we'));
 });
+
+test('card preview starts at the role section and trims cleanly', async () => {
+  const { previewFromParagraphs } = await import('../../js/job-text.js');
+  const paras = [
+    'Acme is building the future of finance for millions of small businesses everywhere.',
+    'About the role',
+    'You will own invoicing end to end, from capture to payment, working closely with design and engineering.',
+    'Lead the roadmap for accounts payable automation across all of our customer segments.',
+  ];
+  assert.match(previewFromParagraphs(paras), /^You will own invoicing/);
+  assert.match(previewFromParagraphs(paras.slice(0, 1)), /^Acme is building/);
+  const long = previewFromParagraphs(paras, 80);
+  assert.ok(long.length <= 81 && long.endsWith('…'), long);
+});

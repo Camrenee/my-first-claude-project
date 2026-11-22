@@ -96,10 +96,9 @@ export function saveDeck(deck) {
   return write(KEYS.deck, deck);
 }
 
-/** Snapshot kept in the tracker so a saved job survives after it drops out of jobs.json. */
+/** Copy kept in the tracker so a saved job (and its description) survives after it drops out of jobs.json. */
 function snapshot(job) {
-  const { descriptionHtml, ...rest } = job;
-  return rest;
+  return { ...job };
 }
 
 /**

@@ -159,6 +159,43 @@
       </form>
     </main>
 
+    <!-- ============ Job details sheet ============ -->
+    <dialog id="job-sheet" class="sheet" aria-labelledby="sheet-title">
+      <div class="sheet-inner">
+        <div class="sheet-bar">
+          <button type="button" class="sheet-close" data-close>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+            <span>Back</span>
+          </button>
+          <a class="sheet-original js-original" target="_blank" rel="noopener noreferrer">Original posting<span class="visually-hidden"> (opens in a new tab)</span> ↗</a>
+        </div>
+        <div class="sheet-scroll">
+          <div class="jc-head">
+            <div class="logo js-logo" aria-hidden="true"></div>
+            <div class="jc-co">
+              <p class="jc-company js-company"></p>
+              <p class="jc-posted js-posted"></p>
+            </div>
+            <span class="match-badge js-match"></span>
+          </div>
+          <h2 class="sheet-title js-title" id="sheet-title"></h2>
+          <ul class="jc-facts">
+            <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span class="js-loc"></span></li>
+            <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg><span class="js-salary"></span></li>
+          </ul>
+          <h3 class="sheet-section">About the job</h3>
+          <div class="job-description js-description"></div>
+        </div>
+        <div class="sheet-actions js-actions">
+          <p class="sheet-blocked js-blocked" role="status"></p>
+          <div class="sheet-buttons">
+            <button type="button" class="btn btn-secondary js-pass">Pass</button>
+            <button type="button" class="btn btn-primary js-save">Save to apply</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
     <!-- ============ Bottom nav ============ -->
     <nav class="nav" aria-label="Main">
       <ul>

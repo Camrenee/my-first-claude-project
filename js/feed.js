@@ -7,6 +7,8 @@ import {
   dealDeck, remainingCards, roleKey, QUEUE_MAX, formatSalary, formatPosted, formatLocation, companyInitial,
 } from './feed-logic.js';
 import { buildMatcher } from './match.js';
+import { openJobDetails, isDetailsOpen } from './job-details.js';
+import { htmlToParagraphs, previewFromParagraphs } from './job-text.js';
 
 const JOBS_URL = 'data/jobs.json';
 const STALE_MS = 60 * 60 * 1000; // re-check the server copy at most hourly unless pulled
@@ -176,6 +178,8 @@ function showCards(matcher, deck) {
   els.pass.disabled = false;
   els.save.disabled = false;
   const topEl = els.deck.querySelector('.job-card.is-top');
+  const nextEl = els.deck.querySelector('.job-card.is-next');
+  if (nextEl && topEl) nextEl.style.height = `${topEl.offsetHeight}px`;
   attachSwipe(topEl);
 }
 
@@ -209,7 +213,8 @@ function cardEl(card, matcher, isTop) {
       <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg><span class="jc-salary"></span></li>
     </ul>
     <div class="jc-tags"></div>
-    <a class="jc-link" target="_blank" rel="noopener noreferrer">Read the full posting<span class="visually-hidden"> (opens in a new tab)</span> ↗</a>`;
+    <p class="jc-preview"></p>
+    <button type="button" class="jc-more">More details<span class="visually-hidden">: ${''}</span></button>`;
   // Text from job boards goes in as text, never as HTML.
   el.querySelector('.logo').textContent = companyInitial(job.company);
   el.querySelector('.jc-company').textContent = job.company;
@@ -221,9 +226,13 @@ function cardEl(card, matcher, isTop) {
   else salEl.closest('li').replaceWith(tag('Salary not listed', 'tag-muted'));
   if (card.updated) el.querySelector('.jc-tags').append(tag('Updated', 'tag-accent'));
   if (!el.querySelector('.jc-tags').children.length) el.querySelector('.jc-tags').remove();
-  const link = el.querySelector('.jc-link');
-  if (/^https:\/\//.test(job.url)) link.href = job.url;
-  else link.remove();
+  const preview = previewOf(job);
+  if (preview) el.querySelector('.jc-preview').textContent = preview;
+  else el.querySelector('.jc-preview').remove();
+  const more = el.querySelector('.jc-more');
+  more.querySelector('.visually-hidden').textContent = `: ${job.title} at ${job.company}`;
+  if (isTop) more.addEventListener('click', () => openDetails(job));
+  else more.tabIndex = -1;
   if (job.logo && /^https:\/\//.test(job.logo)) {
     const img = new Image();
     img.alt = '';
@@ -231,6 +240,27 @@ function cardEl(card, matcher, isTop) {
     img.onload = () => el.querySelector('.logo').replaceChildren(img);
   }
   return el;
+}
+
+const previewCache = new Map();
+function previewOf(job) {
+  if (!previewCache.has(job.id)) previewCache.set(job.id, previewFromParagraphs(htmlToParagraphs(job.descriptionHtml)));
+  return previewCache.get(job.id);
+}
+
+function openDetails(job) {
+  const profile = loadProfile();
+  const score = isProfileComplete(profile) ? getMatcher(profile)(job.id).score : null;
+  const full = queuedJobs().length >= QUEUE_MAX;
+  openJobDetails(job, {
+    score,
+    actions: {
+      onPass: () => decide('passed'),
+      onSave: () => decide('queued'),
+      saveBlocked: full ? `Your queue is full (${QUEUE_MAX} of ${QUEUE_MAX}). Apply to or remove a saved job first.` : null,
+    },
+    onClose: () => els.deck.querySelector('.job-card.is-top')?.focus({ preventScroll: true }),
+  });
 }
 
 function tag(text, cls) {
@@ -352,7 +382,12 @@ function undo() {
 function onKey(e) {
   if (els.screen.hidden || e.altKey || e.metaKey || e.ctrlKey) return;
   if (e.target.closest('input, textarea, select, [contenteditable]')) return;
-  if (e.key === 'ArrowRight' && !els.save.disabled) {
+  if (isDetailsOpen()) return;
+  if (e.key === 'Enter' && e.target.classList?.contains('job-card') && e.target.classList.contains('is-top')) {
+    e.preventDefault();
+    const job = state.jobsById.get(e.target.dataset.id);
+    if (job) openDetails(job);
+  } else if (e.key === 'ArrowRight' && !els.save.disabled) {
     e.preventDefault();
     decide('queued');
   } else if (e.key === 'ArrowLeft' && !els.pass.disabled) {
@@ -408,6 +443,12 @@ function attachSwipe(card) {
     if (e.pointerId !== id) return;
     id = null;
     card.classList.remove('is-dragging');
+    // A tap (no real movement) opens the full description.
+    if (axis === null && e.type === 'pointerup' && !e.target.closest('a, button')) {
+      const job = state.jobsById.get(card.dataset.id);
+      if (job) openDetails(job);
+      return;
+    }
     if (axis !== 'x') return;
     const v = Math.abs(dx) / Math.max(performance.now() - startT, 1);
     if (Math.abs(dx) > card.offsetWidth * 0.3 || (v > 0.6 && Math.abs(dx) > 40)) {

@@ -1,6 +1,7 @@
 // Tracker, US2 slice: the "To apply" queue with manual remove.
 // US4 adds Applied / Referred / All tabs, statuses and the weekly goal.
-import { queuedJobs, removeFromQueue } from './store.js';
+import { queuedJobs, removeFromQueue, loadJobsCache } from './store.js';
+import { openJobDetails } from './job-details.js';
 import { QUEUE_MAX, formatSalary, formatLocation, companyInitial } from './feed-logic.js';
 
 const $ = (s) => document.querySelector(s);
@@ -35,6 +36,7 @@ function itemEl({ id, job, queuedAt }) {
       </div>
     </div>
     <div class="btn-row">
+      <button type="button" class="btn btn-ghost qi-details">Details</button>
       <a class="btn btn-ghost qi-link" target="_blank" rel="noopener noreferrer">View posting<span class="visually-hidden"> (opens in a new tab)</span> ↗</a>
       <button type="button" class="link-btn qi-remove">Remove</button>
     </div>`;
@@ -46,6 +48,14 @@ function itemEl({ id, job, queuedAt }) {
   const link = el.querySelector('.qi-link');
   if (/^https:\/\//.test(job.url)) link.href = job.url;
   else link.remove();
+
+  // Prefer the latest copy of the posting; fall back to the one saved with the job.
+  el.querySelector('.qi-details').addEventListener('click', () => {
+    const full = loadJobsCache()?.jobs?.find((j) => j.id === id);
+    openJobDetails(full ?? job, {
+      onClose: () => document.querySelector(`.queue-item[data-id="${CSS.escape(id)}"] .qi-details`)?.focus({ preventScroll: true }),
+    });
+  });
 
   const btn = el.querySelector('.qi-remove');
   let timer;

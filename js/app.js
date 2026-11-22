@@ -3,6 +3,7 @@ import { initProfile, profileGreetingName } from './profile.js';
 import { loadProfile, isProfileComplete } from './store.js';
 import { initFeed, showToday } from './feed.js';
 import { showTracker } from './tracker.js';
+import { isDetailsOpen } from './job-details.js';
 
 const ROUTES = {
   today: { title: 'Today' },
@@ -20,6 +21,11 @@ function currentRoute() {
 }
 
 function render() {
+  // "#job" means the job details sheet is open over the current screen; leave the screen as is.
+  if (location.hash === '#job') {
+    if (!isDetailsOpen()) history.replaceState(null, '', location.pathname + location.search);
+    else return;
+  }
   const route = currentRoute();
   document.querySelectorAll('.screen').forEach((s) => (s.hidden = s.dataset.route !== route));
   document.querySelectorAll('[data-nav]').forEach((a) => {

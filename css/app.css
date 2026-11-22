@@ -556,15 +556,16 @@ h1 {
 /* Both cards share one grid cell so the next card peeks out behind the top one. */
 .deck > * {
   grid-area: 1 / 1;
+  align-self: start;
 }
 
 .job-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   min-height: 300px;
-  padding: 24px 22px 18px;
+  padding: 22px 22px 14px;
   border-radius: var(--radius-card);
   background: var(--card);
   color: var(--card-text);
@@ -594,6 +595,20 @@ h1 {
 .job-card.is-next.is-promoting {
   transform: none;
   opacity: 1;
+}
+
+/* The card behind is just a silhouette the same height as the top card;
+   its content appears as it slides forward. */
+.job-card.is-next > * {
+  visibility: hidden;
+}
+
+.job-card.is-next.is-promoting {
+  height: auto !important;
+}
+
+.job-card.is-next.is-promoting > * {
+  visibility: visible;
 }
 
 .job-card.is-returning {
@@ -703,8 +718,8 @@ h1 {
 }
 
 .jc-title {
-  margin: 4px 0 0;
-  font-size: 26px;
+  margin: 2px 0 0;
+  font-size: 24px;
   font-weight: 900;
   line-height: 1.15;
   text-wrap: balance;
@@ -769,17 +784,6 @@ h1 {
 .tag-accent {
   background: var(--tint-chip);
   color: var(--accent);
-}
-
-.jc-link {
-  margin-top: auto;
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--touch);
-  color: var(--accent);
-  font-weight: 800;
-  text-underline-offset: 3px;
 }
 
 /* Skeleton while jobs load */
@@ -1046,4 +1050,218 @@ h1 {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* =====================================================================
+   Card description preview + job details sheet
+   ===================================================================== */
+.jc-preview {
+  margin: 0;
+  color: var(--card-text-muted);
+  font-size: 15px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.jc-more {
+  margin: -8px 0 -6px;
+  align-self: flex-start;
+  min-height: var(--touch);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.jc-more::after {
+  content: ' →';
+}
+
+.sheet {
+  width: 100%;
+  max-width: 560px;
+  height: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--card-text);
+}
+
+.sheet::backdrop {
+  background: rgb(9 21 64 / 0.75);
+}
+
+.sheet[open] .sheet-inner {
+  animation: sheet-up 240ms cubic-bezier(.2, .7, .3, 1);
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(40px); opacity: 0; }
+}
+
+.sheet-inner {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 12px - env(safe-area-inset-top, 0px));
+  margin-top: calc(12px + env(safe-area-inset-top, 0px));
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  background: var(--card);
+  overflow: hidden;
+}
+
+.sheet-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px 6px;
+  border-bottom: 1px solid var(--tint-chip);
+}
+
+.sheet-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--touch);
+  padding: 0 14px 0 6px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--tint-chip);
+  color: var(--accent);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.sheet-close svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sheet-original {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  padding: 0 4px;
+  color: var(--accent);
+  font-weight: 800;
+  text-underline-offset: 3px;
+}
+
+.sheet-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sheet-title {
+  margin: 4px 0 0;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.15;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.sheet-section {
+  margin: 10px 0 0;
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.job-description {
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 65ch;
+  overflow-wrap: anywhere;
+}
+
+.job-description > :first-child {
+  margin-top: 0;
+}
+
+.job-description p,
+.job-description ul,
+.job-description ol {
+  margin: 0 0 12px;
+}
+
+.job-description ul,
+.job-description ol {
+  padding-left: 22px;
+}
+
+.job-description li {
+  margin-bottom: 6px;
+}
+
+.job-description h3,
+.job-description h4 {
+  margin: 20px 0 8px;
+  color: var(--card-text);
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.job-description a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.job-description .muted {
+  color: var(--card-text-muted);
+}
+
+.sheet-actions {
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--tint-chip);
+  background: var(--card);
+}
+
+.sheet-actions[hidden] {
+  display: none;
+}
+
+.sheet-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.sheet-buttons .btn {
+  flex: 1;
+}
+
+.sheet-buttons .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sheet-blocked {
+  margin: 0 0 10px;
+  color: var(--card-text-muted);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.sheet-blocked:empty {
+  display: none;
 }

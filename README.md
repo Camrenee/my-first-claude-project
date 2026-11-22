@@ -34,6 +34,8 @@ js/feed-logic.js    US2 rules: eligibility, daily deck, labels (pure, unit-teste
 js/match.js         match score: share of a posting's skills your resume shows
 js/skills.js        PM skills lexicon used by the match score
 js/tracker.js       "To apply" queue (US4 adds the rest of the tracker)
+js/job-details.js   job details sheet: full description, Pass / Save to apply
+js/job-text.js      safe description HTML + card preview text
 data/jobs.json      this week's matching jobs, refreshed by .github/workflows/refresh-jobs.yml
 js/resume-parse.js  PDF (pdf.js) / Word (mammoth) → text, in the browser
 vendor/             pinned copies of pdf.js 4.10.38 and mammoth 1.12.3 (with licenses)
