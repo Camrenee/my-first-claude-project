@@ -93,8 +93,16 @@ export function initProfile({ onDone }) {
     }
   });
 
+  // Two-tap remove (no browser dialog): first tap asks, second tap within 4s removes.
+  let removeTimer;
   els.removeBtn.addEventListener('click', () => {
-    if (!confirm('Remove your resume from this device?')) return;
+    if (!els.removeBtn.dataset.armed) {
+      els.removeBtn.dataset.armed = '1';
+      els.removeBtn.textContent = 'Tap again to remove';
+      removeTimer = setTimeout(disarmRemove, 4000);
+      return;
+    }
+    disarmRemove();
     profile.resume = null;
     els.file.value = '';
     els.fileReplace.value = '';
@@ -102,6 +110,14 @@ export function initProfile({ onDone }) {
     setNotice('Resume removed.', 'info');
     persist();
     els.file.focus();
+  });
+  function disarmRemove() {
+    clearTimeout(removeTimer);
+    delete els.removeBtn.dataset.armed;
+    els.removeBtn.textContent = 'Remove resume';
+  }
+  els.removeBtn.addEventListener('blur', () => {
+    if (els.removeBtn.dataset.armed) setTimeout(disarmRemove, 150);
   });
 
   // Roles & locations

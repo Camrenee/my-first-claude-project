@@ -160,7 +160,7 @@ test('paste text, validation, then everything persists after the browser closes'
   // Reopen the browser: profile is intact and the app opens on Today.
   ({ ctx, page } = await open());
   await page.waitForSelector('#screen-today:not([hidden])');
-  await page.goto(base + '#/profile');
+  await page.goto(base + '#profile');
   assert.equal(await page.textContent('[data-profile-title]'), 'Your search, your way');
   assert.equal(await page.inputValue('#f-name'), 'Alex');
   assert.equal(await page.inputValue('#f-salary'), '180,000');
@@ -189,5 +189,18 @@ test('no horizontal scroll and 44px touch targets at small phone width', async (
       .filter(([, h]) => h < 44)
   );
   assert.deepEqual(small, []);
+  await ctx.close();
+});
+
+test('remove resume takes two taps', async () => {
+  const { ctx, page } = await freshPage();
+  await page.click('#btn-paste');
+  await page.fill('#f-resume', 'Alex Rivera\nSenior Product Manager');
+  await page.click('#btn-remove-resume');
+  assert.equal(await page.textContent('#btn-remove-resume'), 'Tap again to remove');
+  assert.equal(await page.locator('#resume-filled').isVisible(), true);
+  await page.click('#btn-remove-resume');
+  assert.equal(await page.locator('#resume-empty').isVisible(), true);
+  assert.equal((await stored(page)).resume, null);
   await ctx.close();
 });

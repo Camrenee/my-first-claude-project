@@ -1,5 +1,6 @@
 /* Design tokens from the Job Finder design spec. Change colors here only. */
 :root {
+  color-scheme: dark;
   /* Screen */
   --bg: #091540;
   --on-bg: #ffffff;

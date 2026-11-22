@@ -49,6 +49,6 @@ function renderGreeting() {
   document.querySelector('[data-greeting]').textContent = greeting(new Date(), profileGreetingName());
 }
 
-initProfile({ onDone: () => (location.hash = '#/today') });
+initProfile({ onDone: () => (location.hash = '#today') });
 window.addEventListener('hashchange', render);
 render();
