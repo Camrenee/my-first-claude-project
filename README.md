@@ -17,8 +17,8 @@ python3 -m http.server 8000     # then open http://localhost:8000
 | Story | Status |
 |---|---|
 | Data test (job sources, company list) | PR #1 |
-| US1 Profile: resume upload/paste, roles, locations, salary floor | ✅ this branch |
-| US2 Swipe feed | next |
+| US1 Profile: resume upload/paste, roles, locations, salary floor | PR #2 |
+| US2 Swipe feed: daily deck, match score, queue of 5, undo, pull to refresh | ✅ this branch |
 | US4 Tracking, US3 Tailoring, US5 Why I fit | later |
 
 ## Layout
@@ -29,6 +29,12 @@ css/app.css         mobile-first styles
 js/app.js           router + bottom nav + greeting
 js/store.js         the only code that reads/writes localStorage
 js/profile.js       US1 profile screen
+js/feed.js          US2 Today screen: cards, swipe, undo, pull to refresh
+js/feed-logic.js    US2 rules: eligibility, daily deck, labels (pure, unit-tested)
+js/match.js         match score: share of a posting's skills your resume shows
+js/skills.js        PM skills lexicon used by the match score
+js/tracker.js       "To apply" queue (US4 adds the rest of the tracker)
+data/jobs.json      this week's matching jobs, refreshed by .github/workflows/refresh-jobs.yml
 js/resume-parse.js  PDF (pdf.js) / Word (mammoth) → text, in the browser
 vendor/             pinned copies of pdf.js 4.10.38 and mammoth 1.12.3 (with licenses)
 tests/e2e/          Playwright checks at phone size
@@ -36,5 +42,10 @@ tests/e2e/          Playwright checks at phone size
 
 ## Tests
 ```
-node tests/e2e/us1-profile.e2e.mjs   # needs Playwright + Chromium installed
+npm test            # unit tests: filters, feed rules, match score
+npm run test:e2e    # browser tests at phone size (needs Playwright + Chromium)
 ```
+
+## Job data
+`.github/workflows/refresh-jobs.yml` runs `scripts/fetch-jobs.mjs` every 6 hours and commits
+`data/jobs.json` when the list changes. It runs on the default branch, so it starts once this is merged to `main`.

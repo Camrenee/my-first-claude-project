@@ -1,6 +1,8 @@
 // App shell: hash router, bottom nav, greeting.
 import { initProfile, profileGreetingName } from './profile.js';
 import { loadProfile, isProfileComplete } from './store.js';
+import { initFeed, showToday } from './feed.js';
+import { showTracker } from './tracker.js';
 
 const ROUTES = {
   today: { title: 'Today' },
@@ -25,7 +27,11 @@ function render() {
     else a.removeAttribute('aria-current');
   });
   document.title = `${ROUTES[route].title} · Job Finder`;
-  if (route === 'today') renderGreeting();
+  if (route === 'today') {
+    renderGreeting();
+    showToday();
+  }
+  if (route === 'tracker') showTracker();
 
   if (!firstRender) {
     window.scrollTo(0, 0);
@@ -50,5 +56,6 @@ function renderGreeting() {
 }
 
 initProfile({ onDone: () => (location.hash = '#today') });
+initFeed();
 window.addEventListener('hashchange', render);
 render();

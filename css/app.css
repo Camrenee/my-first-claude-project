@@ -56,6 +56,14 @@ textarea {
   margin-bottom: 20px;
 }
 
+.screen-today .screen-header {
+  margin-bottom: 16px;
+}
+
+.screen-today h1 {
+  font-size: 28px;
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: var(--on-bg-muted);
@@ -524,4 +532,518 @@ h1 {
   width: 56px;
   height: 30px;
   border-radius: var(--radius-pill);
+}
+
+/* =====================================================================
+   US2 Today: swipe deck
+   ===================================================================== */
+.screen-today {
+  overscroll-behavior-y: contain;
+}
+
+.deck-status {
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.deck {
+  position: relative;
+  display: grid;
+  min-height: 300px;
+}
+
+/* Both cards share one grid cell so the next card peeks out behind the top one. */
+.deck > * {
+  grid-area: 1 / 1;
+}
+
+.job-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 300px;
+  padding: 24px 22px 18px;
+  border-radius: var(--radius-card);
+  background: var(--card);
+  color: var(--card-text);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.35);
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  will-change: transform;
+  --save: 0;
+  --pass: 0;
+}
+
+.job-card.is-dragging {
+  cursor: grabbing;
+  transition: none !important;
+}
+
+.job-card.is-next {
+  transform: translateY(14px) scale(0.95);
+  opacity: 0.55;
+  box-shadow: none;
+  pointer-events: none;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.job-card.is-next.is-promoting {
+  transform: none;
+  opacity: 1;
+}
+
+.job-card.is-returning {
+  animation: card-return 260ms cubic-bezier(.2, .7, .3, 1);
+}
+
+@keyframes card-return {
+  from { transform: translateY(-24px) scale(0.97); opacity: 0; }
+}
+
+.job-card:focus-visible {
+  outline: 3px solid var(--btn-primary);
+  outline-offset: 4px;
+}
+
+/* SAVE / PASS stamps fade in as the card is dragged. */
+.stamp {
+  position: absolute;
+  top: 26px;
+  padding: 4px 14px;
+  border: 3px solid currentColor;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+  background: var(--card);
+}
+
+.stamp-save {
+  left: 22px;
+  color: var(--success);
+  transform: rotate(-12deg);
+  opacity: var(--save);
+}
+
+.stamp-pass {
+  right: 22px;
+  color: var(--error);
+  transform: rotate(12deg);
+  opacity: var(--pass);
+}
+
+.job-card.show-save { --save: 1; }
+.job-card.show-pass { --pass: 1; }
+
+.jc-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--tint-chip);
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 900;
+  overflow: hidden;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+}
+
+.jc-co {
+  flex: 1;
+  min-width: 0;
+}
+
+.jc-company {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.jc-posted {
+  margin: 0;
+  color: var(--card-text-muted);
+  font-size: 15px;
+}
+
+.match-badge {
+  flex: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--tint-badge);
+  color: var(--card-text);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.match-badge strong {
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.jc-title {
+  margin: 4px 0 0;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.15;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.jc-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.fact svg,
+.round-btn svg,
+.panel-art svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fact svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+
+.jc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.tag-muted {
+  background: var(--tint-fit);
+  color: var(--card-text-muted);
+}
+
+.tag-accent {
+  background: var(--tint-chip);
+  color: var(--accent);
+}
+
+.jc-link {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  color: var(--accent);
+  font-weight: 800;
+  text-underline-offset: 3px;
+}
+
+/* Skeleton while jobs load */
+.is-skeleton {
+  cursor: default;
+}
+
+.sk {
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--tint-fit), var(--tint-chip), var(--tint-fit));
+  background-size: 200% 100%;
+  animation: sk 1.2s linear infinite;
+}
+
+.sk-head { height: 52px; width: 60%; }
+.sk-title { height: 64px; }
+.sk-line { height: 20px; width: 70%; }
+.sk-line.short { width: 45%; }
+
+@keyframes sk {
+  to { background-position: -200% 0; }
+}
+
+/* Panels: caught up, queue full, empty, error */
+.deck-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 300px;
+  padding-block: 28px;
+  text-align: center;
+}
+
+.deck-panel h2 {
+  margin: 0;
+  color: var(--card-text);
+  font-size: 24px;
+  font-weight: 900;
+  text-wrap: balance;
+}
+
+.deck-panel p {
+  margin: 0 0 8px;
+  max-width: 32ch;
+  color: var(--card-text-muted);
+}
+
+.panel-art {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  background: var(--tint-chip);
+  color: var(--accent);
+}
+
+.panel-art svg {
+  width: 56px;
+  height: 56px;
+  stroke-width: 3;
+}
+
+/* Pass / Undo / Save */
+.deck-actions {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.deck-actions[hidden] {
+  display: none;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-label {
+  color: var(--on-bg-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.round-btn {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.round-btn svg {
+  width: 30px;
+  height: 30px;
+  stroke-width: 2.8;
+}
+
+.round-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.round-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.round-pass {
+  background: var(--btn-secondary);
+  border-color: var(--btn-secondary-outline);
+  color: var(--btn-secondary-text);
+}
+
+.round-undo {
+  width: 48px;
+  height: 48px;
+  margin-block: 8px; /* same 64px footprint as its neighbours so labels line up */
+  background: var(--btn-secondary);
+  border-color: var(--btn-secondary-outline);
+  color: var(--on-bg-muted);
+}
+
+.round-undo svg {
+  width: 22px;
+  height: 22px;
+}
+
+.round-save {
+  background: var(--btn-primary);
+  color: var(--btn-primary-text);
+}
+
+/* Pull to refresh */
+.ptr {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  left: 50%;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--card-text);
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.3);
+  transform: translate(-50%, calc(var(--pull, 0px) - 60px));
+  opacity: 0;
+  transition: transform 160ms ease, opacity 160ms ease;
+  pointer-events: none;
+}
+
+.ptr.is-visible {
+  opacity: 1;
+}
+
+.ptr-spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--tint-chip);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+}
+
+.ptr.is-spinning .ptr-spinner {
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px));
+  z-index: 30;
+  max-width: calc(100% - 32px);
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--card-text);
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+  transform: translate(-50%, 12px);
+  opacity: 0;
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events: none;
+}
+
+.toast.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* =====================================================================
+   Tracker: To apply queue
+   ===================================================================== */
+.queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.queue-list .card {
+  margin: 0;
+}
+
+.queue-item {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.qi-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.qi-main {
+  min-width: 0;
+}
+
+.queue-item .qi-title {
+  margin: 0;
+  color: var(--card-text);
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.qi-sub {
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+
+.qi-meta {
+  margin: 2px 0 0;
+  color: var(--card-text-muted);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

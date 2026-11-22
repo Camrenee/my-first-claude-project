@@ -15,31 +15,49 @@
     <script type="module" src="js/app.js"></script>
   </head>
   <body>
-    <!-- ============ Today (US2 builds the swipe deck here) ============ -->
-    <main id="screen-today" class="screen" data-route="today" hidden>
+    <!-- ============ Today: swipe deck (US2) ============ -->
+    <main id="screen-today" class="screen screen-today" data-route="today" hidden>
+      <div class="ptr" id="ptr" aria-hidden="true"><span class="ptr-spinner"></span><span class="ptr-text">Pull to refresh</span></div>
       <header class="screen-header">
         <p class="eyebrow" data-greeting>Hello</p>
         <h1>Here's today's shortlist</h1>
+        <p class="lede deck-status" id="deck-status"></p>
       </header>
-      <section class="card empty" aria-live="polite">
-        <div class="emoji" aria-hidden="true">🗂️</div>
-        <h2>Your shortlist is almost here</h2>
-        <p>We're lining up PM roles in New York and remote, matched to your resume. Check back soon.</p>
-        <a class="btn btn-ghost" href="#profile">Review my profile</a>
-      </section>
+
+      <section class="deck" id="deck" aria-label="Job cards" aria-describedby="deck-help"></section>
+      <p id="deck-help" class="visually-hidden">Swipe right or press the right arrow to save a job to apply. Swipe left or press the left arrow to pass.</p>
+
+      <div class="deck-actions" id="deck-actions">
+        <div class="action">
+          <button type="button" class="round-btn round-pass" id="btn-pass" aria-labelledby="lbl-pass">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+          <span class="action-label" id="lbl-pass">Pass</span>
+        </div>
+        <div class="action">
+          <button type="button" class="round-btn round-undo" id="btn-undo" aria-labelledby="lbl-undo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
+          </button>
+          <span class="action-label" id="lbl-undo">Undo</span>
+        </div>
+        <div class="action">
+          <button type="button" class="round-btn round-save" id="btn-save" aria-labelledby="lbl-save">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+          </button>
+          <span class="action-label" id="lbl-save">Save to apply</span>
+        </div>
+      </div>
+      <p class="visually-hidden" id="deck-live" aria-live="polite"></p>
     </main>
 
-    <!-- ============ Tracker (US4) ============ -->
+    <!-- ============ Tracker (US4 adds Applied / Referred / All and the weekly goal) ============ -->
     <main id="screen-tracker" class="screen" data-route="tracker" hidden>
       <header class="screen-header">
         <p class="eyebrow">Tracker</p>
-        <h1>Your applications</h1>
+        <h1>To apply</h1>
+        <p class="lede" id="queue-count"></p>
       </header>
-      <section class="card empty">
-        <div class="emoji" aria-hidden="true">✅</div>
-        <h2>Nothing tracked yet</h2>
-        <p>Jobs you save to apply will show up here, along with your weekly goal.</p>
-      </section>
+      <section id="queue-list" class="queue-list" aria-label="Jobs saved to apply"></section>
     </main>
 
     <!-- ============ Profile (US1) ============ -->
