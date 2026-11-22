@@ -1,6 +1,6 @@
 // US1 Profile: resume (upload or paste), roles, locations, salary floor, no-salary toggle.
 // Every valid change saves to this device right away.
-import { DEFAULT_PROFILE, loadProfile, saveProfile, isProfileComplete } from './store.js';
+import { DEFAULT_PROFILE, loadProfile, saveProfile, isProfileComplete, resetActivity } from './store.js';
 import { parseResumeFile, ResumeError, cleanText, toLines } from './resume-parse.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -148,6 +148,27 @@ export function initProfile({ onDone }) {
   els.noSalary.addEventListener('change', () => {
     profile.showNoSalary = els.noSalary.checked;
     persist();
+  });
+
+  // Start over: two taps, like Remove.
+  const startBtn = document.getElementById('btn-start-over');
+  const startStatus = document.getElementById('start-over-status');
+  let startTimer;
+  startBtn.addEventListener('click', () => {
+    if (!startBtn.dataset.armed) {
+      startBtn.dataset.armed = '1';
+      startBtn.textContent = 'Tap again to clear';
+      startTimer = setTimeout(() => {
+        delete startBtn.dataset.armed;
+        startBtn.textContent = 'Clear swipes and saved jobs';
+      }, 4000);
+      return;
+    }
+    clearTimeout(startTimer);
+    delete startBtn.dataset.armed;
+    startBtn.textContent = 'Clear swipes and saved jobs';
+    resetActivity();
+    startStatus.textContent = 'Done. Your shortlist starts fresh on the Today tab.';
   });
 
   // "Show my shortlist"

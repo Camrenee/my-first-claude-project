@@ -1405,3 +1405,7 @@ h1 {
   column-gap: 18px;
   row-gap: 6px;
 }
+
+.start-over {
+  margin-top: 28px;
+}

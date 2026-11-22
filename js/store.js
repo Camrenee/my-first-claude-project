@@ -146,6 +146,17 @@ export function undoLastDecision() {
 }
 
 /** Take a job out of the apply queue by hand. It stays hidden from the feed. */
+/** Forget all swipes, the queue, today's deck and undo history. Keeps the profile and job cache. */
+export function resetActivity() {
+  for (const k of [KEYS.decisions, KEYS.tracker, KEYS.deck, KEYS.undo]) {
+    try {
+      localStorage.removeItem(k);
+    } catch {
+      /* storage blocked; nothing to clear */
+    }
+  }
+}
+
 export function removeFromQueue(jobId) {
   const tracker = loadTracker();
   if (!tracker[jobId]) return false;

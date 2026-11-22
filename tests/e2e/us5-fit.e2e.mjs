@@ -102,3 +102,22 @@ test('saved jobs show the same reasons from the Tracker', async () => {
   assert.match(await page.textContent('#job-sheet .match-badge'), /\d+% match/);
   await ctx.close();
 });
+
+test('Profile → Start over clears swipes and the queue so every job shows again', async () => {
+  const { ctx, page } = await openApp(env, { jobs: [BILLING, UNRELATED], profile: PROFILE });
+  await page.click('#btn-save');
+  await page.waitForTimeout(350);
+  await page.click('#btn-pass');
+  await page.waitForTimeout(350);
+  assert.equal(await page.textContent('#deck .deck-panel h2'), 'You’re all caught up!');
+  await page.click('a[data-nav="profile"]');
+  await page.click('#btn-start-over');
+  assert.equal(await page.textContent('#btn-start-over'), 'Tap again to clear');
+  await page.click('#btn-start-over');
+  assert.match(await page.textContent('#start-over-status'), /starts fresh/);
+  assert.ok(JSON.parse(await page.evaluate(() => localStorage.getItem('jf.profile'))).resume.text.length > 0);
+  await page.click('a[data-nav="today"]');
+  await page.waitForSelector('#deck .job-card.is-top');
+  assert.match(await page.textContent('#deck-status'), /2 of 2 left today · 0 of 5 in your queue/);
+  await ctx.close();
+});
