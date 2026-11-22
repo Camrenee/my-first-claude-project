@@ -44,6 +44,10 @@ vendor/             pinned copies of pdf.js 4.10.38 and mammoth 1.12.3 (with lic
 tests/e2e/          Playwright checks at phone size
 ```
 
+## Releasing a change
+After editing anything in `css/` or `js/`, run `node scripts/stamp-version.mjs`. It stamps a new
+version onto every file URL in `index.html`, so phones never mix old cached files with new ones.
+
 ## Tests
 ```
 npm test            # unit tests: filters, feed rules, match score

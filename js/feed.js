@@ -20,6 +20,7 @@ const $ = (s) => document.querySelector(s);
 let els;
 let state = { jobs: [], jobsById: new Map(), generatedAt: null, matcher: null, matcherKey: '', cards: [], loading: false, error: null };
 let busy = false; // true while a card is flying out
+let pendingFreshStart = false; // set by Profile → Start over; announced after the new deck is dealt
 
 export function initFeed() {
   els = {
@@ -37,6 +38,8 @@ export function initFeed() {
   els.save.addEventListener('click', () => decide('queued'));
   els.undo.addEventListener('click', undo);
   document.addEventListener('keydown', onKey);
+  // After Profile → Start over, say so on Today once the fresh deck is dealt.
+  window.addEventListener('jf:start-over', () => (pendingFreshStart = true));
   setupPullToRefresh();
 
   const cached = loadJobsCache();
@@ -135,6 +138,11 @@ function render() {
   const deck = dealDeck({ jobs: state.jobs, profile, decisions, deck: loadDeck(), score: matcher });
   saveDeck(deck);
   state.cards = remainingCards({ deck, jobsById: state.jobsById, profile, decisions });
+  if (pendingFreshStart) {
+    pendingFreshStart = false;
+    const n = state.cards.length;
+    announce(n ? `Fresh start: ${n} job${n === 1 ? '' : 's'} ready.` : 'Fresh start. No jobs match your filters right now.', true);
+  }
 
   const left = state.cards.length;
   setStatus(`${left ? `${left} of ${deck.dealt.length} left today` : 'Done for today'} · ${queue.length} of ${QUEUE_MAX} in your queue`);

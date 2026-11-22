@@ -1,6 +1,6 @@
 // US1 Profile: resume (upload or paste), roles, locations, salary floor, no-salary toggle.
 // Every valid change saves to this device right away.
-import { DEFAULT_PROFILE, loadProfile, saveProfile, isProfileComplete, resetActivity } from './store.js';
+import { DEFAULT_PROFILE, loadProfile, saveProfile, isProfileComplete, resetActivity, activitySummary } from './store.js';
 import { parseResumeFile, ResumeError, cleanText, toLines } from './resume-parse.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -150,25 +150,39 @@ export function initProfile({ onDone }) {
     persist();
   });
 
-  // Start over: two taps, like Remove.
+  // Start over: shows exactly what will be cleared, then asks to confirm.
   const startBtn = document.getElementById('btn-start-over');
+  const confirmBox = document.getElementById('start-over-confirm');
+  const summary = document.getElementById('start-over-summary');
+  const yes = document.getElementById('btn-start-over-yes');
   const startStatus = document.getElementById('start-over-status');
-  let startTimer;
+  const closeConfirm = () => {
+    confirmBox.hidden = true;
+    startBtn.setAttribute('aria-expanded', 'false');
+  };
   startBtn.addEventListener('click', () => {
-    if (!startBtn.dataset.armed) {
-      startBtn.dataset.armed = '1';
-      startBtn.textContent = 'Tap again to clear';
-      startTimer = setTimeout(() => {
-        delete startBtn.dataset.armed;
-        startBtn.textContent = 'Clear swipes and saved jobs';
-      }, 4000);
+    startStatus.textContent = '';
+    const { swipes, saved } = activitySummary();
+    if (!swipes && !saved) {
+      closeConfirm();
+      startStatus.textContent = 'Nothing to clear yet. Every current job is still in your shortlist.';
       return;
     }
-    clearTimeout(startTimer);
-    delete startBtn.dataset.armed;
-    startBtn.textContent = 'Clear swipes and saved jobs';
+    const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+    summary.textContent = `This clears ${plural(swipes, 'swiped job')} and ${plural(saved, 'saved job')}, so every current job shows up again. Your resume and settings stay.`;
+    confirmBox.hidden = false;
+    startBtn.setAttribute('aria-expanded', 'true');
+    yes.focus();
+  });
+  document.getElementById('btn-start-over-no').addEventListener('click', () => {
+    closeConfirm();
+    startBtn.focus();
+  });
+  yes.addEventListener('click', () => {
     resetActivity();
-    startStatus.textContent = 'Done. Your shortlist starts fresh on the Today tab.';
+    closeConfirm();
+    window.dispatchEvent(new CustomEvent('jf:start-over'));
+    location.hash = '#today';
   });
 
   // "Show my shortlist"

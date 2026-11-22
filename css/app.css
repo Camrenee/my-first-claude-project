@@ -1409,3 +1409,19 @@ h1 {
 .start-over {
   margin-top: 28px;
 }
+
+.start-over-confirm {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 20px;
+  background: var(--tint-fit);
+}
+
+.start-over-confirm[hidden] {
+  display: none;
+}
+
+.start-over-summary {
+  margin: 0 0 10px;
+  font-weight: 700;
+}

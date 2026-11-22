@@ -112,12 +112,19 @@ test('Profile → Start over clears swipes and the queue so every job shows agai
   assert.equal(await page.textContent('#deck .deck-panel h2'), 'You’re all caught up!');
   await page.click('a[data-nav="profile"]');
   await page.click('#btn-start-over');
-  assert.equal(await page.textContent('#btn-start-over'), 'Tap again to clear');
+  assert.match(await page.textContent('#start-over-summary'), /clears 2 swiped jobs and 1 saved job/);
+  await page.click('#btn-start-over-no'); // Cancel changes nothing
+  assert.equal(await page.locator('#start-over-confirm').isVisible(), false);
   await page.click('#btn-start-over');
-  assert.match(await page.textContent('#start-over-status'), /starts fresh/);
-  assert.ok(JSON.parse(await page.evaluate(() => localStorage.getItem('jf.profile'))).resume.text.length > 0);
-  await page.click('a[data-nav="today"]');
-  await page.waitForSelector('#deck .job-card.is-top');
+  await page.click('#btn-start-over-yes');
+  // Lands on Today with every job back and says so
+  await page.waitForSelector('#screen-today:not([hidden]) #deck .job-card.is-top');
   assert.match(await page.textContent('#deck-status'), /2 of 2 left today · 0 of 5 in your queue/);
+  await page.waitForFunction(() => /Fresh start: 2 jobs ready/.test(document.querySelector('#deck-live').textContent));
+  assert.ok(JSON.parse(await page.evaluate(() => localStorage.getItem('jf.profile'))).resume.text.length > 0);
+  // With nothing to clear, it says so instead of asking
+  await page.click('a[data-nav="profile"]');
+  await page.click('#btn-start-over');
+  assert.match(await page.textContent('#start-over-status'), /Nothing to clear yet/);
   await ctx.close();
 });

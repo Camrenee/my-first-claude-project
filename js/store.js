@@ -146,6 +146,11 @@ export function undoLastDecision() {
 }
 
 /** Take a job out of the apply queue by hand. It stays hidden from the feed. */
+/** What Start over would clear: number of swiped jobs and saved jobs. */
+export function activitySummary() {
+  return { swipes: Object.keys(loadDecisions().byId).length, saved: queuedJobs().length };
+}
+
 /** Forget all swipes, the queue, today's deck and undo history. Keeps the profile and job cache. */
 export function resetActivity() {
   for (const k of [KEYS.decisions, KEYS.tracker, KEYS.deck, KEYS.undo]) {

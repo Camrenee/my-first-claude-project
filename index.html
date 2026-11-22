@@ -10,9 +10,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/tokens.css" />
-    <link rel="stylesheet" href="css/app.css" />
-    <script type="module" src="js/app.js"></script>
+    <link rel="stylesheet" href="css/tokens.css?v=202611221519" />
+    <link rel="stylesheet" href="css/app.css?v=202611221519" />
+    <script type="importmap">{"imports":{"./js/app.js":"./js/app.js?v=202611221519","./js/feed-logic.js":"./js/feed-logic.js?v=202611221519","./js/feed.js":"./js/feed.js?v=202611221519","./js/fit.js":"./js/fit.js?v=202611221519","./js/job-details.js":"./js/job-details.js?v=202611221519","./js/job-text.js":"./js/job-text.js?v=202611221519","./js/match.js":"./js/match.js?v=202611221519","./js/profile.js":"./js/profile.js?v=202611221519","./js/resume-parse.js":"./js/resume-parse.js?v=202611221519","./js/skills.js":"./js/skills.js?v=202611221519","./js/store.js":"./js/store.js?v=202611221519","./js/tracker.js":"./js/tracker.js?v=202611221519"}}</script>
+    <script type="module" src="js/app.js?v=202611221519"></script>
   </head>
   <body>
     <!-- ============ Today: swipe deck (US2) ============ -->
@@ -161,7 +162,14 @@
       <section class="card start-over" aria-labelledby="h-start-over">
         <h2 id="h-start-over">Start over</h2>
         <p class="hint">Clears your swipes, your saved jobs and today's shortlist, so every current job shows up again. Your resume and settings stay.</p>
-        <button type="button" class="btn btn-ghost" id="btn-start-over">Clear swipes and saved jobs</button>
+        <button type="button" class="btn btn-ghost" id="btn-start-over" aria-expanded="false" aria-controls="start-over-confirm">Start over…</button>
+        <div class="start-over-confirm" id="start-over-confirm" hidden>
+          <p class="start-over-summary" id="start-over-summary"></p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" id="btn-start-over-yes">Yes, start over</button>
+            <button type="button" class="link-btn" id="btn-start-over-no">Cancel</button>
+          </div>
+        </div>
         <p class="notice is-info" id="start-over-status" role="status" aria-live="polite"></p>
       </section>
     </main>
