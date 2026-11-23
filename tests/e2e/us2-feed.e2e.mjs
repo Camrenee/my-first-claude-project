@@ -204,7 +204,7 @@ test('queue holds 5: swiping pauses with a prompt; removing one resumes', async 
 
   await page.click('#deck .deck-panel a');
   await page.waitForSelector('#screen-tracker:not([hidden])');
-  assert.match(await page.textContent('#queue-count'), /5 of 5 saved/);
+  assert.match(await page.textContent('#tab-hint'), /5 of 5 saved/);
   const remove = page.locator('.queue-item .qi-remove').first();
   await remove.click();
   assert.equal(await remove.textContent(), 'Tap again to remove');

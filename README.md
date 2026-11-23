@@ -19,8 +19,9 @@ python3 -m http.server 8000     # then open http://localhost:8000
 | Data test (job sources, company list) | PR #1 |
 | US1 Profile: resume upload/paste, roles, locations, salary floor | PR #2 |
 | US2 Swipe feed: daily deck, match score, queue of 5, undo, pull to refresh | PR #3 |
-| US5 Why I fit: reasons tied to resume lines on the card and in details | ✅ this branch |
-| US4 Tracking, US3 Tailoring | next |
+| US5 Why I fit: reasons tied to resume lines on the card and in details | PR #4 |
+| US4 Tracking: Applied / Referred, tabs, weekly goal | ✅ this branch |
+| US3 Tailoring | next |
 
 ## Layout
 ```
@@ -34,7 +35,10 @@ js/feed.js          US2 Today screen: cards, swipe, undo, pull to refresh
 js/feed-logic.js    US2 rules: eligibility, daily deck, labels (pure, unit-tested)
 js/match.js         match score: share of a posting's skills your resume shows
 js/skills.js        PM skills lexicon used by the match score
-js/tracker.js       "To apply" queue (US4 adds the rest of the tracker)
+js/tracker.js       US4 Tracker: tabs, weekly goal, Applied / Referred, referral details
+js/tracking.js      US4 rules: tabs, Monday–Sunday weeks, goal and streak (pure, unit-tested)
+js/track-actions.js Applied / Referred actions shared by the Tracker and job details
+js/toast.js         short confirmation messages, also read out to screen readers
 js/job-details.js   job details sheet: full description, Pass / Save to apply
 js/job-text.js      safe description HTML, card preview text, boilerplate filter
 js/fit.js           US5 "Why you're a great fit": reasons quoting your resume lines

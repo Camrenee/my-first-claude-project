@@ -7,7 +7,8 @@ import {
   dealDeck, remainingCards, roleKey, QUEUE_MAX, formatSalary, formatPosted, formatLocation, companyInitial,
 } from './feed-logic.js';
 import { buildMatcher } from './match.js';
-import { openJobDetails, isDetailsOpen } from './job-details.js';
+import { openJobDetails, isDetailsOpen, closeJobDetails } from './job-details.js';
+import { trackingFor } from './track-actions.js';
 import { htmlToParagraphs, previewFromParagraphs, roleParagraphs } from './job-text.js';
 import { buildReasons, gapsFrom } from './fit.js';
 import { toLines } from './resume-parse.js';
@@ -18,7 +19,7 @@ const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matche
 
 const $ = (s) => document.querySelector(s);
 let els;
-let state = { jobs: [], jobsById: new Map(), generatedAt: null, matcher: null, matcherKey: '', cards: [], loading: false, error: null };
+let state = { loaded: false, jobs: [], jobsById: new Map(), generatedAt: null, matcher: null, matcherKey: '', cards: [], loading: false, error: null };
 let busy = false; // true while a card is flying out
 let pendingFreshStart = false; // set by Profile → Start over; announced after the new deck is dealt
 
@@ -72,7 +73,7 @@ async function refresh({ quiet = false } = {}) {
     // The very first load isn't news; only say "new" when we had jobs before.
     if (!quiet && before.size) announce(added ? `${added} new role${added === 1 ? '' : 's'} found.` : 'You’re up to date.', true);
   } catch {
-    state.error = state.jobs.length ? null : 'load';
+    state.error = state.loaded ? null : 'load';
     if (!quiet) announce('Couldn’t refresh. Check your connection and try again.', true);
   } finally {
     state.loading = false;
@@ -81,6 +82,7 @@ async function refresh({ quiet = false } = {}) {
 }
 
 function setJobs({ jobs, generatedAt }) {
+  state.loaded = true;
   state.jobs = jobs;
   state.jobsById = new Map(jobs.map((j) => [j.id, j]));
   state.generatedAt = generatedAt;
@@ -125,7 +127,8 @@ function render() {
     });
   }
 
-  if (!state.jobs.length) {
+  // "Not loaded yet" and "loaded, but no jobs this week" are different: only the first waits.
+  if (!state.loaded) {
     setStatus('');
     if (state.error) {
       return showPanel({ icon: 'cloud', title: 'We couldn’t load jobs', body: 'Check your connection, then pull down to try again.', cta: { action: () => refresh(), label: 'Try again' } });
@@ -318,6 +321,15 @@ function openDetails(job) {
   openJobDetails(job, {
     score: fit.score,
     fit,
+    tracking: trackingFor(job, {
+      onChange: (kind, on) => {
+        if (!on) return;
+        // Referred usually means you'll apply: put it in the queue too when there's room.
+        if (kind === 'referred' && queuedJobs().length < QUEUE_MAX) recordDecision(job, 'queued', roleKey(job));
+        // Either way the job is now tracked, so close the sheet and move to the next card.
+        closeJobDetails(() => render());
+      },
+    }),
     actions: {
       onPass: () => decide('passed'),
       onSave: () => decide('queued'),

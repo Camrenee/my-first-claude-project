@@ -1493,3 +1493,222 @@ h1 {
     100% { opacity: 0; transform: translate(-50%, -50%); }
   }
 }
+
+/* =====================================================================
+   US4 Tracker: weekly goal, tabs, Applied / Referred
+   ===================================================================== */
+.goal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goal-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.goal-card h2 {
+  margin: 0;
+}
+
+.goal-week {
+  margin: 0;
+  color: var(--card-text-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.goal-count {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.goal-count strong {
+  font-size: 30px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.goal-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.goal-seg {
+  flex: 1;
+  height: 12px;
+  border-radius: var(--radius-pill);
+  background: var(--tint-chip);
+}
+
+.goal-seg.is-done {
+  background: var(--btn-primary);
+}
+
+.goal-note {
+  margin: 0;
+  color: var(--card-text-muted);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.goal-card.is-met .goal-note {
+  color: var(--success);
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 18px 0 8px;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  min-height: 56px;
+  padding: 6px 4px;
+  line-height: 1.15;
+  text-align: center;
+  border: 2px solid var(--btn-secondary-outline);
+  border-radius: 20px;
+  background: var(--btn-secondary);
+  color: var(--on-bg-muted);
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tab[aria-selected='true'] {
+  background: var(--card);
+  border-color: var(--card);
+  color: var(--card-text);
+}
+
+.tab-count {
+  min-width: 22px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: rgb(171 210 250 / 0.18);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.tab[aria-selected='true'] .tab-count {
+  background: var(--tint-chip);
+  color: var(--accent);
+}
+
+.tab-hint:empty {
+  display: none;
+}
+
+.tab-hint {
+  margin: 0 0 12px;
+}
+
+.qi-dates {
+  margin: 4px 0 0;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.qi-dates:empty {
+  display: none;
+}
+
+/* Applied / Referred toggles (Tracker and details sheet) */
+.track-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.track-row[hidden] {
+  display: none;
+}
+
+.track-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--touch);
+  padding: 0 18px;
+  border: 2px solid var(--outline);
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--card-text-muted);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.track-btn .tb-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--outline);
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+  color: transparent;
+}
+
+.track-btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--tint-chip);
+  color: var(--accent);
+}
+
+.track-btn[aria-pressed='true'] .tb-icon {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.ref-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 20px;
+  background: var(--tint-fit);
+}
+
+.ref-status {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ref-status legend {
+  margin-bottom: 6px;
+  padding: 0;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.ref-status .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ref-editor .field-label {
+  margin: 4px 0 0;
+}
+
+.qi-actions .qi-remove {
+  margin-left: auto;
+}

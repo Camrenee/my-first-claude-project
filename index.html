@@ -10,10 +10,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/tokens.css?v=202611221526" />
-    <link rel="stylesheet" href="css/app.css?v=202611221526" />
-    <script type="importmap">{"imports":{"./js/app.js":"./js/app.js?v=202611221526","./js/feed-logic.js":"./js/feed-logic.js?v=202611221526","./js/feed.js":"./js/feed.js?v=202611221526","./js/fit.js":"./js/fit.js?v=202611221526","./js/job-details.js":"./js/job-details.js?v=202611221526","./js/job-text.js":"./js/job-text.js?v=202611221526","./js/match.js":"./js/match.js?v=202611221526","./js/profile.js":"./js/profile.js?v=202611221526","./js/resume-parse.js":"./js/resume-parse.js?v=202611221526","./js/skills.js":"./js/skills.js?v=202611221526","./js/store.js":"./js/store.js?v=202611221526","./js/tracker.js":"./js/tracker.js?v=202611221526"}}</script>
-    <script type="module" src="js/app.js?v=202611221526"></script>
+    <link rel="stylesheet" href="css/tokens.css?v=202611231614" />
+    <link rel="stylesheet" href="css/app.css?v=202611231614" />
+    <script type="importmap">{"imports":{"./js/app.js":"./js/app.js?v=202611231614","./js/feed-logic.js":"./js/feed-logic.js?v=202611231614","./js/feed.js":"./js/feed.js?v=202611231614","./js/fit.js":"./js/fit.js?v=202611231614","./js/job-details.js":"./js/job-details.js?v=202611231614","./js/job-text.js":"./js/job-text.js?v=202611231614","./js/match.js":"./js/match.js?v=202611231614","./js/profile.js":"./js/profile.js?v=202611231614","./js/resume-parse.js":"./js/resume-parse.js?v=202611231614","./js/skills.js":"./js/skills.js?v=202611231614","./js/store.js":"./js/store.js?v=202611231614","./js/toast.js":"./js/toast.js?v=202611231614","./js/track-actions.js":"./js/track-actions.js?v=202611231614","./js/tracker.js":"./js/tracker.js?v=202611231614","./js/tracking.js":"./js/tracking.js?v=202611231614"}}</script>
+    <script type="module" src="js/app.js?v=202611231614"></script>
   </head>
   <body>
     <!-- ============ Today: swipe deck (US2) ============ -->
@@ -55,10 +55,22 @@
     <main id="screen-tracker" class="screen" data-route="tracker" hidden>
       <header class="screen-header">
         <p class="eyebrow">Tracker</p>
-        <h1>To apply</h1>
-        <p class="lede" id="queue-count"></p>
+        <h1>Your applications</h1>
       </header>
-      <section id="queue-list" class="queue-list" aria-label="Jobs saved to apply"></section>
+
+      <section class="card goal-card" id="goal-card" aria-labelledby="goal-h">
+        <div class="goal-top">
+          <h2 id="goal-h">This week</h2>
+          <p class="goal-week" id="goal-week"></p>
+        </div>
+        <p class="goal-count"><strong id="goal-count">0 of 2</strong> applications</p>
+        <div class="goal-bar" id="goal-bar" role="progressbar" aria-labelledby="goal-h" aria-valuemin="0" aria-valuemax="2" aria-valuenow="0"></div>
+        <p class="goal-note" id="goal-note"></p>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="Tracker views" id="tracker-tabs"></div>
+      <p class="lede tab-hint" id="tab-hint"></p>
+      <section id="tracker-list" class="queue-list" role="tabpanel" aria-labelledby="tab-to_apply"></section>
     </main>
 
     <!-- ============ Profile (US1) ============ -->
@@ -161,7 +173,7 @@
 
       <section class="card start-over" aria-labelledby="h-start-over">
         <h2 id="h-start-over">Start over</h2>
-        <p class="hint">Clears your swipes, your saved jobs and today's shortlist, so every current job shows up again. Your resume and settings stay.</p>
+        <p class="hint">Clears your swipes, your saved jobs and today's shortlist, so every current job shows up again. Your resume, settings and application history stay.</p>
         <button type="button" class="btn btn-ghost" id="btn-start-over" aria-expanded="false" aria-controls="start-over-confirm">Start over…</button>
         <div class="start-over-confirm" id="start-over-confirm" hidden>
           <p class="start-over-summary" id="start-over-summary"></p>
@@ -198,6 +210,10 @@
             <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span class="js-loc"></span></li>
             <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg><span class="js-salary"></span></li>
           </ul>
+          <div class="track-row js-track" role="group" aria-label="Status">
+            <button type="button" class="track-btn js-track-applied" aria-pressed="false"><span class="tb-icon" aria-hidden="true">✓</span> Applied</button>
+            <button type="button" class="track-btn js-track-referred" aria-pressed="false"><span class="tb-icon" aria-hidden="true">✓</span> Referred</button>
+          </div>
           <section class="sheet-fit js-fit" aria-labelledby="fit-h">
             <h3 class="sheet-section" id="fit-h">Why you're a great fit</h3>
             <ul class="reason-list js-reasons"></ul>
@@ -220,6 +236,8 @@
         </div>
       </div>
     </dialog>
+
+    <p class="visually-hidden" id="app-live" aria-live="polite"></p>
 
     <!-- ============ Bottom nav ============ -->
     <nav class="nav" aria-label="Main">

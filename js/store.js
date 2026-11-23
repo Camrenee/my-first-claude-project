@@ -5,7 +5,7 @@ const KEYS = {
   meta: 'jf.meta',
   jobs: 'jf.jobs.cache', // last jobs.json, so the feed works offline
   decisions: 'jf.decisions', // { byId: {jobId: {action, at, postedAt}}, byKey: {roleKey: same} }
-  tracker: 'jf.tracker', // { jobId: {job, queuedAt, removedAt?, appliedAt?} }
+  tracker: 'jf.tracker', // { jobId: {job, queuedAt?, removedAt?, appliedAt?, referral?: {status, by, at, updatedAt}} }
   deck: 'jf.deck', // { date, dealt: [{id, at, updated?}] }
   undo: 'jf.undo', // last decisions, newest last
 };
@@ -115,7 +115,8 @@ export function recordDecision(job, action, key) {
   const entry = { action, at, postedAt: job.postedAt };
   decisions.byId[job.id] = entry;
   decisions.byKey[key] = entry;
-  if (action === 'queued') tracker[job.id] = { job: snapshot(job), queuedAt: at };
+  // Merge, so saving a job never wipes a referral or applied date already recorded on it.
+  if (action === 'queued') tracker[job.id] = { ...(tracker[job.id] ?? {}), job: snapshot(job), queuedAt: at };
 
   const ok = write(KEYS.decisions, decisions).ok && write(KEYS.tracker, tracker).ok;
   write(KEYS.undo, undo.slice(-20));
@@ -146,14 +147,82 @@ export function undoLastDecision() {
 }
 
 /** Take a job out of the apply queue by hand. It stays hidden from the feed. */
-/** What Start over would clear: number of swiped jobs and saved jobs. */
-export function activitySummary() {
-  return { swipes: Object.keys(loadDecisions().byId).length, saved: queuedJobs().length };
+// ---------- US4: Applied / Referred ----------
+
+/** All tracker entries as a list: [{id, job, queuedAt?, appliedAt?, referral?, removedAt?}]. */
+export function trackerEntries() {
+  return Object.entries(loadTracker()).map(([id, e]) => ({ id, ...e }));
 }
 
-/** Forget all swipes, the queue, today's deck and undo history. Keeps the profile and job cache. */
+export function trackerEntry(jobId) {
+  return loadTracker()[jobId] ?? null;
+}
+
+/** Hide a job from the feed once it's tracked, without touching Undo history. */
+function markDecided(job, action) {
+  const decisions = loadDecisions();
+  if (decisions.byId[job.id]) return;
+  const entry = { action, at: new Date().toISOString(), postedAt: job.postedAt };
+  decisions.byId[job.id] = entry;
+  const key = `${job.company}|${String(job.title).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()}`;
+  decisions.byKey[key] ??= entry;
+  write(KEYS.decisions, decisions);
+}
+
+/** One tap: mark a job applied (on=true) or take that back. Applied jobs leave the To apply queue. */
+export function setApplied(job, on) {
+  const tracker = loadTracker();
+  const e = { ...(tracker[job.id] ?? {}), job: tracker[job.id]?.job ?? snapshot(job) };
+  if (on) e.appliedAt = new Date().toISOString();
+  else delete e.appliedAt;
+  tracker[job.id] = e;
+  if (on) markDecided(job, 'applied');
+  return write(KEYS.tracker, tracker).ok;
+}
+
+/**
+ * One tap: mark a job referred (patch = {} starts "In progress"), update it
+ * (patch = {status} or {by}), or remove the referral (patch = null).
+ */
+export function setReferral(job, patch) {
+  const tracker = loadTracker();
+  const e = { ...(tracker[job.id] ?? {}), job: tracker[job.id]?.job ?? snapshot(job) };
+  const now = new Date().toISOString();
+  if (patch === null) delete e.referral;
+  else e.referral = { ...(e.referral ?? { status: 'in_progress', by: '', at: now }), ...patch, updatedAt: now };
+  tracker[job.id] = e;
+  if (patch !== null) markDecided(job, 'referred');
+  return write(KEYS.tracker, tracker).ok;
+}
+
+/** What Start over would clear: number of swiped jobs and saved jobs. */
+export function activitySummary() {
+  const kept = Object.values(loadTracker()).filter((e) => e.appliedAt || e.referral).length;
+  return { swipes: Math.max(0, Object.keys(loadDecisions().byId).length - kept), saved: queuedJobs().length };
+}
+
+/**
+ * Start over: forget swipes, today's deck, undo history and jobs that were only saved.
+ * Keeps the profile, the job cache, and application history (applied / referred jobs stay
+ * in the Tracker and stay out of the feed).
+ */
 export function resetActivity() {
-  for (const k of [KEYS.decisions, KEYS.tracker, KEYS.deck, KEYS.undo]) {
+  const tracker = loadTracker();
+  const decisions = loadDecisions();
+  const keptTracker = {};
+  const keptDecisions = { byId: {}, byKey: {} };
+  for (const [id, e] of Object.entries(tracker)) {
+    if (!e.appliedAt && !e.referral) continue;
+    const { queuedAt, removedAt, ...rest } = e;
+    keptTracker[id] = rest;
+    if (decisions.byId[id]) keptDecisions.byId[id] = decisions.byId[id];
+  }
+  for (const [k, v] of Object.entries(decisions.byKey)) {
+    if (Object.values(keptDecisions.byId).includes(v)) keptDecisions.byKey[k] = v;
+  }
+  write(KEYS.tracker, keptTracker);
+  write(KEYS.decisions, keptDecisions);
+  for (const k of [KEYS.deck, KEYS.undo]) {
     try {
       localStorage.removeItem(k);
     } catch {

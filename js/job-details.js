@@ -27,9 +27,9 @@ function ensureDialog() {
 
 /**
  * @param job normalized job
- * @param opts {score?: number, fit?: {reasons, gaps}, actions?: {onPass, onSave, saveBlocked?: string}, onClose?: fn}
+ * @param opts {score?, fit?: {reasons, gaps}, actions?: {onPass, onSave, saveBlocked?}, tracking?: {applied(), referred(), toggleApplied(), toggleReferred()}, onClose?}
  */
-export function openJobDetails(job, { score, fit, actions, onClose } = {}) {
+export function openJobDetails(job, { score, fit, actions, tracking, onClose } = {}) {
   const d = ensureDialog();
   onCloseCb = onClose ?? null;
 
@@ -44,6 +44,7 @@ export function openJobDetails(job, { score, fit, actions, onClose } = {}) {
   d.querySelector('.js-salary').textContent = formatSalary(job.salary) ?? 'Salary not listed';
 
   renderFit(d, fit);
+  renderTracking(d, tracking);
 
   const body = d.querySelector('.js-description');
   const safe = job.descriptionHtml ? sanitizeHtml(job.descriptionHtml) : null;
@@ -72,6 +73,24 @@ export function openJobDetails(job, { score, fit, actions, onClose } = {}) {
   if (!d.open) d.showModal();
   if (location.hash !== '#job') location.hash = 'job';
   d.querySelector('[data-close]').focus({ preventScroll: true });
+}
+
+function renderTracking(d, tracking) {
+  const row = d.querySelector('.js-track');
+  row.hidden = !tracking;
+  if (!tracking) return;
+  const applied = d.querySelector('.js-track-applied');
+  const referred = d.querySelector('.js-track-referred');
+  applied.setAttribute('aria-pressed', String(tracking.applied()));
+  referred.setAttribute('aria-pressed', String(tracking.referred()));
+  applied.onclick = () => applied.setAttribute('aria-pressed', String(tracking.toggleApplied()));
+  referred.onclick = () => referred.setAttribute('aria-pressed', String(tracking.toggleReferred()));
+}
+
+/** Close the sheet from outside (e.g. after marking a feed job applied), then run `after`. */
+export function closeJobDetails(after) {
+  if (dialog?.open) close(after);
+  else after?.();
 }
 
 function renderFit(d, fit) {

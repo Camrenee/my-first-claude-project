@@ -169,7 +169,7 @@ export function initProfile({ onDone }) {
       return;
     }
     const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
-    summary.textContent = `This clears ${plural(swipes, 'swiped job')} and ${plural(saved, 'saved job')}, so every current job shows up again. Your resume and settings stay.`;
+    summary.textContent = `This clears ${plural(swipes, 'swiped job')} and ${plural(saved, 'saved job')}, so every current job shows up again. Your resume, settings and application history stay.`;
     confirmBox.hidden = false;
     startBtn.setAttribute('aria-expanded', 'true');
     yes.focus();
