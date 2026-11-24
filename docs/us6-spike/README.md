@@ -93,6 +93,7 @@ were bad it would still pass at 85% (23/27).
 $3 a month. Run it on GitHub when jobs are fetched, like the requirement embeddings would have been.
 
 Caveats: one resume, one run (no repeat runs to check variance), and one person labeling.
-`labels.json` marks `ashby:openai:…|1|1` ("Have 6+ years of product management experience…")
-as good, which breaks the rule that years-of-experience requirements are always bad. It was left
-as is here and should be reviewed.
+`labels.json` marked one years-of-experience pair as good (OpenAI "Have 6+ years of product
+management experience…" ↔ the self-serve onboarding line). That label came from part 1 and broke
+the rule; it is now corrected to bad. Effect: part 1's best on-device result drops from 50% to 47%
+(17/36); part 2 numbers are unchanged unless a model picked that pair.

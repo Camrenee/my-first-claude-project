@@ -71,7 +71,7 @@
  "greenhouse:betterment:8400644|3|4": false,
  "greenhouse:via:8951205002|1|4": false,
  "ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|8|4": false,
- "ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|7|1": true,
+ "ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|7|1": false,
  "greenhouse:stripe:8190038|14|6": true,
  "greenhouse:stripe:8384434|12|7": false,
  "greenhouse:affirm:8075414003|5|5": true,
