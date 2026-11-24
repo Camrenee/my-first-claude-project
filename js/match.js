@@ -4,7 +4,7 @@
 // also shows, weighted by how much the posting stresses each one and how distinctive it is.
 // Word overlap (terms below) is the fallback for postings that name few lexicon skills.
 // Pure functions only, so the same code runs in Node tests.
-import { skillCounts, SKILL_BY_ID } from './skills.js';
+import { skillCounts, SKILL_BY_ID, resumeEvidenceText } from './skills.js';
 
 const STOP = new Set(
   `a about above across after again all also am an and any are as at be because been before being below between both but by can
@@ -74,7 +74,7 @@ function counts(list) {
  * @returns {(id: string) => {score: number, matched: {id: string, label: string}[], missing: {id: string, label: string}[]}}
  */
 export function buildMatcher(resumeText, docs) {
-  const resumeSkills = skillCounts(resumeText);
+  const resumeSkills = skillCounts(resumeEvidenceText(resumeText));
   const docSkills = new Map(docs.map((d) => [d.id, skillCounts(d.text)]));
   const df = new Map();
   for (const m of docSkills.values()) for (const id of m.keys()) df.set(id, (df.get(id) ?? 0) + 1);

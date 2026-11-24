@@ -190,3 +190,16 @@ test('boilerplate (EEO, pay, benefits, recruiting) never counts as what the job 
     ['You will own billing.']
   );
 });
+
+test('generic words and resume headings are not skill matches (the "Education" bug)', async () => {
+  const { skillCounts } = await import('../../js/skills.js');
+  const resume = 'Alex Rivera\nEducation\nB.A. Economics, Columbia University\n• Led payments roadmap for B2B invoicing';
+  const job = 'We offer an education stipend. Bachelor’s degree or equivalent education required. Ability to travel. Global company. Strong technical skills and content strategy.';
+  const docs = [{ id: 'j', text: job }, { id: 'k', text: 'Own the K-12 learning platform used by teachers and students in classrooms.' }];
+  const m = buildMatcher(resume, docs);
+  assert.ok(!m('j').matched.some((x) => x.id === 'edtech'), 'education stipend is not edtech');
+  for (const id of ['edtech', 'travel', 'international', 'media']) assert.ok(!skillCounts(job).has(id), id);
+  assert.ok(skillCounts(docs[1].text).has('edtech'));
+  // A resume with only an "Education" heading doesn't claim edtech experience
+  assert.equal(m('k').matched.length, 0);
+});

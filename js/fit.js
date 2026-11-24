@@ -4,7 +4,7 @@
 // (trimmed to a window around the match when the line is very long), next to the sentence in
 // the posting that asks for the same skill. If nothing overlaps, we say so.
 // Pure functions; no DOM.
-import { findSkill, SKILL_BY_ID } from './skills.js';
+import { findSkill, SKILL_BY_ID, isResumeHeading } from './skills.js';
 
 const BULLET = /^•\s*/;
 
@@ -60,7 +60,7 @@ function bestLine(skillId, lines, used, matched) {
   let best = null;
   lines.forEach((raw, index) => {
     const line = String(raw).trim();
-    if (!line || !findSkill(skillId, line)) return;
+    if (!line || isResumeHeading(line) || !findSkill(skillId, line)) return;
     let score = 0;
     if (BULLET.test(line) || /^[-*–]\s/.test(line)) score += 3; // accomplishments live in bullets
     if (line.length >= 40) score += 2;
