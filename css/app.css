@@ -60,12 +60,25 @@ textarea {
   margin-bottom: 20px;
 }
 
+.screen-today {
+  padding-top: 14px;
+}
+
 .screen-today .screen-header {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .screen-today h1 {
-  font-size: 28px;
+  font-size: 24px;
+}
+
+.screen-today .eyebrow {
+  margin-bottom: 0;
+}
+
+.screen-today .deck-status {
+  margin-top: 4px;
+  font-size: 14px;
 }
 
 .eyebrow {
@@ -1893,4 +1906,19 @@ h1 {
   color: var(--card-text-muted);
   font-size: 15px;
   font-weight: 700;
+}
+
+/* Smart matching gets the card's room: Claude's pairs replace the description preview
+   (the full description is one tap away in details), and each quote can run to 4 lines. */
+.fit-box.is-smart ~ .jc-preview,
+.fit-box.is-loading ~ .jc-preview {
+  display: none;
+}
+
+.fit-box.is-smart .pair {
+  -webkit-line-clamp: 4;
+}
+
+.fit-box.is-smart .pair + .pair {
+  margin-top: 8px;
 }
