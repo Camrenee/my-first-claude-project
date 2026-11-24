@@ -1922,3 +1922,22 @@ h1 {
 .fit-box.is-smart .pair + .pair {
   margin-top: 8px;
 }
+
+/* Card: "You did" bullets, one line each */
+.did-list {
+  gap: 6px;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.did-list li {
+  display: list-item;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  color: var(--card-text);
+  font-weight: 600;
+}
+
+.did-list li::marker {
+  color: var(--accent);
+}

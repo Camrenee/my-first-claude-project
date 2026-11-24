@@ -121,3 +121,15 @@ export function badgeHtml(fit) {
   if (s?.state === 'loading') return 'Matching…';
   return fit.score == null ? '' : `<strong>${Number(fit.score)}%</strong> match`;
 }
+
+/**
+ * A short version of a resume line for the card: the line's own words, cut at a word
+ * boundary with "…". Never reworded.
+ */
+export function shortQuote(text, max = 60) {
+  const t = String(text).replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max + 1);
+  const end = cut.lastIndexOf(' ');
+  return `${(end > max * 0.5 ? cut.slice(0, end) : t.slice(0, max)).replace(/[\s,;:.–—-]+$/, '')}…`;
+}

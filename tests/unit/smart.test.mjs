@@ -73,3 +73,14 @@ test('prompt numbers requirements and resume lines; cache key changes with the r
   assert.notEqual(a, cacheKey('job1', ['Led billing roadmap (edited)']));
   assert.ok(a.includes(MODEL));
 });
+
+test('card bullets: resume lines cut at a word boundary, never reworded', async () => {
+  const { shortQuote } = await import('../../js/fit.js');
+  const line = 'Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months';
+  const short = shortQuote(line);
+  assert.ok(short.length <= 61, short);
+  assert.ok(short.endsWith('…'));
+  assert.ok(line.startsWith(short.slice(0, -1)), 'a prefix of the real line');
+  assert.equal(short, 'Led roadmap for B2B invoicing and billing, growing ARR 40%…');
+  assert.equal(shortQuote('Ran A/B tests with SQL'), 'Ran A/B tests with SQL');
+});

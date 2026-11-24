@@ -115,10 +115,11 @@ test('card shows Claude’s top pair verbatim; app sends requirements + resume l
   const card = page.locator('#deck .job-card.is-top');
   await page.waitForFunction(() => document.querySelector('#deck .job-card.is-top .fit-box.is-smart'));
   assert.equal(await card.getAttribute('data-id'), BILLING.id);
-  const pairs = card.locator('.fit-box .pair');
-  assert.equal(await pairs.nth(0).locator('q').textContent(), 'Own the billing platform roadmap end to end');
-  assert.equal(await pairs.nth(1).locator('q').textContent(), 'Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months');
-  assert.equal(await card.locator('.fit-more').textContent(), '1 more reason →');
+  // Card: only "You did", as short bullets taken word for word from the resume
+  assert.equal(await card.locator('.fit-title').textContent(), 'You did');
+  const bullets = await card.locator('.did-list li').allTextContents();
+  assert.deepEqual(bullets, ['Led roadmap for B2B invoicing and billing, growing ARR 40%…', 'Ran pricing experiments and A/B tests with SQL and Amplitude']);
+  assert.equal(await card.locator('.pair').count(), 0); // "They want" lives in details
   assert.match(await card.locator('.match-badge').textContent(), /2 matches/);
 
   const sent = calls.find((c) => c.body.messages[0].content.includes('Figma')).body;
@@ -150,7 +151,7 @@ test('details show every pair with 👍/👎; votes are saved and summarized in 
     beforeLoad: (c) => mockClaude(c, { answer: billingAnswer }),
   });
   await page.waitForFunction(() => document.querySelector('#deck .job-card.is-top .fit-box.is-smart'));
-  await page.click('#deck .job-card.is-top .fit-more');
+  await page.click('#deck .job-card.is-top .jc-more');
   const sheet = page.locator('#job-sheet');
   await sheet.waitFor({ state: 'visible' });
   const reasons = sheet.locator('.pair-reason');

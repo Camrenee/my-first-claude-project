@@ -10,7 +10,7 @@ import { buildMatcher } from './match.js';
 import { openJobDetails, isDetailsOpen, closeJobDetails } from './job-details.js';
 import { trackingFor } from './track-actions.js';
 import { htmlToParagraphs, previewFromParagraphs, roleParagraphs } from './job-text.js';
-import { buildReasons, gapsFrom, badgeHtml } from './fit.js';
+import { buildReasons, gapsFrom, badgeHtml, shortQuote } from './fit.js';
 import { toLines } from './resume-parse.js';
 import { smartFor, resetSmartStatus } from './smart-fit.js';
 
@@ -306,17 +306,17 @@ function renderCardFit(el, job, fit, isTop) {
       box.append(Object.assign(document.createElement('p'), { className: 'fit-none', textContent: 'No strong matches with your resume for this one.' }));
       return;
     }
-    box.append(pairEl('They want', s.pairs[0].want), pairEl('You did', s.pairs[0].did));
-    if (s.pairs.length > 1) {
-      const more = document.createElement('button');
-      more.type = 'button';
-      more.className = 'fit-more';
-      const n = s.pairs.length - 1;
-      more.textContent = `${n} more reason${n === 1 ? '' : 's'} →`;
-      if (isTop) more.addEventListener('click', () => openDetails(job));
-      else more.tabIndex = -1;
-      box.append(more);
+    // Card: just what you did, as short bullets (cut, never reworded). Tapping the card
+    // opens the full "They want → You did" pairs.
+    box.querySelector('.fit-title').textContent = 'You did';
+    const list = Object.assign(document.createElement('ul'), { className: 'fit-list did-list' });
+    for (const p of s.pairs) {
+      const li = document.createElement('li');
+      li.textContent = shortQuote(p.did);
+      li.title = p.did;
+      list.append(li);
     }
+    box.append(list);
     return;
   }
   if (s.state === 'loading') {
