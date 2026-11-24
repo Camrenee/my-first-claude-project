@@ -1,0 +1,42 @@
+/* Design tokens from the Job Finder design spec. Change colors here only. */
+:root {
+  color-scheme: dark;
+  /* Screen */
+  --bg: #091540;
+  --on-bg: #ffffff;
+  --on-bg-muted: #abd2fa;
+
+  /* Cards & sheets */
+  --card: #ffffff;
+  --card-text: #091540;
+  --card-text-muted: #3d518c;
+  --accent: #1b2cc1;
+
+  /* Buttons */
+  --btn-primary: #7692ff;
+  --btn-primary-text: #091540;
+  --btn-secondary: #16224f;
+  --btn-secondary-text: #ffffff;
+  --btn-secondary-outline: #3d518c;
+
+  /* Tints */
+  --tint-fit: #eef4fe;
+  --tint-chip: #e8edff;
+  --tint-badge: #abd2fa;
+
+  /* Outline for unselected controls on white (≥3:1, WCAG 1.4.11) */
+  --outline: #7083bf;
+
+  /* Feedback (AA on white) */
+  --error: #b3261e;
+  --success: #1e6b3a;
+
+  /* Shape & type */
+  --radius-card: 34px;
+  --radius-field: 16px;
+  --radius-pill: 999px;
+  --touch: 44px;
+  --font: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --gutter: 16px;
+  --nav-h: 68px;
+}

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#091540" />
+    <meta name="description" content="One swipe feed of PM jobs in NYC and remote, matched to your resume." />
+    <title>Job Finder</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23091540'/%3E%3Crect x='14' y='12' width='36' height='40' rx='10' fill='%23fff'/%3E%3Ccircle cx='32' cy='27' r='7' fill='%237692FF'/%3E%3Crect x='22' y='39' width='20' height='5' rx='2.5' fill='%23ABD2FA'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/tokens.css?v=202611240145" />
+    <link rel="stylesheet" href="css/app.css?v=202611240145" />
+    <script type="importmap">{"imports":{"./js/app.js":"./js/app.js?v=202611240145","./js/feed-logic.js":"./js/feed-logic.js?v=202611240145","./js/feed.js":"./js/feed.js?v=202611240145","./js/fit.js":"./js/fit.js?v=202611240145","./js/job-details.js":"./js/job-details.js?v=202611240145","./js/job-text.js":"./js/job-text.js?v=202611240145","./js/match.js":"./js/match.js?v=202611240145","./js/profile.js":"./js/profile.js?v=202611240145","./js/resume-parse.js":"./js/resume-parse.js?v=202611240145","./js/skills.js":"./js/skills.js?v=202611240145","./js/store.js":"./js/store.js?v=202611240145","./js/toast.js":"./js/toast.js?v=202611240145","./js/track-actions.js":"./js/track-actions.js?v=202611240145","./js/tracker.js":"./js/tracker.js?v=202611240145","./js/tracking.js":"./js/tracking.js?v=202611240145"}}</script>
+    <script type="module" src="js/app.js?v=202611240145"></script>
+  </head>
+  <body>
+    <!-- ============ Today: swipe deck (US2) ============ -->
+    <main id="screen-today" class="screen screen-today" data-route="today" hidden>
+      <div class="ptr" id="ptr" aria-hidden="true"><span class="ptr-spinner"></span><span class="ptr-text">Pull to refresh</span></div>
+      <header class="screen-header">
+        <p class="eyebrow" data-greeting>Hello</p>
+        <h1>Here's today's shortlist</h1>
+        <p class="lede deck-status" id="deck-status"></p>
+      </header>
+
+      <section class="deck" id="deck" aria-label="Job cards" aria-describedby="deck-help"></section>
+      <p id="deck-help" class="visually-hidden">Swipe right or press the right arrow to save a job to apply. Swipe left or press the left arrow to pass.</p>
+
+      <div class="deck-actions" id="deck-actions">
+        <div class="action">
+          <button type="button" class="round-btn round-pass" id="btn-pass" aria-labelledby="lbl-pass">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+          <span class="action-label" id="lbl-pass">Pass</span>
+        </div>
+        <div class="action">
+          <button type="button" class="round-btn round-undo" id="btn-undo" aria-labelledby="lbl-undo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
+          </button>
+          <span class="action-label" id="lbl-undo">Undo</span>
+        </div>
+        <div class="action">
+          <button type="button" class="round-btn round-save" id="btn-save" aria-labelledby="lbl-save">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+          </button>
+          <span class="action-label" id="lbl-save">Save to apply</span>
+        </div>
+      </div>
+      <p class="visually-hidden" id="deck-live" aria-live="polite"></p>
+    </main>
+
+    <!-- ============ Tracker (US4 adds Applied / Referred / All and the weekly goal) ============ -->
+    <main id="screen-tracker" class="screen" data-route="tracker" hidden>
+      <header class="screen-header">
+        <p class="eyebrow">Tracker</p>
+        <h1>Your applications</h1>
+      </header>
+
+      <section class="card goal-card" id="goal-card" aria-labelledby="goal-h">
+        <div class="goal-top">
+          <h2 id="goal-h">This week</h2>
+          <p class="goal-week" id="goal-week"></p>
+        </div>
+        <p class="goal-count"><strong id="goal-count">0 of 2</strong> applications</p>
+        <div class="goal-bar" id="goal-bar" role="progressbar" aria-labelledby="goal-h" aria-valuemin="0" aria-valuemax="2" aria-valuenow="0"></div>
+        <p class="goal-note" id="goal-note"></p>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="Tracker views" id="tracker-tabs"></div>
+      <p class="lede tab-hint" id="tab-hint"></p>
+      <section id="tracker-list" class="queue-list" role="tabpanel" aria-labelledby="tab-to_apply"></section>
+    </main>
+
+    <!-- ============ Profile (US1) ============ -->
+    <main id="screen-profile" class="screen" data-route="profile" hidden>
+      <header class="screen-header">
+        <p class="eyebrow" data-profile-eyebrow>Your profile</p>
+        <h1 data-profile-title>Let's find your next PM role</h1>
+        <p class="lede">Tell us what you're after. Everything stays on this device. No sign-in, nothing uploaded.</p>
+      </header>
+
+      <form id="profile-form" novalidate>
+        <!-- Name -->
+        <section class="card" aria-labelledby="h-name">
+          <h2 id="h-name">What should we call you?</h2>
+          <p class="hint">Just your first name, for a friendly hello.</p>
+          <label class="visually-hidden" for="f-name">First name</label>
+          <input id="f-name" name="name" class="text-input" type="text" autocomplete="given-name" maxlength="40" placeholder="e.g. Alex" />
+        </section>
+
+        <!-- Resume -->
+        <section class="card" aria-labelledby="h-resume">
+          <h2 id="h-resume">Your resume</h2>
+          <p class="hint">We use it to rank jobs and show why you're a great fit.</p>
+
+          <div id="resume-empty">
+            <div class="dropzone" id="dropzone">
+              <p><strong>Upload a PDF or Word file</strong></p>
+              <label class="btn btn-primary" for="f-file">Choose a file</label>
+              <input id="f-file" class="visually-hidden" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+              <p>or</p>
+              <button type="button" class="link-btn" id="btn-paste">Paste the text instead</button>
+            </div>
+          </div>
+
+          <div id="resume-filled" hidden>
+            <div class="file-chip">
+              <span class="icon" aria-hidden="true" data-file-icon>TXT</span>
+              <div class="meta">
+                <p class="name" data-file-name>Pasted text</p>
+                <p class="sub" data-file-sub></p>
+              </div>
+            </div>
+            <label class="field-label" for="f-resume">Check it reads right. You can fix anything here.</label>
+            <textarea id="f-resume" name="resumeText" class="textarea" spellcheck="true" placeholder="Paste your resume text here"></textarea>
+            <div class="btn-row" style="margin-top: 10px">
+              <label class="btn btn-ghost" for="f-file-replace">Replace file</label>
+              <input id="f-file-replace" class="visually-hidden" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+              <button type="button" class="link-btn" id="btn-remove-resume">Remove resume</button>
+            </div>
+          </div>
+
+          <p class="notice" id="resume-notice" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- Roles -->
+        <section class="card" aria-labelledby="h-roles">
+          <h2 id="h-roles">Roles</h2>
+          <p class="hint">Pick at least one.</p>
+          <fieldset class="chips" aria-describedby="err-roles">
+            <legend class="visually-hidden">Roles</legend>
+            <label class="chip"><input type="checkbox" name="roles" value="pm" /><span>Product Manager</span></label>
+            <label class="chip"><input type="checkbox" name="roles" value="senior_pm" /><span>Senior PM</span></label>
+          </fieldset>
+          <p class="field-error" id="err-roles"></p>
+        </section>
+
+        <!-- Locations -->
+        <section class="card" aria-labelledby="h-loc">
+          <h2 id="h-loc">Where</h2>
+          <p class="hint">Manhattan includes hybrid roles in New York, NY.</p>
+          <fieldset class="chips" aria-describedby="err-locations">
+            <legend class="visually-hidden">Locations</legend>
+            <label class="chip"><input type="checkbox" name="locations" value="nyc" /><span>Manhattan</span></label>
+            <label class="chip"><input type="checkbox" name="locations" value="remote_us" /><span>Remote (US)</span></label>
+          </fieldset>
+          <p class="field-error" id="err-locations"></p>
+        </section>
+
+        <!-- Salary -->
+        <section class="card" aria-labelledby="h-salary">
+          <h2 id="h-salary">Salary floor</h2>
+          <p class="hint">We'll hide jobs whose range tops out at or below this.</p>
+          <label class="visually-hidden" for="f-salary">Salary floor in US dollars per year</label>
+          <div class="money">
+            <input id="f-salary" name="salaryFloor" class="text-input" type="text" inputmode="numeric" autocomplete="off" aria-describedby="err-salary" />
+          </div>
+          <p class="field-error" id="err-salary"></p>
+          <label class="switch-row" for="f-nosalary">
+            <span class="switch-text">Show jobs with no salary<small>They'll get a "Salary not listed" tag.</small></span>
+            <span class="switch">
+              <input id="f-nosalary" name="showNoSalary" type="checkbox" role="switch" />
+              <span class="track" aria-hidden="true"></span>
+            </span>
+          </label>
+        </section>
+
+        <p class="save-status" id="save-status" role="status" aria-live="polite"></p>
+        <button type="submit" class="btn btn-primary btn-block" id="btn-done">Show my shortlist</button>
+      </form>
+
+      <section class="card start-over" aria-labelledby="h-start-over">
+        <h2 id="h-start-over">Start over</h2>
+        <p class="hint">Clears your swipes, your saved jobs and today's shortlist, so every current job shows up again. Your resume, settings and application history stay.</p>
+        <button type="button" class="btn btn-ghost" id="btn-start-over" aria-expanded="false" aria-controls="start-over-confirm">Start over…</button>
+        <div class="start-over-confirm" id="start-over-confirm" hidden>
+          <p class="start-over-summary" id="start-over-summary"></p>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" id="btn-start-over-yes">Yes, start over</button>
+            <button type="button" class="link-btn" id="btn-start-over-no">Cancel</button>
+          </div>
+        </div>
+        <p class="notice is-info" id="start-over-status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <!-- ============ Job details sheet ============ -->
+    <dialog id="job-sheet" class="sheet" aria-labelledby="sheet-title">
+      <div class="sheet-inner">
+        <div class="sheet-bar">
+          <button type="button" class="sheet-close" data-close>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+            <span>Back</span>
+          </button>
+          <a class="sheet-original js-original" target="_blank" rel="noopener noreferrer">Original posting<span class="visually-hidden"> (opens in a new tab)</span> ↗</a>
+        </div>
+        <div class="sheet-scroll">
+          <div class="jc-head">
+            <div class="logo js-logo" aria-hidden="true"></div>
+            <div class="jc-co">
+              <p class="jc-company js-company"></p>
+              <p class="jc-posted js-posted"></p>
+            </div>
+            <span class="match-badge js-match"></span>
+          </div>
+          <h2 class="sheet-title js-title" id="sheet-title"></h2>
+          <ul class="jc-facts">
+            <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span class="js-loc"></span></li>
+            <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg><span class="js-salary"></span></li>
+          </ul>
+          <div class="track-row js-track" role="group" aria-label="Status">
+            <button type="button" class="track-btn js-track-applied" aria-pressed="false"><span class="tb-icon" aria-hidden="true">✓</span> Applied</button>
+            <button type="button" class="track-btn js-track-referred" aria-pressed="false"><span class="tb-icon" aria-hidden="true">✓</span> Referred</button>
+          </div>
+          <section class="sheet-fit js-fit" aria-labelledby="fit-h">
+            <h3 class="sheet-section" id="fit-h">Why you're a great fit</h3>
+            <ul class="reason-list js-reasons"></ul>
+            <p class="fit-none js-fit-none"></p>
+          </section>
+          <section class="sheet-gaps js-gaps" aria-labelledby="gaps-h">
+            <h3 class="sheet-section" id="gaps-h">Worth a look before you apply</h3>
+            <p class="gaps-note">This job also asks for these, and your resume doesn't show them yet. If you have real experience with any of them, bring it out when you tailor.</p>
+            <ul class="gap-list js-gap-list"></ul>
+          </section>
+          <h3 class="sheet-section">About the job</h3>
+          <div class="job-description js-description"></div>
+        </div>
+        <div class="sheet-actions js-actions">
+          <p class="sheet-blocked js-blocked" role="status"></p>
+          <div class="sheet-buttons">
+            <button type="button" class="btn btn-secondary js-pass">Pass</button>
+            <button type="button" class="btn btn-primary js-save">Save to apply</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <p class="visually-hidden" id="app-live" aria-live="polite"></p>
+
+    <!-- ============ Bottom nav ============ -->
+    <nav class="nav" aria-label="Main">
+      <ul>
+        <li>
+          <a href="#today" data-nav="today">
+            <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="4"/><path d="M9 9h6M9 13h4"/></svg></span>
+            Today
+          </a>
+        </li>
+        <li>
+          <a href="#tracker" data-nav="tracker">
+            <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h10M4 18h7"/><path d="m16 16 2 2 4-4"/></svg></span>
+            Tracker
+          </a>
+        </li>
+        <li>
+          <a href="#profile" data-nav="profile">
+            <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span>
+            Profile
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </body>
+</html>
