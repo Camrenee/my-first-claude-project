@@ -47,3 +47,18 @@ phone. Go/no-go bars (first load < 30 s, later < 3 s) pass, except gte on slow 4
 - `compare.mjs`, `score.mjs`, `hybrid.mjs`: run models, score against labels
 - `timing.cjs` + `timing-page.html`: browser timing harness
 - Models were downloaded from Hugging Face (Xenova/*) and are not committed.
+
+## Part 2: Claude as the judge (ready to run)
+`claude-judge.mjs` sends each posting's requirements and the resume lines (numbered) to Claude
+and gets back up to 3 index pairs, so the app can show both texts word for word. It scores the
+pairs against the same labels (`labels.json`, all 104 judged pairs) and lists any new pairs to judge
+by the same rule.
+
+```
+cd docs/us6-spike
+npm install @anthropic-ai/sdk zod
+ANTHROPIC_API_KEY=... node claude-judge.mjs            # Haiku 5.5 and Sonnet 5.5
+```
+
+Go bar: at least 85% of shown pairs correct (after judging any new ones) and 2+ pairs on most jobs.
+Expected cost of one run: well under $1.

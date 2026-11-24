@@ -1,0 +1,252 @@
+{
+ "resume": [
+  "Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months",
+  "Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%",
+  "Ran pricing experiments and A/B tests with SQL and Amplitude",
+  "Launched patient scheduling used by 200 clinics",
+  "Partnered with sales on enterprise deals and growth",
+  "Built a dashboard tracking funnel conversion that the exec team reviewed weekly",
+  "Interviewed 40+ customers to define requirements for a new payments API",
+  "Managed a team of 2 associate PMs and ran weekly product reviews"
+ ],
+ "jobs": [
+  {
+   "id": "greenhouse:figma:6266479004",
+   "company": "Figma",
+   "requirements": [
+    "Partner with your cross-functional teams to define and build a reliable and flexible billing platform",
+    "Iterate on the core billing and payments infrastructure in partnership with Finance, Sales, Support, and Engineering, balancing business needs with long-term platform scalability",
+    "Partner with other Figma product teams to power new monetization efforts and unlock sales levers",
+    "Drive planning and prioritization, defining and tracking key metrics, and work closely with engineers to define feature functionality and execute against the roadmap",
+    "5+ years of experience as a product manager",
+    "Previous experience with billing / commercial systems",
+    "Worked on products with a technical platform",
+    "A track record of leading complex product launches that require alignment across many teams",
+    "Excellent communication and analytical skills",
+    "Have deep user empathy for both internal and external customers",
+    "Excellent verbal and written communication skills, with the ability to adjust your approach for different audiences and rally a team behind a clear vision",
+    "Comfort working in a rapidly changing environment and adapting as priorities shift"
+   ]
+  },
+  {
+   "id": "ashby:paxos:501fcbfb-471f-4d03-ad95-0d66349ed750",
+   "company": "Paxos",
+   "requirements": [
+    "Own the Custody strategy and roadmap, and drive it through execution, from defining requirements to launch and iteration",
+    "Define the security and control capabilities institutional customers rely on to protect and govern their assets, including wallet management and the controls around how assets are held and moved",
+    "Drive the infrastructure and integrations that extend Custody to meet institutional requirements, including relationships with third-party providers and partners",
+    "Collaborate with Engineering, Design, Compliance, Legal, and Operations to deliver capabilities that are secure, usable, and meet the regulatory expectations of institutional clients",
+    "Work with Go-To-Market teams to drive adoption of new capabilities, from positioning and client onboarding to feedback that shapes what comes next",
+    "Engage directly with institutional customers and prospects, and turn their requirements into capabilities that serve the broader client base",
+    "About you 6+ years of product management experience at a high-growth financial infrastructure company",
+    "Deep partnership with engineering teams on highly technical platform problems",
+    "A demonstrated ability to make effective product prioritization decisions with imperfect information",
+    "Demonstrated success getting buy-in from cross-functional teams, including senior and executive stakeholders, on your product vision and strategy in written and verbal forums",
+    "Experience building enterprise B2B products and working directly with clients and client-facing teams",
+    "Experience with digital asset custody, wallet infrastructure, key management, or HSMs",
+    "Experience supporting large financial institutions including banks, asset managers, or wealth managers"
+   ]
+  },
+  {
+   "id": "greenhouse:peloton:8399956",
+   "company": "Peloton",
+   "requirements": [
+    "Collaborate with Content & Studio Production teams to modernize the software used for daily content production and library management and reimagine processes and SOPs for their use",
+    "Identify and implement opportunities to use AI/LLMs to reduce manual production overhead, improve quality and speed up content publishing",
+    "Partner with other Product Managers to think through and implement changes to our internal tools needed for new products and software features",
+    "Immerse yourself in Peloton’s programming and production processes and serve as the SME within the Product team",
+    "Generate detailed requirements documentation and process flows and socialize them with Product, Content, and Engineering",
+    "Support the rollout of changes to internal tools by supporting employee training and documentation",
+    "Work closely with Engineering to define requirements and designs, document tickets and perform user acceptance testing ahead of release",
+    "Develop deep relationships with the Content, Production, and Engineering teams",
+    "2+ years of Product Management Experience",
+    "Experience working with internal tooling used for live production or content management",
+    "Experience with implementing AI to improve processes and workflows",
+    "Exceptional communication skills, especially the ability to work closely with experts in a different field to understand their needs and translate them into software changes",
+    "Strong UX sensibility and experience triaging and responding to user feedback",
+    "Experience working with an agile scrum engineering team",
+    "Highly collaborative and willing to give and accept constructive feedback",
+    "Self starter; ability to act autonomously",
+    "Constant attention to detail",
+    "Experience working on a consumer software product with integrated hardware",
+    "Experience with ML-based recommendations and/or content curation tools",
+    "Experience in health and fitness, content streaming, or other related fields"
+   ]
+  },
+  {
+   "id": "greenhouse:betterment:8400644",
+   "company": "Betterment",
+   "requirements": [
+    "New York City: $145,000 - $170,000",
+    "5-7 years of product management experience at a financial services or financial technology company with a focus on trading and/or portfolio management preferred",
+    "Strong analytical abilities with a passion for data-inspired decision making",
+    "Self-starter and demonstrated success at communicating, prioritizing, and balancing needs cross-functionally",
+    "Obsessive attention to detail and strong organization skills in a fast-paced environment",
+    "Ability to build strong relationships across functions within an organization",
+    "Creative problem solving skills that balance complying with regulatory realities and a commitment to innovation",
+    "Ability to think connect abstract or complicated back-end builds to delightful customer experiences",
+    "The story-telling capabilities that can help the organization see the long term vision of our advisor toolset",
+    "Experience shipping, or a strong point of view on shipping, AI-powered features, including how to evaluate output quality and manage risk"
+   ]
+  },
+  {
+   "id": "greenhouse:via:8951205002",
+   "company": "Via",
+   "requirements": [
+    "Define AI Product Strategy: Lead the strategy for AI Labs, leveraging LLMs and agentic workflows to solve complex municipal challenges beyond traditional transit",
+    "Work Forward-Deployed: Partner directly with city leaders on-site to run scoping workshops, identify core problems, and iterate quickly on scalable AI solutions",
+    "Create Crisp Specs: Translate ambiguous requirements and user research into clear product specifications for intelligent tooling and real-time decision-making features",
+    "Own the Roadmap: Prioritize a fast-moving, varied roadmap using a data-informed framework to evaluate the ROI of new AI opportunities",
+    "Drive Execution: Act as the central liaison across cross-functional teams, steering day-to-day execution with Forward Deployed Engineers, Data Science, and Operations",
+    "Shape the Culture: Help establish the foundational product and technical culture of AI Labs, defining how we build, ship, and iterate from day one",
+    "5+ years of PM experience at successful startups or global companies",
+    "AI expertise: Proven track record of identifying and shipping impactful AI-powered solutions (e.g., LLMs, predictive models, agentic workflows)",
+    "Zero-to-one builder: Demonstrated success owning end-to-end product lifecycles from a completely blank canvas",
+    "Comfortable with ambiguity: You thrive in early-stage environments and take proactive ownership without needing perfectly defined requirements",
+    "Technical translator: Ability to synthesize customer feedback and technical AI constraints into a clear, compelling product vision",
+    "Customer-facing: Comfortable traveling to collaborate directly on-site with users, city leaders, and external stakeholders",
+    "Domain passion: A strong interest in the public sector, smart cities, and accessibility (direct working experience in these areas is a huge plus)"
+   ]
+  },
+  {
+   "id": "ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f",
+   "company": "OpenAI",
+   "requirements": [
+    "Own the product strategy, roadmap, and results for your growth area, translating an ambitious goal into clear priorities and a practical plan.",
+    "Understand the needs of business owners, admins, and members through customer conversations, product data, and close partnership with design and go-to-market teams.",
+    "Build and improve experiences that help businesses get started, invite colleagues, adopt useful workflows, and keep finding value in ChatGPT.",
+    "Identify new growth opportunities, including tailored experiences and distribution paths that help small businesses adopt ChatGPT.",
+    "Define success metrics and design experiments that distinguish incremental growth from activity that would have happened anyway. Use what you learn to scale, iterate, or stop an approach.",
+    "Lead execution with engineering, design, and data science, making thoughtful tradeoffs between speed, customer experience, and long-term impact.",
+    "Align with core product, monetization, marketing, sales, and partnerships teams on shared goals and dependencies. Drive outcomes across surfaces and capabilities that span team boundaries.",
+    "Have 6+ years of product management experience, including a track record of delivering measurable growth for self-serve SaaS, business, or team-based products.",
+    "Have owned a meaningful growth problem from strategy through launch and iteration, with depth in acquisition, activation, expansion, retention, or product-led distribution.",
+    "Are highly analytical and fluent in experimentation, with the judgment to connect funnel and cohort metrics to real customer value.",
+    "Have strong product sense and empathy for business users, and can turn a complex customer journey into a simple, useful experience.",
+    "Work effectively with technical and nontechnical partners, communicate clearly, and influence decisions without relying on formal authority.",
+    "Are comfortable with ambiguity, move quickly, and stay hands-on as you learn what works and adapt your plans.",
+    "Are motivated by OpenAI’s mission and excited to help businesses use AI in their everyday work."
+   ]
+  },
+  {
+   "id": "greenhouse:stripe:8190038",
+   "company": "Stripe",
+   "requirements": [
+    "Develop a deep understanding of the needs of businesses interacting on the network and identify critical pain points to address.",
+    "Drive the product development lifecycle by setting strategic priorities, outlining product requirements, and leading cross-functional teams in delivering impactful solutions for our users.",
+    "Collaborate with design, engineering, and other stakeholders to create user-centric product experiences that are simple yet powerful.",
+    "Represent the Business Network externally with partners, clients, and stakeholders to gather feedback and promote our initiatives.",
+    "Monitor key performance indicators and use data analytics to drive product decisions and optimizations.",
+    "Communicate product updates and vision effectively with Stripe’s leadership and broader organization to align efforts and increase visibility.",
+    "10+ years of Product Management experience",
+    "Computer Science background or equivalent technical experience",
+    "Demonstrated experience of leading initiatives across large engineering organizations, spanning multiple teams to influence tech roadmap planning and execution",
+    "Strong written and verbal communication skills, structuring ambiguous concepts clearly and from first principles",
+    "Thrive in a collaborative environment involving different functions, stakeholders, and subject matter experts",
+    "Deep empathy for users balancing autonomy and guidance in digital commerce experiences",
+    "Background in launching new products or features, particularly in a startup or early-stage environment.",
+    "Familiarity with complex technical systems and an ability to balance tactical and strategic considerations in a product roadmap. Experience building APIs or new integration experiences for users",
+    "Experience in building or operating systems that involve user identity, payments, or financial transactions.",
+    "You’ve founded a business / startup, taking a product from 0-1"
+   ]
+  },
+  {
+   "id": "greenhouse:stripe:8384434",
+   "company": "Stripe",
+   "requirements": [
+    "Set the vision and strategy for new financial data products, identifying where Stripe can solve valuable customer problems and build a differentiated business.",
+    "Spend time with developers and customers to understand their needs, test ideas, and decide which opportunities to pursue.",
+    "Partner with Engineering and Design to turn ambiguous opportunities into simple, high-quality products, moving quickly while earning users’ trust.",
+    "Work directly with early customers to help them launch, learn what makes the product valuable, and use that feedback to improve it.",
+    "Collaborate with Sales, Marketing, and Partnerships to bring products to market and turn early customer successes into broader adoption.",
+    "Define success and use customer feedback, usage, and retention to decide where to invest, iterate, or change direction.",
+    "6+ years of product management or product-focused founder experience",
+    "A track record of launching and growing new products for businesses, with ownership from customer discovery through adoption.",
+    "Strong product judgment and creativity, with the ability to turn an open-ended problem into a clear direction and make progress with incomplete information.",
+    "A hands-on approach to building a business. You’re comfortable pitching early customers, working through obstacles, and changing your approach as you learn.",
+    "Experience partnering closely with engineers on technical products, with a high bar for product quality and the ability to make complex experiences feel simple.",
+    "Strong analytical skills and clear written and verbal communication. You can use data and customer insights to make decisions and explain your reasoning.",
+    "Experience leading work across teams and external partners, with the autonomy, persistence, and attention to detail to see it through.",
+    "Experience with financial products, data platforms, or products that use AI.",
+    "Experience building in an early-stage environment and scaling products within a larger organization.",
+    "Experience developing products that serve both businesses and their end users."
+   ]
+  },
+  {
+   "id": "greenhouse:affirm:8075414003",
+   "company": "Affirm",
+   "requirements": [
+    "You will partner with IT leadership to define and manage priorities for Affirm's collaboration and productivity tools, including Slack, Notion, Google Workspace, and emerging AI-powered technologies.",
+    "You will turn employee needs, business priorities, and technical constraints into clear requirements, practical solutions, and actionable roadmaps that guide technology improvements.",
+    "You will help guide the technology lifecycle, from evaluating new solutions and developing business cases to optimizing existing investments, supporting vendor renewals, and recommending when to consolidate or retire tools.",
+    "You will lead the rollout and adoption of new tools, features, and AI-powered capabilities, partnering with Internal Communications, business leaders, and employee champions to help Affirmers navigate change with confidence.",
+    "You will connect Affirmers with practical guidance, self-service resources, and learning opportunities—leveraging vendor expertise, existing materials, and on-demand options—to help them build confidence and get more value from workplace technology.",
+    "You will define success measures, use employee feedback, adoption data, and support trends to evaluate outcomes, and recommend improvements that enhance the employee experience and inform technology priorities.",
+    "You will partner with IT Engineering, Security, Legal, Procurement, and vendors to deliver solutions that balance employee needs, business value, technical feasibility, cost, and risk.",
+    "You have 5+ years of relevant experience in IT product or program management, workplace technology, technology-focussed organizational change management, or a related field, or an equivalent combination of education and practical experience.",
+    "You have experience identifying and delivering improvements to employee workflows through enterprise collaboration and productivity platforms, such as Slack, Notion, Google Workspace, or similar technologies, and are eager to apply that same approach to emerging AI capabilities.",
+    "You have experience gathering stakeholder needs, defining requirements, prioritizing opportunities, and developing actionable plans or roadmaps for technology solutions.",
+    "You have experience leading technology rollouts, organizational change initiatives, or employee adoption programs that help people confidently embrace new tools and ways of working.",
+    "You communicate clearly with different audiences and have experience identifying, organizing, and sharing resources that help employees understand and adopt workplace technologies.",
+    "You use data, employee feedback, and support trends to evaluate technology adoption, measure outcomes, and identify opportunities for improvement.",
+    "You build effective relationships across technical and business teams, using sound judgment to balance competing priorities, navigate ambiguity, and influence decisions without direct authority."
+   ]
+  },
+  {
+   "id": "lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60",
+   "company": "Olo",
+   "requirements": [
+    "Ability to travel to customers, partners, conferences, and Olo HQ in NYC, as needed.",
+    "About Olo Olo is a leading restaurant technology provider with ordering, payment, and guest engagement solutions that help brands increase orders, streamline operations, and improve the guest experience.",
+    "Each day, Olo processes millions of orders on its open SaaS platform, gathering the right data from each touchpoint into a single source, so restaurants can better understand and better serve every guest on every channel, every time.",
+    "Over 800 restaurant brands trust Olo and its network of more than 400 integration partners to innovate on behalf of the restaurant community, accelerating technology’s positive impact and creating a world where every restaurant guest feels like a regular.",
+    "Since 2015, we have been evolving our culture to continue to support a more distributed workforce and now over 75% of our team works remotely across the U.S.",
+    "If you're in the New York City area, you can choose to work remotely or from Olo's headquarters.",
+    "We encourage you to apply!",
+    "At Olo, we believe bringing together people with varied experiences and viewpoints leads to better results.",
+    "Don't check every box in the job description?",
+    "Research shows many qualified candidates hold back from applying unless they meet all listed requirements.",
+    "We're committed to creating a genuine workplace where everyone can contribute their best work—this improves our decision-making and helps us better serve our communities.",
+    "If you're enthusiastic about this role but your background doesn't perfectly align with every qualification, we encourage you to apply anyway.",
+    "You might be exactly the right fit for this or other positions.",
+    "California Residents: CCPA notice"
+   ]
+  },
+  {
+   "id": "greenhouse:stripe:8393939",
+   "company": "Stripe",
+   "requirements": [
+    "Develop a deep understanding of Finance users, jobs-to-be-done, compliance and regulatory considerations, and data dependencies, then translate that understanding into a clear roadmap for agentic automations.",
+    "Own products end to end, from problem discovery and strategy through delivery, adoption, measurement, and iteration",
+    "Build reusable data and self-serve workflow capabilities that eliminate manual overhead and enable future automated Finance use cases",
+    "Partner with Finance, engineering, data, security, legal, and others to make sound product and architecture tradeoffs in a business-critical and control-sensitive environment",
+    "Define measures to understand adoption, engagement, and impact for products and develop insights into the metrics to guide improvements to the product",
+    "Develop Finance products that enable Stripes to self-serve the creation and operation of agentic automations, while establishing appropriate boundaries for autonomous execution, evaluation methods, and controls for human review",
+    "Use AI-enabled tools throughout product development and help establish effective practices for AI-assisted discovery, prototyping, specification, testing, and iteration",
+    "Balance new product development with reliability, operational ownership, and the long-term health of the portfolio",
+    "5+ years of product management or equivalent experience leading the development of complex software products",
+    "Experience independently taking a product from problem discovery through launch, adoption, measurement, and iteration",
+    "Experience working closely with engineering and data teams on systems involving data models, integrations, APIs, or complex operational workflows",
+    "Demonstrated ability to synthesize the needs of multiple user groups and lead decisions across organizational boundaries",
+    "Ability to communicate clearly about product strategy, priorities, tradeoffs, risks, and results with both technical and nontechnical partners",
+    "Experience building products for tax, treasury, accounting, regulatory reporting, or other control-sensitive domains",
+    "Experience with enterprise data platforms, workflow systems, internal tool development, or systems of record",
+    "Experience applying AI or automation to expert workflows while preserving human review, auditability, and accountability",
+    "Experience maturing a product from active development into a reliable, sustainable operating model"
+   ]
+  },
+  {
+   "id": "greenhouse:justworks:8356649",
+   "company": "Justworks",
+   "requirements": [
+    "Embrace complex platform and experience related stakeholder problems",
+    "Analyze funnel drop-offs, design and run experiments, work with research to interview customers, and partner with Data Science to define and track activation metrics",
+    "Demonstrate expertise in deploying a product strategy and effectively tie insights to roadmap outcomes",
+    "Scope, prioritize, and execute projects to deliver measurable business impact while ensuring clarity on objectives, leverage, and accountability for outcomes",
+    "Partner deeply with Design and Engineering peers and organize and lead effective team processes and routines",
+    "Demonstrate a rich understanding of engineering concepts, concerns and tradeoffs, and effectively communicate them to manage stakeholder expectations around deadlines and scope",
+    "Drive camaraderie with your team while demonstrating effective collaboration with PMs across other pods/teams"
+   ]
+  }
+ ]
+}
