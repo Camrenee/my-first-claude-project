@@ -20,7 +20,8 @@ python3 -m http.server 8000     # then open http://localhost:8000
 | US1 Profile: resume upload/paste, roles, locations, salary floor | PR #2 |
 | US2 Swipe feed: daily deck, match score, queue of 5, undo, pull to refresh | PR #3 |
 | US5 Why I fit: reasons tied to resume lines on the card and in details | PR #4 |
-| US4 Tracking: Applied / Referred, tabs, weekly goal | ✅ this branch |
+| US4 Tracking: Applied / Referred, tabs, weekly goal | PR #5 |
+| US6 Smart matching: Claude pairs requirements with resume lines (opt-in, your own key) | ✅ this branch |
 | US3 Tailoring | next |
 
 ## Layout
@@ -39,6 +40,11 @@ js/tracker.js       US4 Tracker: tabs, weekly goal, Applied / Referred, referral
 js/tracking.js      US4 rules: tabs, Monday–Sunday weeks, goal and streak (pure, unit-tested)
 js/track-actions.js Applied / Referred actions shared by the Tracker and job details
 js/toast.js         short confirmation messages, also read out to screen readers
+js/smart-fit.js     US6: asks Claude for "They want → You did" pairs; cache, errors, fallback
+js/requirements.js  US6: splits postings into requirements and resumes into evidence lines
+js/smart-settings.js US6: Profile card (switch, API key, privacy note, feedback stats)
+js/feedback.js      US6: 👍/👎 on each pair, stats and export
+vendor/anthropic-sdk-1.7.0/  Anthropic SDK bundled for the browser (loaded only when smart matching is on)
 js/job-details.js   job details sheet: full description, Pass / Save to apply
 js/job-text.js      safe description HTML, card preview text, boilerplate filter
 js/fit.js           US5 "Why you're a great fit": reasons quoting your resume lines

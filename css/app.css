@@ -1712,3 +1712,185 @@ h1 {
 .qi-actions .qi-remove {
   margin-left: auto;
 }
+
+/* =====================================================================
+   US6 Smart matching: "They want → You did" pairs, thumbs, Profile card
+   ===================================================================== */
+.pair {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pair + .pair {
+  margin-top: 6px;
+}
+
+.pair-label {
+  display: inline;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.pair q {
+  color: var(--card-text);
+}
+
+.fit-box .pair-label + q {
+  color: var(--card-text-muted);
+}
+
+.fit-more {
+  min-height: var(--touch);
+  margin: 2px 0 -10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.fit-box.is-loading .fit-none {
+  background: linear-gradient(90deg, var(--card-text-muted), var(--accent), var(--card-text-muted));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sk 1.6s linear infinite;
+}
+
+.fit-note,
+.fit-source {
+  margin: 6px 0 0;
+  color: var(--card-text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.fit-source:empty {
+  display: none;
+}
+
+/* Details: pairs as cards, each with thumbs */
+.reason-list:has(.pair-reason) {
+  padding: 0;
+  background: none;
+  list-style: none;
+}
+
+.pair-reason {
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: var(--tint-fit);
+}
+
+.pair-reason .pair {
+  -webkit-line-clamp: unset;
+  display: block;
+}
+
+.pair-reason .pair-label {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.pair-reason .pair + .pair {
+  margin-top: 10px;
+}
+
+.thumbs {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.thumb {
+  display: grid;
+  place-items: center;
+  width: var(--touch);
+  height: var(--touch);
+  border: 2px solid var(--outline);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--card-text-muted);
+  cursor: pointer;
+}
+
+.thumb svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.thumb[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Profile card */
+.smart-key {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.smart-key .text-input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+}
+
+.smart-about {
+  margin-top: 12px;
+  color: var(--card-text-muted);
+  font-size: 15px;
+}
+
+.smart-about summary {
+  min-height: var(--touch);
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.smart-about ul {
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+
+.smart-about li {
+  margin-bottom: 6px;
+}
+
+.feedback-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.feedback-stats {
+  flex: 1 1 200px;
+  margin: 0;
+  color: var(--card-text-muted);
+  font-size: 15px;
+  font-weight: 700;
+}

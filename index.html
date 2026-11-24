@@ -10,10 +10,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/tokens.css?v=202611240145" />
-    <link rel="stylesheet" href="css/app.css?v=202611240145" />
-    <script type="importmap">{"imports":{"./js/app.js":"./js/app.js?v=202611240145","./js/feed-logic.js":"./js/feed-logic.js?v=202611240145","./js/feed.js":"./js/feed.js?v=202611240145","./js/fit.js":"./js/fit.js?v=202611240145","./js/job-details.js":"./js/job-details.js?v=202611240145","./js/job-text.js":"./js/job-text.js?v=202611240145","./js/match.js":"./js/match.js?v=202611240145","./js/profile.js":"./js/profile.js?v=202611240145","./js/resume-parse.js":"./js/resume-parse.js?v=202611240145","./js/skills.js":"./js/skills.js?v=202611240145","./js/store.js":"./js/store.js?v=202611240145","./js/toast.js":"./js/toast.js?v=202611240145","./js/track-actions.js":"./js/track-actions.js?v=202611240145","./js/tracker.js":"./js/tracker.js?v=202611240145","./js/tracking.js":"./js/tracking.js?v=202611240145"}}</script>
-    <script type="module" src="js/app.js?v=202611240145"></script>
+    <link rel="stylesheet" href="css/tokens.css?v=202611241511" />
+    <link rel="stylesheet" href="css/app.css?v=202611241511" />
+    <script type="importmap">{"imports":{"./js/app.js":"./js/app.js?v=202611241511","./js/feed-logic.js":"./js/feed-logic.js?v=202611241511","./js/feed.js":"./js/feed.js?v=202611241511","./js/feedback.js":"./js/feedback.js?v=202611241511","./js/fit.js":"./js/fit.js?v=202611241511","./js/job-details.js":"./js/job-details.js?v=202611241511","./js/job-text.js":"./js/job-text.js?v=202611241511","./js/match.js":"./js/match.js?v=202611241511","./js/profile.js":"./js/profile.js?v=202611241511","./js/requirements.js":"./js/requirements.js?v=202611241511","./js/resume-parse.js":"./js/resume-parse.js?v=202611241511","./js/skills.js":"./js/skills.js?v=202611241511","./js/smart-fit.js":"./js/smart-fit.js?v=202611241511","./js/smart-settings.js":"./js/smart-settings.js?v=202611241511","./js/store.js":"./js/store.js?v=202611241511","./js/toast.js":"./js/toast.js?v=202611241511","./js/track-actions.js":"./js/track-actions.js?v=202611241511","./js/tracker.js":"./js/tracker.js?v=202611241511","./js/tracking.js":"./js/tracking.js?v=202611241511"}}</script>
+    <script type="module" src="js/app.js?v=202611241511"></script>
   </head>
   <body>
     <!-- ============ Today: swipe deck (US2) ============ -->
@@ -171,6 +171,42 @@
         <button type="submit" class="btn btn-primary btn-block" id="btn-done">Show my shortlist</button>
       </form>
 
+      <section class="card smart-card" aria-labelledby="h-smart">
+        <h2 id="h-smart">Smart matching</h2>
+        <p class="hint">Claude reads each job's requirements and finds the lines in your resume that prove them, shown as "They want → You did".</p>
+        <label class="switch-row" for="f-smart">
+          <span class="switch-text">Use smart matching<small id="smart-sub">Needs your Anthropic API key.</small></span>
+          <span class="switch">
+            <input id="f-smart" type="checkbox" role="switch" />
+            <span class="track" aria-hidden="true"></span>
+          </span>
+        </label>
+        <div class="smart-key" id="smart-key-box">
+          <label class="field-label" for="f-apikey">Your Anthropic API key</label>
+          <input id="f-apikey" class="text-input" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-ant-…" />
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" id="btn-key-save">Save key</button>
+            <button type="button" class="link-btn" id="btn-key-remove" hidden>Remove key</button>
+          </div>
+        </div>
+        <p class="notice" id="smart-notice" role="status" aria-live="polite"></p>
+        <details class="smart-about">
+          <summary>What gets sent, and what it costs</summary>
+          <ul>
+            <li>When it's on, each job's description and the bullet lines of your resume are sent to Anthropic's Claude API with your key. Nothing else is sent.</li>
+            <li>Your key is stored only on this device.</li>
+            <li>Model: Claude Sonnet 5.5. About $3 a month at 15 jobs a day, billed to your Anthropic account.</li>
+            <li>Without a key, or offline, you'll see keyword matches instead.</li>
+          </ul>
+        </details>
+        <div class="feedback-row">
+          <p class="feedback-stats" id="feedback-stats"></p>
+          <button type="button" class="btn btn-ghost" id="btn-copy-feedback" hidden>Copy feedback</button>
+        </div>
+        <label class="visually-hidden" for="feedback-copy">Feedback to copy</label>
+        <textarea id="feedback-copy" class="textarea" readonly hidden></textarea>
+      </section>
+
       <section class="card start-over" aria-labelledby="h-start-over">
         <h2 id="h-start-over">Start over</h2>
         <p class="hint">Clears your swipes, your saved jobs and today's shortlist, so every current job shows up again. Your resume, settings and application history stay.</p>
@@ -216,6 +252,7 @@
           </div>
           <section class="sheet-fit js-fit" aria-labelledby="fit-h">
             <h3 class="sheet-section" id="fit-h">Why you're a great fit</h3>
+            <p class="fit-source js-fit-source"></p>
             <ul class="reason-list js-reasons"></ul>
             <p class="fit-none js-fit-none"></p>
           </section>

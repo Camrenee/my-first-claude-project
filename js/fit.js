@@ -110,3 +110,14 @@ export function excerpt(text, skillId, max = 200) {
 export function gapsFrom(missing = [], max = 3) {
   return missing.filter((m) => (SKILL_BY_ID.get(m.id)?.w ?? 1) >= 1).slice(0, max);
 }
+
+/** Badge text: strong-match count when smart matching has answered, else the keyword %. */
+export function badgeHtml(fit) {
+  const s = fit.smart;
+  if (s?.state === 'ready') {
+    const n = s.pairs.length;
+    return n ? `<strong>${n}</strong> match${n === 1 ? '' : 'es'}` : 'No strong match';
+  }
+  if (s?.state === 'loading') return 'Matching…';
+  return fit.score == null ? '' : `<strong>${Number(fit.score)}%</strong> match`;
+}

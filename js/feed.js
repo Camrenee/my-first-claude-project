@@ -10,8 +10,9 @@ import { buildMatcher } from './match.js';
 import { openJobDetails, isDetailsOpen, closeJobDetails } from './job-details.js';
 import { trackingFor } from './track-actions.js';
 import { htmlToParagraphs, previewFromParagraphs, roleParagraphs } from './job-text.js';
-import { buildReasons, gapsFrom } from './fit.js';
+import { buildReasons, gapsFrom, badgeHtml } from './fit.js';
 import { toLines } from './resume-parse.js';
+import { smartFor, resetSmartStatus } from './smart-fit.js';
 
 const JOBS_URL = 'data/jobs.json';
 const STALE_MS = 60 * 60 * 1000; // re-check the server copy at most hourly unless pulled
@@ -41,6 +42,7 @@ export function initFeed() {
   document.addEventListener('keydown', onKey);
   // After Profile → Start over, say so on Today once the fresh deck is dealt.
   window.addEventListener('jf:start-over', () => (pendingFreshStart = true));
+  window.addEventListener('jf:smart-ready', onSmartReady);
   setupPullToRefresh();
 
   const cached = loadJobsCache();
@@ -58,6 +60,7 @@ export function showToday() {
 
 async function refresh({ quiet = false } = {}) {
   if (state.loading) return;
+  if (!quiet) resetSmartStatus(); // a manual refresh also retries smart matching after an error
   state.loading = true;
   state.error = null;
   if (!state.jobs.length) render();
@@ -200,6 +203,7 @@ function showCards(matcher, deck) {
 function cardEl(card, matcher, isTop) {
   const job = state.jobsById.get(card.id);
   const { score } = matcher(job.id);
+  const fit = fitFor(job);
   const salary = formatSalary(job.salary);
   const el = document.createElement('article');
   el.className = `job-card ${isTop ? 'is-top' : 'is-next'}`;
@@ -219,7 +223,7 @@ function cardEl(card, matcher, isTop) {
         <p class="jc-company"></p>
         <p class="jc-posted"></p>
       </div>
-      <span class="match-badge"><strong>${score}%</strong> match</span>
+      <span class="match-badge"></span>
     </div>
     <h2 class="jc-title"></h2>
     <ul class="jc-facts">
@@ -227,7 +231,7 @@ function cardEl(card, matcher, isTop) {
       <li class="fact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg><span class="jc-salary"></span></li>
     </ul>
     <div class="jc-tags"></div>
-    <section class="fit-box"><h3 class="fit-title">Why you're a great fit</h3><ul class="fit-list"></ul></section>
+    <section class="fit-box"></section>
     <p class="jc-preview"></p>
     <button type="button" class="jc-more">More details<span class="visually-hidden">: ${''}</span></button>`;
   // Text from job boards goes in as text, never as HTML.
@@ -242,7 +246,7 @@ function cardEl(card, matcher, isTop) {
   if (card.updated) el.querySelector('.jc-tags').append(tag('Updated', 'tag-accent'));
   if (!el.querySelector('.jc-tags').children.length) el.querySelector('.jc-tags').remove();
   const preview = previewOf(job);
-  renderFitBox(el.querySelector('.fit-box'), fitFor(job).reasons.slice(0, 2));
+  renderCardFit(el, job, fit, isTop);
   if (preview) el.querySelector('.jc-preview').textContent = preview;
   else el.querySelector('.jc-preview').remove();
   const more = el.querySelector('.jc-more');
@@ -284,7 +288,72 @@ export function fitFor(job) {
       gaps: gapsFrom(m.missing, 3),
     });
   }
-  return fitCache.get(key);
+  return { ...fitCache.get(key), smart: smartFor(job) };
+}
+
+function renderCardFit(el, job, fit, isTop) {
+  const badge = el.querySelector('.match-badge');
+  badge.innerHTML = badgeHtml(fit);
+  badge.hidden = !badge.innerHTML;
+  const box = el.querySelector('.fit-box');
+  box.className = 'fit-box';
+  box.innerHTML = `<h3 class="fit-title">Why you're a great fit</h3>`;
+  const s = fit.smart;
+  if (s.state === 'ready') {
+    box.classList.add('is-smart');
+    if (!s.pairs.length) {
+      box.querySelector('.fit-title').textContent = 'Fit check';
+      box.append(Object.assign(document.createElement('p'), { className: 'fit-none', textContent: 'No strong matches with your resume for this one.' }));
+      return;
+    }
+    box.append(pairEl('They want', s.pairs[0].want), pairEl('You did', s.pairs[0].did));
+    if (s.pairs.length > 1) {
+      const more = document.createElement('button');
+      more.type = 'button';
+      more.className = 'fit-more';
+      const n = s.pairs.length - 1;
+      more.textContent = `${n} more reason${n === 1 ? '' : 's'} →`;
+      if (isTop) more.addEventListener('click', () => openDetails(job));
+      else more.tabIndex = -1;
+      box.append(more);
+    }
+    return;
+  }
+  if (s.state === 'loading') {
+    box.classList.add('is-loading');
+    box.append(Object.assign(document.createElement('p'), { className: 'fit-none', textContent: 'Finding your best matches…' }));
+    return;
+  }
+  box.append(Object.assign(document.createElement('ul'), { className: 'fit-list' }));
+  renderFitBox(box, fit.reasons.slice(0, 2));
+  if (s.state === 'error') {
+    box.append(Object.assign(document.createElement('p'), { className: 'fit-note', textContent: 'Keyword matches · smart matching unavailable right now' }));
+  }
+}
+
+function pairEl(label, text) {
+  const p = document.createElement('p');
+  p.className = 'pair';
+  const l = document.createElement('span');
+  l.className = 'pair-label';
+  l.textContent = label;
+  const q = document.createElement('q');
+  q.textContent = text;
+  p.append(l, ' ', q);
+  return p;
+}
+
+/** Claude answered for a job: update that card in place (no re-deal, no lost drag). */
+function onSmartReady(e) {
+  const id = e.detail?.jobId;
+  if (!id || !els) return;
+  const card = [...els.deck.querySelectorAll('.job-card')].find((c) => c.dataset.id === id);
+  const job = state.jobsById.get(id);
+  if (!card || !job) return;
+  renderCardFit(card, job, fitFor(job), card.classList.contains('is-top'));
+  const top = els.deck.querySelector('.job-card.is-top');
+  const next = els.deck.querySelector('.job-card.is-next');
+  if (top && next) next.style.height = `${top.offsetHeight}px`;
 }
 
 function renderFitBox(box, reasons) {
@@ -321,6 +390,7 @@ function openDetails(job) {
   openJobDetails(job, {
     score: fit.score,
     fit,
+    getFit: () => fitFor(job),
     tracking: trackingFor(job, {
       onChange: (kind, on) => {
         if (!on) return;

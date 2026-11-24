@@ -8,6 +8,10 @@ const KEYS = {
   tracker: 'jf.tracker', // { jobId: {job, queuedAt?, removedAt?, appliedAt?, referral?: {status, by, at, updatedAt}} }
   deck: 'jf.deck', // { date, dealt: [{id, at, updated?}] }
   undo: 'jf.undo', // last decisions, newest last
+  smart: 'jf.smart', // { enabled } — US6 smart matching switch
+  apiKey: 'jf.apiKey', // the person's own Anthropic API key, kept on this device only
+  smartCache: 'jf.smart.cache', // { cacheKey: {pairs, at} }
+  feedback: 'jf.feedback', // { pairKey: {vote, want, did, jobId, company, title, model, at} }
 };
 const SCHEMA_VERSION = 1;
 
@@ -193,6 +197,59 @@ export function setReferral(job, patch) {
   tracker[job.id] = e;
   if (patch !== null) markDecided(job, 'referred');
   return write(KEYS.tracker, tracker).ok;
+}
+
+// ---------- US6: smart matching ----------
+
+export function loadSmartSettings() {
+  return { enabled: false, ...(read(KEYS.smart) ?? {}) };
+}
+
+export function saveSmartSettings(settings) {
+  return write(KEYS.smart, settings);
+}
+
+export function loadApiKey() {
+  try {
+    return localStorage.getItem(KEYS.apiKey) || '';
+  } catch {
+    return '';
+  }
+}
+
+export function saveApiKey(key) {
+  try {
+    localStorage.setItem(KEYS.apiKey, key);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function clearApiKey() {
+  try {
+    localStorage.removeItem(KEYS.apiKey);
+  } catch {
+    /* nothing stored */
+  }
+}
+
+export function loadSmartCache() {
+  return read(KEYS.smartCache) ?? {};
+}
+
+/** Keep the newest `max` entries so the cache can't grow without bound. */
+export function saveSmartCache(cache, max = 300) {
+  const entries = Object.entries(cache).sort((a, b) => Date.parse(b[1].at) - Date.parse(a[1].at)).slice(0, max);
+  return write(KEYS.smartCache, Object.fromEntries(entries));
+}
+
+export function loadFeedback() {
+  return read(KEYS.feedback) ?? {};
+}
+
+export function saveFeedback(feedback) {
+  return write(KEYS.feedback, feedback);
 }
 
 /** What Start over would clear: number of swiped jobs and saved jobs. */

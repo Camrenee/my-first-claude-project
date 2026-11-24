@@ -151,7 +151,7 @@ test('paste text, validation, then everything persists after the browser closes'
   await page.locator('#f-salary').blur();
   assert.equal(await page.inputValue('#f-salary'), '180,000');
 
-  await page.locator('label.switch-row').click();
+  await page.locator('label[for="f-nosalary"]').click();
   await page.click('#btn-done');
   await page.waitForSelector('#screen-today:not([hidden])');
   assert.match(await page.textContent('[data-greeting]'), /^Good (morning|afternoon|evening), Alex$/);

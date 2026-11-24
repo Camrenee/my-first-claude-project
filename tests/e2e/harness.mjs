@@ -63,7 +63,7 @@ export function profileWith(resumeText, o = {}) {
 }
 
 /** Open the app on Today with a seeded profile/storage and a fixed jobs list. */
-export async function openApp(env, { jobs, profile, seed = {} }) {
+export async function openApp(env, { jobs, profile, seed = {}, beforeLoad }) {
   const ctx = await env.browser.newContext({ ...devices['iPhone 13'] });
   await ctx.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
   await ctx.route(/data\/jobs\.json/, (r) =>
@@ -73,8 +73,10 @@ export async function openApp(env, { jobs, profile, seed = {} }) {
     if (sessionStorage.getItem('seeded')) return;
     sessionStorage.setItem('seeded', '1');
     localStorage.setItem('jf.profile', JSON.stringify(profile));
-    for (const [k, v] of Object.entries(seed)) localStorage.setItem(k, JSON.stringify(v));
+    // Plain strings (like an API key) are stored as-is; everything else as JSON.
+    for (const [k, v] of Object.entries(seed)) localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v));
   }, { profile, seed });
+  if (beforeLoad) await beforeLoad(ctx);
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));

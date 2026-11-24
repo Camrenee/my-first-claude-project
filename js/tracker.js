@@ -274,6 +274,7 @@ function openDetails(entry) {
   openJobDetails(job, {
     score: fit.score,
     fit,
+    getFit: () => fitFor(job),
     tracking: trackingFor(job),
     onClose: () => {
       showTracker();

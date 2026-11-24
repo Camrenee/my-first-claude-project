@@ -4,6 +4,7 @@ import { loadProfile, isProfileComplete } from './store.js';
 import { initFeed, showToday } from './feed.js';
 import { showTracker } from './tracker.js';
 import { isDetailsOpen } from './job-details.js';
+import { initSmartSettings, showSmartSettings } from './smart-settings.js';
 
 const ROUTES = {
   today: { title: 'Today' },
@@ -38,6 +39,7 @@ function render() {
     showToday();
   }
   if (route === 'tracker') showTracker();
+  if (route === 'profile') showSmartSettings();
 
   if (!firstRender) {
     window.scrollTo(0, 0);
@@ -63,5 +65,6 @@ function renderGreeting() {
 
 initProfile({ onDone: () => (location.hash = '#today') });
 initFeed();
+initSmartSettings();
 window.addEventListener('hashchange', render);
 render();
