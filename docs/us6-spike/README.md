@@ -62,3 +62,37 @@ ANTHROPIC_API_KEY=... node claude-judge.mjs            # Haiku 5.5 and Sonnet 5.
 
 Go bar: at least 85% of shown pairs correct (after judging any new ones) and 2+ pairs on most jobs.
 Expected cost of one run: well under $1.
+
+## Part 2 results (2026-11-24)
+One run of `claude-judge.mjs`, 12 jobs, both default models. The 24 new pairs the models picked
+(some by both) were judged by the same rule as before and merged into `labels.json` (now 128
+pairs), so precision below counts every shown pair.
+
+| Model | Pairs shown | Jobs with 2+ pairs | Correct (all shown pairs) | Cost, 12 jobs | ~Per month (15 jobs/day) | Go? |
+|---|---|---|---|---|---|---|
+| claude-haiku-5-5 | 33 | 11 of 12 | **79%** (26/33) | $0.007 | ~$0.26 | No: precision < 85% |
+| claude-sonnet-5-5 | 27 | 9 of 12 | **96%** (26/27) | $0.079 | ~$2.95 | **Yes** |
+
+Go bar: at least 85% correct and 2+ pairs on at least 7 of 12 jobs. Costs come from the
+script's price table and the token counts it reports (18.6k input tokens for each model;
+Haiku used 10.2k output tokens, Sonnet 4.1k).
+
+**Haiku's misses** are the failure modes the prompt warns about: generic matches ("leading
+complex launches across many teams" ↔ one team shipping onboarding), different senses (employee
+technology adoption ↔ customer onboarding), loose domain links (health and fitness ↔ clinic
+scheduling) and vague requirements ("deliver measurable business impact"). It fills 3 slots
+almost every time.
+
+**Sonnet** shows fewer pairs but nearly all hold up. Its one labeled miss was already in the
+labels. Borderline new pairs judged good: "products with a technical platform" ↔ payments-API
+requirements, "launching and growing new products for businesses" ↔ growing B2B invoicing ARR,
+and "work closely with Engineering… document tickets" ↔ shipping with 6 engineers. If all three
+were bad it would still pass at 85% (23/27).
+
+**Recommendation:** go with Sonnet 5.5 as the matcher, at roughly 13× Haiku's cost but still about
+$3 a month. Run it on GitHub when jobs are fetched, like the requirement embeddings would have been.
+
+Caveats: one resume, one run (no repeat runs to check variance), and one person labeling.
+`labels.json` marks `ashby:openai:…|1|1` ("Have 6+ years of product management experience…")
+as good, which breaks the rule that years-of-experience requirements are always bad. It was left
+as is here and should be reviewed.
