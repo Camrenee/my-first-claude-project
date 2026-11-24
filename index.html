@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#091540" />
+    <meta name="description" content="One swipe feed of PM jobs in NYC and remote, matched to your resume." />
+    <title>Job Finder</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23091540'/%3E%3Crect x='14' y='12' width='36' height='40' rx='10' fill='%23fff'/%3E%3Ccircle cx='32' cy='27' r='7' fill='%237692FF'/%3E%3Crect x='22' y='39' width='20' height='5' rx='2.5' fill='%23ABD2FA'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <script type="module" src="js/app.js"></script>
+  </head>
+  <body>
+    <!-- ============ Today (US2 builds the swipe deck here) ============ -->
+    <main id="screen-today" class="screen" data-route="today" hidden>
+      <header class="screen-header">
+        <p class="eyebrow" data-greeting>Hello</p>
+        <h1>Here's today's shortlist</h1>
+      </header>
+      <section class="card empty" aria-live="polite">
+        <div class="emoji" aria-hidden="true">🗂️</div>
+        <h2>Your shortlist is almost here</h2>
+        <p>We're lining up PM roles in New York and remote, matched to your resume. Check back soon.</p>
+        <a class="btn btn-ghost" href="#profile">Review my profile</a>
+      </section>
+    </main>
+
+    <!-- ============ Tracker (US4) ============ -->
+    <main id="screen-tracker" class="screen" data-route="tracker" hidden>
+      <header class="screen-header">
+        <p class="eyebrow">Tracker</p>
+        <h1>Your applications</h1>
+      </header>
+      <section class="card empty">
+        <div class="emoji" aria-hidden="true">✅</div>
+        <h2>Nothing tracked yet</h2>
+        <p>Jobs you save to apply will show up here, along with your weekly goal.</p>
+      </section>
+    </main>
+
+    <!-- ============ Profile (US1) ============ -->
+    <main id="screen-profile" class="screen" data-route="profile" hidden>
+      <header class="screen-header">
+        <p class="eyebrow" data-profile-eyebrow>Your profile</p>
+        <h1 data-profile-title>Let's find your next PM role</h1>
+        <p class="lede">Tell us what you're after. Everything stays on this device. No sign-in, nothing uploaded.</p>
+      </header>
+
+      <form id="profile-form" novalidate>
+        <!-- Name -->
+        <section class="card" aria-labelledby="h-name">
+          <h2 id="h-name">What should we call you?</h2>
+          <p class="hint">Just your first name, for a friendly hello.</p>
+          <label class="visually-hidden" for="f-name">First name</label>
+          <input id="f-name" name="name" class="text-input" type="text" autocomplete="given-name" maxlength="40" placeholder="e.g. Alex" />
+        </section>
+
+        <!-- Resume -->
+        <section class="card" aria-labelledby="h-resume">
+          <h2 id="h-resume">Your resume</h2>
+          <p class="hint">We use it to rank jobs and show why you're a great fit.</p>
+
+          <div id="resume-empty">
+            <div class="dropzone" id="dropzone">
+              <p><strong>Upload a PDF or Word file</strong></p>
+              <label class="btn btn-primary" for="f-file">Choose a file</label>
+              <input id="f-file" class="visually-hidden" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+              <p>or</p>
+              <button type="button" class="link-btn" id="btn-paste">Paste the text instead</button>
+            </div>
+          </div>
+
+          <div id="resume-filled" hidden>
+            <div class="file-chip">
+              <span class="icon" aria-hidden="true" data-file-icon>TXT</span>
+              <div class="meta">
+                <p class="name" data-file-name>Pasted text</p>
+                <p class="sub" data-file-sub></p>
+              </div>
+            </div>
+            <label class="field-label" for="f-resume">Check it reads right. You can fix anything here.</label>
+            <textarea id="f-resume" name="resumeText" class="textarea" spellcheck="true" placeholder="Paste your resume text here"></textarea>
+            <div class="btn-row" style="margin-top: 10px">
+              <label class="btn btn-ghost" for="f-file-replace">Replace file</label>
+              <input id="f-file-replace" class="visually-hidden" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+              <button type="button" class="link-btn" id="btn-remove-resume">Remove resume</button>
+            </div>
+          </div>
+
+          <p class="notice" id="resume-notice" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- Roles -->
+        <section class="card" aria-labelledby="h-roles">
+          <h2 id="h-roles">Roles</h2>
+          <p class="hint">Pick at least one.</p>
+          <fieldset class="chips" aria-describedby="err-roles">
+            <legend class="visually-hidden">Roles</legend>
+            <label class="chip"><input type="checkbox" name="roles" value="pm" /><span>Product Manager</span></label>
+            <label class="chip"><input type="checkbox" name="roles" value="senior_pm" /><span>Senior PM</span></label>
+          </fieldset>
+          <p class="field-error" id="err-roles"></p>
+        </section>
+
+        <!-- Locations -->
+        <section class="card" aria-labelledby="h-loc">
+          <h2 id="h-loc">Where</h2>
+          <p class="hint">Manhattan includes hybrid roles in New York, NY.</p>
+          <fieldset class="chips" aria-describedby="err-locations">
+            <legend class="visually-hidden">Locations</legend>
+            <label class="chip"><input type="checkbox" name="locations" value="nyc" /><span>Manhattan</span></label>
+            <label class="chip"><input type="checkbox" name="locations" value="remote_us" /><span>Remote (US)</span></label>
+          </fieldset>
+          <p class="field-error" id="err-locations"></p>
+        </section>
+
+        <!-- Salary -->
+        <section class="card" aria-labelledby="h-salary">
+          <h2 id="h-salary">Salary floor</h2>
+          <p class="hint">We'll hide jobs whose range tops out at or below this.</p>
+          <label class="visually-hidden" for="f-salary">Salary floor in US dollars per year</label>
+          <div class="money">
+            <input id="f-salary" name="salaryFloor" class="text-input" type="text" inputmode="numeric" autocomplete="off" aria-describedby="err-salary" />
+          </div>
+          <p class="field-error" id="err-salary"></p>
+          <label class="switch-row" for="f-nosalary">
+            <span class="switch-text">Show jobs with no salary<small>They'll get a "Salary not listed" tag.</small></span>
+            <span class="switch">
+              <input id="f-nosalary" name="showNoSalary" type="checkbox" role="switch" />
+              <span class="track" aria-hidden="true"></span>
+            </span>
+          </label>
+        </section>
+
+        <p class="save-status" id="save-status" role="status" aria-live="polite"></p>
+        <button type="submit" class="btn btn-primary btn-block" id="btn-done">Show my shortlist</button>
+      </form>
+    </main>
+
+    <!-- ============ Bottom nav ============ -->
+    <nav class="nav" aria-label="Main">
+      <ul>
+        <li>
+          <a href="#today" data-nav="today">
+            <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="4"/><path d="M9 9h6M9 13h4"/></svg></span>
+            Today
+          </a>
+        </li>
+        <li>
+          <a href="#tracker" data-nav="tracker">
+            <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h10M4 18h7"/><path d="m16 16 2 2 4-4"/></svg></span>
+            Tracker
+          </a>
+        </li>
+        <li>
+          <a href="#profile" data-nav="profile">
+            <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span>
+            Profile
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </body>
+</html>
