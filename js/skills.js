@@ -16,28 +16,28 @@ export const SKILLS = [
   c('crypto', 'Crypto & digital assets', /crypto\w*|digital assets?|blockchain|stablecoins?|tokeniz\w*|web3|wallets?/),
   c('custody', 'Custody', /custody|custodial/),
   c('wealth', 'Investing & wealth', /investing|investments?|wealth|brokerage|portfolio management|retirement|401\(?k\)?|advisors?/),
-  c('insurance', 'Insurance', /insurance|insurtech|underwriting|claims/),
+  c('insurance', 'Insurance', /insurance (products?|carriers?|platforms?|industry)|insurtech|underwriting|claims processing|policyholders?/),
   c('payroll', 'Payroll & HR', /payroll|hris|benefits administration|\bpeo\b|hr tech|human resources/),
   c('healthcare', 'Healthcare', /healthtech|health tech|clinical|clinics?|patients?|payers?|ehr|emr|telehealth|care delivery|digital health/),
   c('ecommerce', 'E-commerce & retail', /e-?commerce|retail|merchants?|shopping|storefronts?|online ordering/),
   c('restaurants', 'Restaurants & food', /restaurants?|food delivery|dining|hospitality|menus?/),
   c('marketplace', 'Marketplaces', /marketplaces?|two-sided|supply and demand|sellers? and buyers?/),
   c('ads', 'Ads & ad tech', /advertis\w*|ad ?tech|\bads\b|campaigns?|auctions?|ad products?|programmatic/),
-  c('media', 'Media & content', /media|content|publishing|creators?|streaming|video|audio|podcasts?|music/),
+  c('media', 'Media & content', /digital media|media companies|publishing|publishers?|creators?|creator economy|streaming|video platforms?|podcasts?|music|newsrooms?|editorial/),
   c('fitness', 'Fitness & wellness', /fitness|workouts?|connected fitness|exercise/),
-  c('mobility', 'Mobility & transportation', /transportation|transit|mobility|rides?|ride-?sharing|routing|fleets?|logistics/),
-  c('travel', 'Travel', /travel|bookings?|hotels?|flights?/),
+  c('mobility', 'Mobility & transportation', /transportation|transit|mobility|ride-?sharing|fleet management|logistics|last-mile/),
+  c('travel', 'Travel', /travel (industry|booking|products?|platforms?|tech)|online travel|hotels?|flights?|airlines?|vacation rentals?/),
   c('real_estate', 'Real estate', /real estate|proptech|mortgages?|rentals?|leasing/),
-  c('edtech', 'Education', /education|edtech|learning|students?|teachers?|courses?/),
+  c('edtech', 'Education & edtech', /edtech|ed tech|education technology|education platforms?|k-?12|higher education|students|teachers|classrooms?|online courses|learning platforms?|learning management|lms/),
   c('security', 'Security & identity', /security|identity|authentication|sso|access management|fraud|trust and safety/),
-  c('compliance', 'Compliance & regulation', /complian\w*|regulat\w*|\bkyc\b|\baml\b|audits?|hipaa|soc ?2|gdpr|legal/),
+  c('compliance', 'Compliance & regulation', /complian\w*|regulat\w*|\bkyc\b|\baml\b|audits?|hipaa|soc ?2|gdpr/),
   c('devtools', 'Developer tools', /developer tools?|developer experience|devtools|sdks?|developer platforms?/),
   c('infra', 'Infrastructure & cloud', /infrastructure|cloud|observability|databases?|data platform|reliability|devops|kubernetes|\baws\b|\bgcp\b|azure/),
   c('api', 'APIs & platform', /\bapis?\b|platform products?|integrations?|webhooks?|partner platform/),
   c('data_products', 'Data products & analytics tools', /data products?|analytics products?|business intelligence|dashboards?|reporting/),
   c('ai', 'AI & ML', /ai|artificial intelligence|machine learning|ml|llms?|large language models?|generative|gen ?ai|ml models?|ai models?|foundation models?|ai agents?|agentic|personaliz\w*/),
   c('search', 'Search & discovery', /search|discovery|relevance|recommendations?/),
-  c('collab', 'Collaboration & productivity', /collaboration|productivity|workflows?|workspaces?|design tools?/),
+  c('collab', 'Collaboration & productivity', /collaboration (tools?|software|products?)|productivity (tools?|software|apps?)|workspaces?|design tools?|workflow automation/),
   c('comms', 'Messaging & communications', /messaging|notifications?|in-app messages?|sms/),
   c('finance_ops', 'Finance operations', /finance operations|accounting|reconciliation|ledgers?|treasury|close process|spend management|expense/),
 
@@ -46,9 +46,9 @@ export const SKILLS = [
   c('b2c', 'Consumer (B2C)', /b2c|consumers?|end users?|consumer apps?/),
   c('self_serve', 'Self-serve / PLG', /self-?serve|product-?led|\bplg\b|freemium|free trials?/),
   c('mobile', 'Mobile apps', /mobile|ios|android|app store|native apps?/),
-  c('web', 'Web', /\bweb\b|websites?|browsers?|desktop/),
-  c('hardware', 'Hardware & devices', /hardware|devices?|iot|firmware/),
-  c('international', 'International / global', /international|global|localization|multi-?currency|cross-?border/),
+  c('web', 'Web', /web apps?|web products?|websites?|browser extensions?|desktop apps?/),
+  c('hardware', 'Hardware & devices', /hardware|iot|firmware|connected devices|consumer devices|embedded/),
+  c('international', 'International / global', /international (expansion|markets?|launch\w*)|localization|multi-?currency|cross-?border|global (markets?|expansion|payments|launch\w*)/),
 
   // ----- Lifecycle & growth -----
   c('growth', 'Growth', /growth|acquisition|funnels?|conversion|top of funnel/),
@@ -65,13 +65,13 @@ export const SKILLS = [
   c('sql', 'SQL', /\bsql\b/),
   c('tools_analytics', 'Analytics tools', /amplitude|mixpanel|looker|tableau|mode analytics|heap|segment|snowflake|dbt/),
   c('design', 'Working with design', /designers?|ux|user experience|prototyp\w*|figma/, 0.5),
-  c('technical', 'Technical depth', /technical|engineering background|computer science|architecture|system design/),
-  c('strategy', 'Product strategy & vision', /strategy|strategic|vision|north star|long-?term/),
+  c('technical', 'Technical depth', /technical (background|product|depth)|engineering background|computer science|system design|architecture/, 0.5),
+  c('strategy', 'Product strategy & vision', /product strategy|product vision|strategic|north star|long-?term (vision|strategy|roadmap)/, 0.5),
   c('roadmap', 'Roadmapping & prioritization', /roadmaps?|prioritiz\w*|trade-?offs?/, 0.5),
   c('stakeholders', 'Cross-functional leadership', /cross-?functional|stakeholders?|alignment|influence without authority/, 0.5),
   c('launch', 'Shipping & launching', /shipp?\w*|launch\w*|deliver\w*|execution/, 0.5),
   c('zero_to_one', '0→1 building', /0 ?(to|→|-) ?1|zero to one|from scratch|new products?|greenfield|early-?stage/),
-  c('scale', 'Scaling products', /at scale|scal(e|ing)|millions of|high-?growth/),
+  c('scale', 'Scaling products', /at scale|scaling (products?|platforms?|systems)|millions of (users|customers|members)|high-?growth/, 0.5),
   c('mentoring', 'Mentoring & leading PMs', /mentor\w*|coach\w*|people management|managing pms?|lead a team/),
   c('specs', 'Specs & requirements', /\bprds?\b|requirements|specs?\b|user stories/),
   c('agile', 'Agile delivery', /agile|scrum|sprints?|kanban/),
@@ -102,4 +102,20 @@ export function findSkill(id, text) {
   const re = new RegExp(s.re.source, 'i');
   const m = re.exec(String(text));
   return m ? { index: m.index, length: m[0].length } : null;
+}
+
+// Resume section headings ("Education", "Skills:") say nothing about experience,
+// so they never count as evidence of a skill.
+const HEADING = /^\s*(education|experience|work experience|professional experience|skills?|technical skills|summary|profile|objective|projects?|certifications?|awards|honors|interests|languages|volunteer\w*|publications|references|contact)\s*:?\s*$/i;
+
+export function isResumeHeading(line) {
+  return HEADING.test(String(line));
+}
+
+/** Resume text minus section headings: what the match score reads from the resume. */
+export function resumeEvidenceText(text) {
+  return String(text)
+    .split(/\r?\n/)
+    .filter((l) => !isResumeHeading(l))
+    .join('\n');
 }
