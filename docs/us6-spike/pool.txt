@@ -1,0 +1,270 @@
+1	greenhouse:figma:6266479004|2|4
+   WANT (Figma): Partner with other Figma product teams to power new monetization efforts and unlock sales levers
+   DID: Partnered with sales on enterprise deals and growth
+2	greenhouse:figma:6266479004|1|0
+   WANT (Figma): Iterate on the core billing and payments infrastructure in partnership with Finance, Sales, Support, and Engineering, balancing business needs with lo
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+3	greenhouse:figma:6266479004|4|7
+   WANT (Figma): 5+ years of experience as a product manager
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+4	ashby:paxos:501fcbfb-471f-4d03-ad95-0d66349ed750|10|4
+   WANT (Paxos): Experience building enterprise B2B products and working directly with clients and client-facing teams
+   DID: Partnered with sales on enterprise deals and growth
+5	ashby:paxos:501fcbfb-471f-4d03-ad95-0d66349ed750|9|7
+   WANT (Paxos): Demonstrated success getting buy-in from cross-functional teams, including senior and executive stakeholders, on your product vision and strategy in w
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+6	ashby:paxos:501fcbfb-471f-4d03-ad95-0d66349ed750|3|1
+   WANT (Paxos): Collaborate with Engineering, Design, Compliance, Legal, and Operations to deliver capabilities that are secure, usable, and meet the regulatory expec
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+7	greenhouse:peloton:8399956|8|7
+   WANT (Peloton): 2+ years of Product Management Experience
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+8	greenhouse:peloton:8399956|2|4
+   WANT (Peloton): Partner with other Product Managers to think through and implement changes to our internal tools needed for new products and software features
+   DID: Partnered with sales on enterprise deals and growth
+9	greenhouse:peloton:8399956|17|1
+   WANT (Peloton): Experience working on a consumer software product with integrated hardware
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+10	greenhouse:betterment:8400644|9|1
+   WANT (Betterment): Experience shipping, or a strong point of view on shipping, AI-powered features, including how to evaluate output quality and manage risk
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+11	greenhouse:betterment:8400644|1|7
+   WANT (Betterment): 5-7 years of product management experience at a financial services or financial technology company with a focus on trading and/or portfolio management
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+12	greenhouse:betterment:8400644|7|6
+   WANT (Betterment): Ability to think connect abstract or complicated back-end builds to delightful customer experiences
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+13	greenhouse:via:8951205002|4|1
+   WANT (Via): Drive Execution: Act as the central liaison across cross-functional teams, steering day-to-day execution with Forward Deployed Engineers, Data Science
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+14	greenhouse:via:8951205002|6|7
+   WANT (Via): 5+ years of PM experience at successful startups or global companies
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+15	greenhouse:via:8951205002|11|4
+   WANT (Via): Customer-facing: Comfortable traveling to collaborate directly on-site with users, city leaders, and external stakeholders
+   DID: Partnered with sales on enterprise deals and growth
+16	ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|7|7
+   WANT (OpenAI): Have 6+ years of product management experience, including a track record of delivering measurable growth for self-serve SaaS, business, or team-based 
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+17	ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|6|4
+   WANT (OpenAI): Align with core product, monetization, marketing, sales, and partnerships teams on shared goals and dependencies. Drive outcomes across surfaces and c
+   DID: Partnered with sales on enterprise deals and growth
+18	ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|9|2
+   WANT (OpenAI): Are highly analytical and fluent in experimentation, with the judgment to connect funnel and cohort metrics to real customer value.
+   DID: Ran pricing experiments and A/B tests with SQL and Amplitude
+19	greenhouse:stripe:8190038|6|7
+   WANT (Stripe): 10+ years of Product Management experience
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+20	greenhouse:stripe:8190038|3|4
+   WANT (Stripe): Represent the Business Network externally with partners, clients, and stakeholders to gather feedback and promote our initiatives.
+   DID: Partnered with sales on enterprise deals and growth
+21	greenhouse:stripe:8190038|5|0
+   WANT (Stripe): Communicate product updates and vision effectively with Stripe’s leadership and broader organization to align efforts and increase visibility.
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+22	greenhouse:stripe:8384434|4|4
+   WANT (Stripe): Collaborate with Sales, Marketing, and Partnerships to bring products to market and turn early customer successes into broader adoption.
+   DID: Partnered with sales on enterprise deals and growth
+23	greenhouse:stripe:8384434|3|7
+   WANT (Stripe): Work directly with early customers to help them launch, learn what makes the product valuable, and use that feedback to improve it.
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+24	greenhouse:stripe:8384434|0|0
+   WANT (Stripe): Set the vision and strategy for new financial data products, identifying where Stripe can solve valuable customer problems and build a differentiated 
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+25	greenhouse:affirm:8075414003|6|4
+   WANT (Affirm): You will partner with IT Engineering, Security, Legal, Procurement, and vendors to deliver solutions that balance employee needs, business value, tech
+   DID: Partnered with sales on enterprise deals and growth
+26	greenhouse:affirm:8075414003|4|1
+   WANT (Affirm): You will connect Affirmers with practical guidance, self-service resources, and learning opportunities—leveraging vendor expertise, existing materials
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+27	greenhouse:affirm:8075414003|13|7
+   WANT (Affirm): You build effective relationships across technical and business teams, using sound judgment to balance competing priorities, navigate ambiguity, and i
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+28	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|3|4
+   WANT (Olo): Over 800 restaurant brands trust Olo and its network of more than 400 integration partners to innovate on behalf of the restaurant community, accelera
+   DID: Partnered with sales on enterprise deals and growth
+29	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|10|7
+   WANT (Olo): We're committed to creating a genuine workplace where everyone can contribute their best work—this improves our decision-making and helps us better se
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+30	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|2|3
+   WANT (Olo): Each day, Olo processes millions of orders on its open SaaS platform, gathering the right data from each touchpoint into a single source, so restauran
+   DID: Launched patient scheduling used by 200 clinics
+31	greenhouse:stripe:8393939|1|4
+   WANT (Stripe): Own products end to end, from problem discovery and strategy through delivery, adoption, measurement, and iteration
+   DID: Partnered with sales on enterprise deals and growth
+32	greenhouse:stripe:8393939|8|7
+   WANT (Stripe): 5+ years of product management or equivalent experience leading the development of complex software products
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+33	greenhouse:stripe:8393939|9|1
+   WANT (Stripe): Experience independently taking a product from problem discovery through launch, adoption, measurement, and iteration
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+34	greenhouse:justworks:8356649|1|2
+   WANT (Justworks): Analyze funnel drop-offs, design and run experiments, work with research to interview customers, and partner with Data Science to define and track act
+   DID: Ran pricing experiments and A/B tests with SQL and Amplitude
+35	greenhouse:justworks:8356649|6|7
+   WANT (Justworks): Drive camaraderie with your team while demonstrating effective collaboration with PMs across other pods/teams
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+36	greenhouse:justworks:8356649|2|4
+   WANT (Justworks): Demonstrate expertise in deploying a product strategy and effectively tie insights to roadmap outcomes
+   DID: Partnered with sales on enterprise deals and growth
+37	greenhouse:figma:6266479004|5|6
+   WANT (Figma): Previous experience with billing / commercial systems
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+38	ashby:paxos:501fcbfb-471f-4d03-ad95-0d66349ed750|9|4
+   WANT (Paxos): Demonstrated success getting buy-in from cross-functional teams, including senior and executive stakeholders, on your product vision and strategy in w
+   DID: Partnered with sales on enterprise deals and growth
+39	ashby:paxos:501fcbfb-471f-4d03-ad95-0d66349ed750|4|5
+   WANT (Paxos): Work with Go-To-Market teams to drive adoption of new capabilities, from positioning and client onboarding to feedback that shapes what comes next
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+40	ashby:paxos:501fcbfb-471f-4d03-ad95-0d66349ed750|5|6
+   WANT (Paxos): Engage directly with institutional customers and prospects, and turn their requirements into capabilities that serve the broader client base
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+41	greenhouse:peloton:8399956|4|6
+   WANT (Peloton): Generate detailed requirements documentation and process flows and socialize them with Product, Content, and Engineering
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+42	greenhouse:peloton:8399956|18|2
+   WANT (Peloton): Experience with ML-based recommendations and/or content curation tools
+   DID: Ran pricing experiments and A/B tests with SQL and Amplitude
+43	greenhouse:betterment:8400644|7|4
+   WANT (Betterment): Ability to think connect abstract or complicated back-end builds to delightful customer experiences
+   DID: Partnered with sales on enterprise deals and growth
+44	greenhouse:betterment:8400644|8|5
+   WANT (Betterment): The story-telling capabilities that can help the organization see the long term vision of our advisor toolset
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+45	greenhouse:betterment:8400644|2|2
+   WANT (Betterment): Strong analytical abilities with a passion for data-inspired decision making
+   DID: Ran pricing experiments and A/B tests with SQL and Amplitude
+46	greenhouse:via:8951205002|2|2
+   WANT (Via): Create Crisp Specs: Translate ambiguous requirements and user research into clear product specifications for intelligent tooling and real-time decisio
+   DID: Ran pricing experiments and A/B tests with SQL and Amplitude
+47	greenhouse:via:8951205002|3|0
+   WANT (Via): Own the Roadmap: Prioritize a fast-moving, varied roadmap using a data-informed framework to evaluate the ROI of new AI opportunities
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+48	ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|3|0
+   WANT (OpenAI): Identify new growth opportunities, including tailored experiences and distribution paths that help small businesses adopt ChatGPT.
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+49	ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|1|6
+   WANT (OpenAI): Understand the needs of business owners, admins, and members through customer conversations, product data, and close partnership with design and go-to
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+50	greenhouse:stripe:8190038|5|5
+   WANT (Stripe): Communicate product updates and vision effectively with Stripe’s leadership and broader organization to align efforts and increase visibility.
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+51	greenhouse:stripe:8190038|8|4
+   WANT (Stripe): Demonstrated experience of leading initiatives across large engineering organizations, spanning multiple teams to influence tech roadmap planning and 
+   DID: Partnered with sales on enterprise deals and growth
+52	greenhouse:stripe:8190038|11|6
+   WANT (Stripe): Deep empathy for users balancing autonomy and guidance in digital commerce experiences
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+53	greenhouse:stripe:8384434|1|6
+   WANT (Stripe): Spend time with developers and customers to understand their needs, test ideas, and decide which opportunities to pursue.
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+54	greenhouse:stripe:8384434|13|2
+   WANT (Stripe): Experience with financial products, data platforms, or products that use AI.
+   DID: Ran pricing experiments and A/B tests with SQL and Amplitude
+55	greenhouse:affirm:8075414003|12|5
+   WANT (Affirm): You use data, employee feedback, and support trends to evaluate technology adoption, measure outcomes, and identify opportunities for improvement.
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+56	greenhouse:affirm:8075414003|9|6
+   WANT (Affirm): You have experience gathering stakeholder needs, defining requirements, prioritizing opportunities, and developing actionable plans or roadmaps for te
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+57	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|0|6
+   WANT (Olo): Ability to travel to customers, partners, conferences, and Olo HQ in NYC, as needed.
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+58	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|2|4
+   WANT (Olo): Each day, Olo processes millions of orders on its open SaaS platform, gathering the right data from each touchpoint into a single source, so restauran
+   DID: Partnered with sales on enterprise deals and growth
+59	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|4|0
+   WANT (Olo): Since 2015, we have been evolving our culture to continue to support a more distributed workforce and now over 75% of our team works remotely across t
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+60	greenhouse:stripe:8393939|2|2
+   WANT (Stripe): Build reusable data and self-serve workflow capabilities that eliminate manual overhead and enable future automated Finance use cases
+   DID: Ran pricing experiments and A/B tests with SQL and Amplitude
+61	greenhouse:stripe:8393939|3|4
+   WANT (Stripe): Partner with Finance, engineering, data, security, legal, and others to make sound product and architecture tradeoffs in a business-critical and contr
+   DID: Partnered with sales on enterprise deals and growth
+62	greenhouse:stripe:8393939|11|5
+   WANT (Stripe): Demonstrated ability to synthesize the needs of multiple user groups and lead decisions across organizational boundaries
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+63	greenhouse:justworks:8356649|1|5
+   WANT (Justworks): Analyze funnel drop-offs, design and run experiments, work with research to interview customers, and partner with Data Science to define and track act
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+64	greenhouse:figma:6266479004|1|4
+   WANT (Figma): Iterate on the core billing and payments infrastructure in partnership with Finance, Sales, Support, and Engineering, balancing business needs with lo
+   DID: Partnered with sales on enterprise deals and growth
+65	greenhouse:figma:6266479004|5|0
+   WANT (Figma): Previous experience with billing / commercial systems
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+66	greenhouse:figma:6266479004|6|1
+   WANT (Figma): Worked on products with a technical platform
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+67	ashby:paxos:501fcbfb-471f-4d03-ad95-0d66349ed750|7|1
+   WANT (Paxos): Deep partnership with engineering teams on highly technical platform problems
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+68	greenhouse:peloton:8399956|17|6
+   WANT (Peloton): Experience working on a consumer software product with integrated hardware
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+69	greenhouse:peloton:8399956|7|1
+   WANT (Peloton): Develop deep relationships with the Content, Production, and Engineering teams
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+70	greenhouse:betterment:8400644|3|4
+   WANT (Betterment): Self-starter and demonstrated success at communicating, prioritizing, and balancing needs cross-functionally
+   DID: Partnered with sales on enterprise deals and growth
+71	greenhouse:via:8951205002|1|4
+   WANT (Via): Work Forward-Deployed: Partner directly with city leaders on-site to run scoping workshops, identify core problems, and iterate quickly on scalable AI
+   DID: Partnered with sales on enterprise deals and growth
+72	ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|8|4
+   WANT (OpenAI): Have owned a meaningful growth problem from strategy through launch and iteration, with depth in acquisition, activation, expansion, retention, or pro
+   DID: Partnered with sales on enterprise deals and growth
+73	ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|7|1
+   WANT (OpenAI): Have 6+ years of product management experience, including a track record of delivering measurable growth for self-serve SaaS, business, or team-based 
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+74	greenhouse:stripe:8190038|14|6
+   WANT (Stripe): Experience in building or operating systems that involve user identity, payments, or financial transactions.
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+75	greenhouse:stripe:8384434|12|7
+   WANT (Stripe): Experience leading work across teams and external partners, with the autonomy, persistence, and attention to detail to see it through.
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+76	greenhouse:affirm:8075414003|5|5
+   WANT (Affirm): You will define success measures, use employee feedback, adoption data, and support trends to evaluate outcomes, and recommend improvements that enhan
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+77	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|6|1
+   WANT (Olo): We encourage you to apply!
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+78	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|8|7
+   WANT (Olo): Don't check every box in the job description?
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+79	greenhouse:stripe:8393939|0|6
+   WANT (Stripe): Develop a deep understanding of Finance users, jobs-to-be-done, compliance and regulatory considerations, and data dependencies, then translate that u
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+80	greenhouse:justworks:8356649|4|1
+   WANT (Justworks): Partner deeply with Design and Engineering peers and organize and lead effective team processes and routines
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+81	greenhouse:peloton:8399956|5|5
+   WANT (Peloton): Support the rollout of changes to internal tools by supporting employee training and documentation
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+82	greenhouse:peloton:8399956|6|6
+   WANT (Peloton): Work closely with Engineering to define requirements and designs, document tickets and perform user acceptance testing ahead of release
+   DID: Interviewed 40+ customers to define requirements for a new payments API
+83	greenhouse:betterment:8400644|3|1
+   WANT (Betterment): Self-starter and demonstrated success at communicating, prioritizing, and balancing needs cross-functionally
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+84	ashby:openai:89959eee-bd3a-4564-9c47-e4771c6c1e0f|9|5
+   WANT (OpenAI): Are highly analytical and fluent in experimentation, with the judgment to connect funnel and cohort metrics to real customer value.
+   DID: Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+85	greenhouse:stripe:8190038|2|1
+   WANT (Stripe): Collaborate with design, engineering, and other stakeholders to create user-centric product experiences that are simple yet powerful.
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+86	greenhouse:stripe:8384434|6|7
+   WANT (Stripe): 6+ years of product management or product-focused founder experience
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+87	greenhouse:affirm:8075414003|1|0
+   WANT (Affirm): You will turn employee needs, business priorities, and technical constraints into clear requirements, practical solutions, and actionable roadmaps tha
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+88	lever:olo:91f9965e-4470-4888-a08d-590d4aee7f60|4|1
+   WANT (Olo): Since 2015, we have been evolving our culture to continue to support a more distributed workforce and now over 75% of our team works remotely across t
+   DID: Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+89	greenhouse:stripe:8393939|11|7
+   WANT (Stripe): Demonstrated ability to synthesize the needs of multiple user groups and lead decisions across organizational boundaries
+   DID: Managed a team of 2 associate PMs and ran weekly product reviews
+90	greenhouse:stripe:8393939|2|0
+   WANT (Stripe): Build reusable data and self-serve workflow capabilities that eliminate manual overhead and enable future automated Finance use cases
+   DID: Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months

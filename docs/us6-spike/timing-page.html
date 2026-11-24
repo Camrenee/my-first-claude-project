@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>spike</title>
+<script type="importmap">{"imports":{"onnxruntime-web/webgpu":"/ort/ort.webgpu.bundle.min.mjs","onnxruntime-common":"/ortc/index.js"}}</script>
+<script type="module">
+import { pipeline, env } from '/tjs/transformers.web.min.js';
+env.allowLocalModels = true; env.localModelPath = '/models/'; env.allowRemoteModels = false; env.useBrowserCache = true;
+env.backends.onnx.wasm.wasmPaths = '/ort/';
+env.backends.onnx.wasm.numThreads = 1;
+window.run = async (id) => {
+  const t0 = performance.now();
+  const embed = await pipeline('feature-extraction', id, { dtype: 'q8', device: 'wasm' });
+  const t1 = performance.now();
+  const resume = Array.from({ length: 8 }, (_, i) => `Led roadmap number ${i} for B2B invoicing and billing, growing ARR 40% in 18 months`);
+  await embed(resume, { pooling: 'mean', normalize: true });
+  const t2 = performance.now();
+  const reqs = Array.from({ length: 20 }, (_, i) => `Experience ${i} building enterprise B2B products and working directly with clients and client-facing teams`);
+  await embed(reqs, { pooling: 'mean', normalize: true });
+  const t3 = performance.now();
+  return { loadInit: Math.round(t1 - t0), resume8: Math.round(t2 - t1), reqs20: Math.round(t3 - t2) };
+};
+window.ready = true;
+</script>

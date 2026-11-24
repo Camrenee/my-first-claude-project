@@ -1,0 +1,8 @@
+• Led roadmap for B2B invoicing and billing, growing ARR 40% in 18 months
+• Shipped self-serve onboarding with designers and 6 engineers, lifting activation 22%
+• Ran pricing experiments and A/B tests with SQL and Amplitude
+• Launched patient scheduling used by 200 clinics
+• Partnered with sales on enterprise deals and growth
+• Built a dashboard tracking funnel conversion that the exec team reviewed weekly
+• Interviewed 40+ customers to define requirements for a new payments API
+• Managed a team of 2 associate PMs and ran weekly product reviews
