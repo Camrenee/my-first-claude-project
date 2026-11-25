@@ -1,0 +1,840 @@
+[
+  {
+    "name": "Abridge",
+    "ats": "ashby",
+    "slug": "abridge",
+    "board": "https://jobs.ashbyhq.com/abridge",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Addepar",
+    "ats": "greenhouse",
+    "slug": "addepar1",
+    "board": "https://boards.greenhouse.io/addepar1",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Adyen",
+    "ats": "greenhouse",
+    "slug": "adyen",
+    "board": "https://boards.greenhouse.io/adyen",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Alloy",
+    "ats": "greenhouse",
+    "slug": "alloy",
+    "board": "https://boards.greenhouse.io/alloy",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "AllTrails",
+    "ats": "lever",
+    "slug": "alltrails",
+    "board": "https://jobs.lever.co/alltrails",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "AlphaSense",
+    "ats": "greenhouse",
+    "slug": "alphasense",
+    "board": "https://boards.greenhouse.io/alphasense",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Arize AI",
+    "ats": "greenhouse",
+    "slug": "arizeai",
+    "board": "https://boards.greenhouse.io/arizeai",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Astronomer",
+    "ats": "ashby",
+    "slug": "astronomer",
+    "board": "https://jobs.ashbyhq.com/astronomer",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Aurora Solar",
+    "ats": "ashby",
+    "slug": "aurorasolar",
+    "board": "https://jobs.ashbyhq.com/aurorasolar",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Axonius",
+    "ats": "greenhouse",
+    "slug": "axonius",
+    "board": "https://boards.greenhouse.io/axonius",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Baseten",
+    "ats": "ashby",
+    "slug": "baseten",
+    "board": "https://jobs.ashbyhq.com/baseten",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "BetterUp",
+    "ats": "ashby",
+    "slug": "betterup",
+    "board": "https://jobs.ashbyhq.com/betterup",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "BigID",
+    "ats": "greenhouse",
+    "slug": "bigid",
+    "board": "https://boards.greenhouse.io/bigid",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "BitGo",
+    "ats": "greenhouse",
+    "slug": "bitgo",
+    "board": "https://boards.greenhouse.io/bitgo",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Carbon Direct",
+    "ats": "greenhouse",
+    "slug": "carbondirect",
+    "board": "https://boards.greenhouse.io/carbondirect",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Celonis",
+    "ats": "greenhouse",
+    "slug": "celonis",
+    "board": "https://boards.greenhouse.io/celonis",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Chainguard",
+    "ats": "greenhouse",
+    "slug": "chainguard",
+    "board": "https://boards.greenhouse.io/chainguard",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Charlie Health",
+    "ats": "greenhouse",
+    "slug": "charliehealth",
+    "board": "https://boards.greenhouse.io/charliehealth",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Checkr",
+    "ats": "greenhouse",
+    "slug": "checkr",
+    "board": "https://boards.greenhouse.io/checkr",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "CircleCI",
+    "ats": "greenhouse",
+    "slug": "circleci",
+    "board": "https://boards.greenhouse.io/circleci",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Clay",
+    "ats": "ashby",
+    "slug": "claylabs",
+    "board": "https://jobs.ashbyhq.com/claylabs",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Clear Street",
+    "ats": "greenhouse",
+    "slug": "clearstreet",
+    "board": "https://boards.greenhouse.io/clearstreet",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Clever",
+    "ats": "greenhouse",
+    "slug": "clever",
+    "board": "https://boards.greenhouse.io/clever",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Cognition",
+    "ats": "ashby",
+    "slug": "cognition",
+    "board": "https://jobs.ashbyhq.com/cognition",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "CoreWeave",
+    "ats": "greenhouse",
+    "slug": "coreweave",
+    "board": "https://boards.greenhouse.io/coreweave",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Cresta",
+    "ats": "greenhouse",
+    "slug": "cresta",
+    "board": "https://boards.greenhouse.io/cresta",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Cribl",
+    "ats": "greenhouse",
+    "slug": "cribl",
+    "board": "https://boards.greenhouse.io/cribl",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Cursor (Anysphere)",
+    "ats": "ashby",
+    "slug": "cursor",
+    "board": "https://jobs.ashbyhq.com/cursor",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "DailyPay",
+    "ats": "ashby",
+    "slug": "dailypay",
+    "board": "https://jobs.ashbyhq.com/dailypay",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Dataiku",
+    "ats": "greenhouse",
+    "slug": "dataiku",
+    "board": "https://boards.greenhouse.io/dataiku",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Decagon",
+    "ats": "ashby",
+    "slug": "decagon",
+    "board": "https://jobs.ashbyhq.com/decagon",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "DigitalOcean",
+    "ats": "greenhouse",
+    "slug": "digitalocean98",
+    "board": "https://boards.greenhouse.io/digitalocean98",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Domino Data Lab",
+    "ats": "greenhouse",
+    "slug": "dominodatalab",
+    "board": "https://boards.greenhouse.io/dominodatalab",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "DoorDash",
+    "ats": "greenhouse",
+    "slug": "doordashusa",
+    "board": "https://boards.greenhouse.io/doordashusa",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "ElevenLabs",
+    "ats": "ashby",
+    "slug": "elevenlabs",
+    "board": "https://jobs.ashbyhq.com/elevenlabs",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Ethos",
+    "ats": "greenhouse",
+    "slug": "ethoslife",
+    "board": "https://boards.greenhouse.io/ethoslife",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Faire",
+    "ats": "greenhouse",
+    "slug": "faire",
+    "board": "https://boards.greenhouse.io/faire",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "FanDuel",
+    "ats": "greenhouse",
+    "slug": "fanduel",
+    "board": "https://boards.greenhouse.io/fanduel",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Fieldguide",
+    "ats": "ashby",
+    "slug": "fieldguide",
+    "board": "https://jobs.ashbyhq.com/fieldguide",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Figure",
+    "ats": "greenhouse",
+    "slug": "figure",
+    "board": "https://boards.greenhouse.io/figure",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Galaxy Digital",
+    "ats": "greenhouse",
+    "slug": "galaxydigitalservices",
+    "board": "https://boards.greenhouse.io/galaxydigitalservices",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Garner Health",
+    "ats": "greenhouse",
+    "slug": "garnerhealth",
+    "board": "https://boards.greenhouse.io/garnerhealth",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Glean",
+    "ats": "greenhouse",
+    "slug": "gleanwork",
+    "board": "https://boards.greenhouse.io/gleanwork",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "GoFundMe",
+    "ats": "greenhouse",
+    "slug": "gofundme",
+    "board": "https://boards.greenhouse.io/gofundme",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Grow Therapy",
+    "ats": "ashby",
+    "slug": "grow-therapy",
+    "board": "https://jobs.ashbyhq.com/grow-therapy",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Guild",
+    "ats": "greenhouse",
+    "slug": "guild",
+    "board": "https://boards.greenhouse.io/guild",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Handshake",
+    "ats": "ashby",
+    "slug": "handshake",
+    "board": "https://jobs.ashbyhq.com/handshake",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Headspace",
+    "ats": "greenhouse",
+    "slug": "hs",
+    "board": "https://boards.greenhouse.io/hs",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Hebbia",
+    "ats": "ashby",
+    "slug": "hebbia-ai",
+    "board": "https://jobs.ashbyhq.com/hebbia-ai",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Hims & Hers",
+    "ats": "ashby",
+    "slug": "hims-and-hers",
+    "board": "https://jobs.ashbyhq.com/hims-and-hers",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Hinge Health",
+    "ats": "ashby",
+    "slug": "hinge-health",
+    "board": "https://jobs.ashbyhq.com/hinge-health",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Human Interest",
+    "ats": "greenhouse",
+    "slug": "humaninterest",
+    "board": "https://boards.greenhouse.io/humaninterest",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Hume AI",
+    "ats": "greenhouse",
+    "slug": "humeai",
+    "board": "https://boards.greenhouse.io/humeai",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Imprint",
+    "ats": "ashby",
+    "slug": "imprint",
+    "board": "https://jobs.ashbyhq.com/imprint",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Included Health",
+    "ats": "lever",
+    "slug": "includedhealth",
+    "board": "https://jobs.lever.co/includedhealth",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Kalshi",
+    "ats": "ashby",
+    "slug": "kalshi",
+    "board": "https://jobs.ashbyhq.com/kalshi",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Kickstarter",
+    "ats": "greenhouse",
+    "slug": "kickstarter",
+    "board": "https://boards.greenhouse.io/kickstarter",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Kraken",
+    "ats": "ashby",
+    "slug": "kraken.com",
+    "board": "https://jobs.ashbyhq.com/kraken.com",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "LangChain",
+    "ats": "ashby",
+    "slug": "langchain",
+    "board": "https://jobs.ashbyhq.com/langchain",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Legora",
+    "ats": "ashby",
+    "slug": "legora",
+    "board": "https://jobs.ashbyhq.com/legora",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Life360",
+    "ats": "greenhouse",
+    "slug": "life360",
+    "board": "https://boards.greenhouse.io/life360",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Lightning AI",
+    "ats": "greenhouse",
+    "slug": "lightningai",
+    "board": "https://boards.greenhouse.io/lightningai",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Lithic",
+    "ats": "greenhouse",
+    "slug": "lithic",
+    "board": "https://boards.greenhouse.io/lithic",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Match Group (Tinder)",
+    "ats": "lever",
+    "slug": "matchgroup",
+    "board": "https://jobs.lever.co/matchgroup",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Materialize",
+    "ats": "ashby",
+    "slug": "materialize",
+    "board": "https://jobs.ashbyhq.com/materialize",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Maven Clinic",
+    "ats": "greenhouse",
+    "slug": "mavenclinic",
+    "board": "https://boards.greenhouse.io/mavenclinic",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Mercor",
+    "ats": "ashby",
+    "slug": "mercor",
+    "board": "https://jobs.ashbyhq.com/mercor",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Middesk",
+    "ats": "ashby",
+    "slug": "middesk",
+    "board": "https://jobs.ashbyhq.com/middesk",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Modal",
+    "ats": "ashby",
+    "slug": "modal",
+    "board": "https://jobs.ashbyhq.com/modal",
+    "segment": "AI / machine learning companies and AI-native startups",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Modern Treasury",
+    "ats": "ashby",
+    "slug": "moderntreasury",
+    "board": "https://jobs.ashbyhq.com/moderntreasury",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Monte Carlo",
+    "ats": "ashby",
+    "slug": "montecarlodata",
+    "board": "https://jobs.ashbyhq.com/montecarlodata",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Morning Brew",
+    "ats": "lever",
+    "slug": "morningbrew",
+    "board": "https://jobs.lever.co/morningbrew",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "NerdWallet",
+    "ats": "ashby",
+    "slug": "nerdwallet",
+    "board": "https://jobs.ashbyhq.com/nerdwallet",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Norm Ai",
+    "ats": "ashby",
+    "slug": "norm",
+    "board": "https://jobs.ashbyhq.com/norm",
+    "segment": "AI / machine learning companies and AI-native startups",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Nova Credit",
+    "ats": "greenhouse",
+    "slug": "novacredit",
+    "board": "https://boards.greenhouse.io/novacredit",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "OpenSea",
+    "ats": "ashby",
+    "slug": "opensea",
+    "board": "https://jobs.ashbyhq.com/opensea",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Ophelia",
+    "ats": "greenhouse",
+    "slug": "ophelia",
+    "board": "https://boards.greenhouse.io/ophelia",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Oura",
+    "ats": "greenhouse",
+    "slug": "oura",
+    "board": "https://boards.greenhouse.io/oura",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Oyster",
+    "ats": "ashby",
+    "slug": "oyster",
+    "board": "https://jobs.ashbyhq.com/oyster",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Pagaya",
+    "ats": "greenhouse",
+    "slug": "pagaya",
+    "board": "https://boards.greenhouse.io/pagaya",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Partiful",
+    "ats": "ashby",
+    "slug": "partiful",
+    "board": "https://jobs.ashbyhq.com/partiful",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Patch",
+    "ats": "lever",
+    "slug": "patch",
+    "board": "https://jobs.lever.co/patch",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Persona",
+    "ats": "ashby",
+    "slug": "persona",
+    "board": "https://jobs.ashbyhq.com/persona",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Phantom",
+    "ats": "ashby",
+    "slug": "phantom",
+    "board": "https://jobs.ashbyhq.com/phantom",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Pinecone",
+    "ats": "ashby",
+    "slug": "pinecone",
+    "board": "https://jobs.ashbyhq.com/pinecone",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Polymarket",
+    "ats": "ashby",
+    "slug": "polymarket",
+    "board": "https://jobs.ashbyhq.com/polymarket",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "PostHog",
+    "ats": "ashby",
+    "slug": "posthog",
+    "board": "https://jobs.ashbyhq.com/posthog",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Render",
+    "ats": "ashby",
+    "slug": "render",
+    "board": "https://jobs.ashbyhq.com/render",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Rho",
+    "ats": "ashby",
+    "slug": "rho",
+    "board": "https://jobs.ashbyhq.com/rho",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Rilla",
+    "ats": "ashby",
+    "slug": "rilla",
+    "board": "https://jobs.ashbyhq.com/rilla",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Ripple",
+    "ats": "greenhouse",
+    "slug": "ripple",
+    "board": "https://boards.greenhouse.io/ripple",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Rogo",
+    "ats": "ashby",
+    "slug": "rogo",
+    "board": "https://jobs.ashbyhq.com/rogo",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Sardine",
+    "ats": "ashby",
+    "slug": "sardine",
+    "board": "https://jobs.ashbyhq.com/sardine",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Semgrep",
+    "ats": "ashby",
+    "slug": "semgrep",
+    "board": "https://jobs.ashbyhq.com/semgrep",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Sierra",
+    "ats": "ashby",
+    "slug": "sierra",
+    "board": "https://jobs.ashbyhq.com/sierra",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Snorkel AI",
+    "ats": "greenhouse",
+    "slug": "snorkelai",
+    "board": "https://boards.greenhouse.io/snorkelai",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Socure",
+    "ats": "ashby",
+    "slug": "socure",
+    "board": "https://jobs.ashbyhq.com/socure",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Speak",
+    "ats": "ashby",
+    "slug": "speak",
+    "board": "https://jobs.ashbyhq.com/speak",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Starburst",
+    "ats": "greenhouse",
+    "slug": "starburst",
+    "board": "https://boards.greenhouse.io/starburst",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Synthesia",
+    "ats": "ashby",
+    "slug": "synthesia",
+    "board": "https://jobs.ashbyhq.com/synthesia",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "Tailscale",
+    "ats": "greenhouse",
+    "slug": "tailscale",
+    "board": "https://boards.greenhouse.io/tailscale",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Temporal",
+    "ats": "ashby",
+    "slug": "temporal",
+    "board": "https://jobs.ashbyhq.com/temporal",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Tennr",
+    "ats": "ashby",
+    "slug": "tennr",
+    "board": "https://jobs.ashbyhq.com/tennr",
+    "segment": "AI / machine learning companies and AI-native startups"
+  },
+  {
+    "name": "The New York Times",
+    "ats": "greenhouse",
+    "slug": "thenewyorktimes",
+    "board": "https://boards.greenhouse.io/thenewyorktimes",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Tubi",
+    "ats": "greenhouse",
+    "slug": "tubitv",
+    "board": "https://boards.greenhouse.io/tubitv",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Underdog",
+    "ats": "greenhouse",
+    "slug": "underdog",
+    "board": "https://boards.greenhouse.io/underdog",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  },
+  {
+    "name": "Uniswap Labs",
+    "ats": "ashby",
+    "slug": "uniswap",
+    "board": "https://jobs.ashbyhq.com/uniswap",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Upgrade",
+    "ats": "greenhouse",
+    "slug": "upgrade",
+    "board": "https://boards.greenhouse.io/upgrade",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto"
+  },
+  {
+    "name": "Valon",
+    "ats": "ashby",
+    "slug": "valon",
+    "board": "https://jobs.ashbyhq.com/valon",
+    "segment": "fintech, payments, banking infrastructure, insurance and crypto",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Warp",
+    "ats": "ashby",
+    "slug": "warp",
+    "board": "https://jobs.ashbyhq.com/warp",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Watershed",
+    "ats": "ashby",
+    "slug": "watershed",
+    "board": "https://jobs.ashbyhq.com/watershed",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Webflow",
+    "ats": "ashby",
+    "slug": "webflow",
+    "board": "https://jobs.ashbyhq.com/webflow",
+    "segment": "later-stage startups (Series B to pre-IPO) not covered by the segments above"
+  },
+  {
+    "name": "Wellthy",
+    "ats": "greenhouse",
+    "slug": "wellthy",
+    "board": "https://boards.greenhouse.io/wellthy",
+    "segment": "health tech, HR / payroll tech, edtech and climate tech"
+  },
+  {
+    "name": "Whop",
+    "ats": "ashby",
+    "slug": "whop",
+    "board": "https://jobs.ashbyhq.com/whop",
+    "segment": "consumer apps, marketplaces, e-commerce and media",
+    "note": "Check: short slug, confirm the board belongs to this company."
+  },
+  {
+    "name": "Wiz",
+    "ats": "greenhouse",
+    "slug": "wizinc",
+    "board": "https://boards.greenhouse.io/wizinc",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "WorkOS",
+    "ats": "ashby",
+    "slug": "workos",
+    "board": "https://jobs.ashbyhq.com/workos",
+    "segment": "B2B SaaS, developer tools, data and infrastructure software"
+  },
+  {
+    "name": "Zola",
+    "ats": "greenhouse",
+    "slug": "zola",
+    "board": "https://boards.greenhouse.io/zola",
+    "segment": "consumer apps, marketplaces, e-commerce and media"
+  }
+]
