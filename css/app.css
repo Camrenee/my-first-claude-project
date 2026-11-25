@@ -2131,12 +2131,41 @@ h1 {
 }
 
 .t-name .t-text,
+.t-org .t-text,
 .t-role .t-text {
   font-weight: 700;
 }
 
+.t-name,
+.t-contact {
+  text-align: center;
+}
+
+.t-name .t-text {
+  font-size: 1.35em;
+}
+
 .t-role {
   margin-top: 8px;
+}
+
+.t-org + .t-role,
+.t-heading + .t-role,
+.t-heading + .t-org {
+  margin-top: 0;
+}
+
+/* Title on the left, dates flush right (they wrap under the title on narrow screens). */
+.t-role .t-text {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: 12px;
+}
+
+.t-dates {
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .t-heading {

@@ -218,6 +218,12 @@ function renderPaper() {
       paper.append(el);
       continue;
     }
+    if (l.kind === 'role') {
+      text.append(Object.assign(document.createElement('span'), { textContent: l.main }), ' ', Object.assign(document.createElement('span'), { className: 't-dates', textContent: l.dates }));
+      el.append(text);
+      paper.append(el);
+      continue;
+    }
     if (!c) {
       text.textContent = l.text;
       el.append(text);

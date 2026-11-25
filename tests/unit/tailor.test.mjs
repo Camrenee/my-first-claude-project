@@ -142,3 +142,60 @@ test('PDF: Arimo embedded, selectable text, one page at 11 pt', async () => {
   assert.ok(pages[11] > 1);
   assert.equal(await pdf.fitSize(long), pages[10.5] === 1 ? 10.5 : null);
 });
+
+// The shape of a real Word resume read from PDF (made-up content): wrapped bullets, a company
+// line above each title, "Mon. YYYY – Mon. YYYY" dates, and an education line with "Graduated:".
+const PDF_LINES = [
+  'Jordan Lee',
+  'e: jordan@example.com | m: (555)-555-0100',
+  'WORK EXPERIENCE',
+  'Example Bank',
+  'Digital Payments, Sr. Product Manager Apr. 2025 – Present',
+  '• Redesigned the card management experience using user research, A/B testing, and',
+  'custom surveys with engineering and design. Reducing calls 8%, saving $270K.',
+  '• Led training and call -',
+  'handling procedures with Servicing.',
+  'Consumer Products, Product Manager Jun. 2021 – Mar. 2025',
+  '• Led 3 card launches across channels.',
+  'Network Services: Marketing, Analyst Jul. 2017– Dec. 2018',
+  '• Generated +$2M in dining spend across 20+ merchants; drove 2X sales for Amex',
+  'Auto across 90+ merchants.',
+  'EDUCATION',
+  'Example University School of Business – Boston, MA Graduated: May 2017',
+  'BSBA; Concentrations in Marketing & Information Systems; Magna Cum Laude',
+];
+
+test('PDF resumes: wrapped bullets are rejoined, hyphenated words mended, company lines kept', async () => {
+  const { toLines } = await import('../../js/resume-parse.js');
+  const lines = toLines(PDF_LINES.join('\n'));
+  assert.equal(lines[3], 'Example Bank');
+  assert.equal(lines[5], '• Redesigned the card management experience using user research, A/B testing, and custom surveys with engineering and design. Reducing calls 8%, saving $270K.');
+  assert.equal(lines[6], '• Led training and call-handling procedures with Servicing.');
+  assert.equal(lines[10], '• Generated +$2M in dining spend across 20+ merchants; drove 2X sales for Amex Auto across 90+ merchants.');
+  assert.equal(lines.length, PDF_LINES.length - 3);
+});
+
+test('PDF resumes: every date style is a title line; company line bold; education fixed', () => {
+  const m = resumeModel(PDF_LINES);
+  const roles = m.filter((l) => l.kind === 'role').map((l) => [l.main, l.dates]);
+  assert.deepEqual(roles, [
+    ['Digital Payments, Sr. Product Manager', 'Apr. 2025 – Present'],
+    ['Consumer Products, Product Manager', 'Jun. 2021 – Mar. 2025'],
+    ['Network Services: Marketing, Analyst', 'Jul. 2017– Dec. 2018'],
+    ['Example University School of Business – Boston, MA', 'Graduated: May 2017'],
+  ]);
+  assert.equal(m[3].kind, 'org');
+  assert.equal(m.find((l) => l.text.startsWith('BSBA')).editable, false, 'degree line never reworded');
+  assert.equal(m.filter((l) => l.editable).length, 4);
+  assert.deepEqual(rolesIn(m).map((r) => r.bullets.length), [2, 1, 1], 'education isn’t a role to trim');
+});
+
+test('PDF: title dates are printed, company and title lines carry through', async () => {
+  const m = resumeModel(PDF_LINES);
+  const items = composeResume(m, reviewAnswer(m, { summary: '', changes: [] }));
+  const role = items.find((x) => x.kind === 'role');
+  assert.deepEqual([role.text, role.dates], ['Digital Payments, Sr. Product Manager', 'Apr. 2025 – Present']);
+  const pdf = await import('../../js/resume-pdf.js');
+  const out = await pdf.buildPdf(items);
+  assert.equal(out.pages, 1);
+});

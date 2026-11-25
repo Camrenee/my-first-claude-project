@@ -1,6 +1,8 @@
 // Turn a resume file (PDF or Word .docx) into plain text, entirely in the browser.
 // Libraries are loaded only when needed so the first screen stays fast.
 
+import { isResumeHeading } from './skills.js';
+
 const PDFJS = new URL('../vendor/pdfjs-4.10.38/pdf.min.mjs', import.meta.url).href;
 const PDFJS_WORKER = new URL('../vendor/pdfjs-4.10.38/pdf.worker.min.mjs', import.meta.url).href;
 const MAMMOTH = new URL('../vendor/mammoth-1.12.3/mammoth.browser.min.js', import.meta.url).href;
@@ -138,8 +140,12 @@ async function readDocx(file) {
 
 const BULLET_RE = /^[•▪●◦‣⁃∙·*–-]\s*/;
 
-/** One trimmed line per entry; bullets normalized to "• "; blank lines dropped. */
+/** One trimmed line per entry; bullets normalized to "• "; blank lines dropped; wrapped bullets rejoined. */
 export function toLines(text) {
+  return joinWrappedLines(splitLines(text));
+}
+
+function splitLines(text) {
   return String(text)
     .replace(/\r\n?/g, '\n')
     .replace(/ /g, ' ')
@@ -151,4 +157,49 @@ export function toLines(text) {
 
 export function cleanText(text) {
   return toLines(text).join('\n');
+}
+
+// ---------- Dates and wrapped lines ----------
+
+const MONTH = '(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\\.?';
+const ONE_DATE = `(?:${MONTH}\\s+)?(?:19|20)\\d{2}`;
+/**
+ * Dates at the end of a title line: "Apr. 2025 – Present", "Jul. 2017– Dec. 2018", "2010–2014",
+ * "Graduated: May 2017". Group 1 is the dates as written.
+ */
+export const TRAILING_DATES = new RegExp(
+  `[\\s,|–—-]*((?:[A-Za-z]+:\\s*)?${ONE_DATE}(?:\\s*[–—-]\\s*(?:${ONE_DATE}|present|current|now|today))?)\\s*$`,
+  'i'
+);
+const CONTACT_RE = /@|linkedin\.com|https?:\/\/|\(\d{3}\)|\b\d{3}[-.\s)]+\d{3}[-.\s]\d{4}\b/i;
+
+/**
+ * PDFs break long bullets across lines ("• Redesigned … A/B testing, and" / "custom survey …").
+ * Join a line onto the bullet above it when it reads as a continuation: it isn't a bullet,
+ * heading, contact or dated title line, and either starts lowercase or the bullet above hasn't
+ * ended its sentence. A short line right before a dated title is a company name, not a continuation.
+ */
+export function joinWrappedLines(lines) {
+  const out = [];
+  lines.forEach((raw, k) => {
+    const line = String(raw).trim();
+    if (!line) return;
+    const prev = out.at(-1);
+    const next = String(lines[k + 1] ?? '').trim();
+    const isOrg = line.length < 60 && /^[A-Z]/.test(line) && next && !BULLET_RE.test(next) && TRAILING_DATES.test(next);
+    const cont =
+      prev !== undefined &&
+      BULLET_RE.test(prev) &&
+      !BULLET_RE.test(line) &&
+      !/^[A-Z][\w &/]{1,30}:\s/.test(line) && // "Skills: …"-style label lines start something new
+      !isResumeHeading(line) &&
+      !TRAILING_DATES.test(line) &&
+      !CONTACT_RE.test(line) &&
+      !isOrg &&
+      (/^[a-z]/.test(line) || !/[.!?]["”’')]*$/.test(prev));
+    if (!cont) return out.push(line);
+    // "call -" + "handling" was a hyphenated word split by the line break.
+    out[out.length - 1] = /\s-$/.test(prev) && /^[a-z]/.test(line) ? `${prev.replace(/\s-$/, '-')}${line}` : `${prev} ${line}`;
+  });
+  return out;
 }

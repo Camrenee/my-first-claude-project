@@ -9,6 +9,7 @@
 //   the resume) is held back: the original line is kept unless the person chooses otherwise.
 // - A change that names a skill or domain the resume never mentions is flagged for review.
 import { isResumeHeading, SKILLS } from './skills.js';
+import { joinWrappedLines, TRAILING_DATES } from './resume-parse.js';
 
 export const PROMPT_VERSION = 1;
 export const SUMMARY_MAX = 320;
@@ -16,35 +17,59 @@ const DESCRIPTION_MAX = 7000;
 
 const BULLET = /^\s*•\s*/;
 const CONTACT = /@|linkedin\.com|github\.com|https?:\/\/|\(\d{3}\)|\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b/i;
-const DATE_RANGE = /\b(19|20)\d{2}\s*[–—-]\s*((19|20)\d{2}|present|current|now)\b/i;
 const SKILLS_LINE = /^(skills?|tools|technologies|technical skills|languages|certifications?|interests)\s*:/i;
 const SUMMARY_HEADING = /^\s*(summary|profile|professional summary|about( me)?|objective)\s*:?\s*$/i;
 const EXPERIENCE_HEADING = /experience|employment|work history/i;
+const FIXED_SECTION = /education|certification|award|honor|language|interest|reference/i;
 
 export class TailorAnswerError extends Error {}
 
 // ---------- The resume, line by line ----------
 
+/** A title line's dates, split off: {main, dates} or null. "PM, Acme — 2019–2021" → {main: "PM, Acme", dates: "2019–2021"}. */
+export function splitDates(text) {
+  const m = TRAILING_DATES.exec(text);
+  if (!m || m.index < 3) return null;
+  const main = text.slice(0, m.index).replace(/[\s,|–—-]+$/, '');
+  return main.length >= 3 ? { main, dates: m[1] } : null;
+}
+
 /**
  * Each resume line with its role in the document:
- * name (first line), contact, heading, role ("Title, Company — 2019–2021"), bullet, text.
- * `editable` lines are the only ones Claude may reword.
+ * name (first line), contact, heading, org (company line above a title), role ("Title, Company
+ * Apr. 2021 – Present", with `main` and `dates` split), bullet, text.
+ * Lines a PDF wrapped are joined first. `editable` lines are the only ones Claude may reword:
+ * accomplishments outside education and similar fixed sections.
  */
 export function resumeModel(lines = []) {
+  const joined = joinWrappedLines(lines);
   let seenHeading = false;
-  return lines.map((raw, i) => {
+  let fixedSection = false;
+  const model = joined.map((raw, i) => {
     const bullet = BULLET.test(raw);
     const text = String(raw).replace(BULLET, '').trim();
     let kind = 'text';
+    let split = null;
     if (i === 0 && !bullet && text.length < 60 && !CONTACT.test(text)) kind = 'name';
     else if (!bullet && isResumeHeading(text)) kind = 'heading';
     else if (!bullet && CONTACT.test(text) && !seenHeading) kind = 'contact';
-    else if (!bullet && DATE_RANGE.test(text) && text.length < 110) kind = 'role';
+    else if (!bullet && text.length < 140 && (split = splitDates(text))) kind = 'role';
     else if (bullet) kind = 'bullet';
-    if (kind === 'heading') seenHeading = true;
-    const editable = (kind === 'bullet' || kind === 'text') && text.length >= 25 && !SKILLS_LINE.test(text) && !CONTACT.test(text);
-    return { i, kind, text, bullet, editable };
+    if (kind === 'heading') {
+      seenHeading = true;
+      fixedSection = FIXED_SECTION.test(text);
+    }
+    const editable = (kind === 'bullet' || kind === 'text') && !fixedSection && text.length >= 25 && !SKILLS_LINE.test(text) && !CONTACT.test(text);
+    return { i, kind, text, bullet, editable, ...(split ?? {}) };
   });
+  // A short line just above a dated title is the company: "American Express".
+  model.forEach((l, k) => {
+    if (l.kind === 'text' && !l.bullet && l.text.length < 60 && !/[.!?]$/.test(l.text) && model[k + 1]?.kind === 'role') {
+      l.kind = 'org';
+      l.editable = false;
+    }
+  });
+  return model;
 }
 
 export function hasSummary(model) {
@@ -207,8 +232,8 @@ export function composeResume(model, review, use = {}, omit = new Set()) {
     if (summaryOn && l.i === insertAt) out.push({ kind: 'heading', text: 'Summary', src: 'summary' }, { kind: 'text', text: review.summary.text, src: 'summary' });
     if (omit.has(l.i)) continue;
     const c = byLine.get(l.i);
-    const text = c && choice(use, l.i, c) ? c.tailored : l.text;
-    out.push({ kind: l.kind, text, src: l.i });
+    if (l.kind === 'role') out.push({ kind: 'role', text: l.main, dates: l.dates, src: l.i });
+    else out.push({ kind: l.kind, text: c && choice(use, l.i, c) ? c.tailored : l.text, src: l.i });
   }
   if (summaryOn && insertAt === model.length) out.push({ kind: 'heading', text: 'Summary', src: 'summary' }, { kind: 'text', text: review.summary.text, src: 'summary' });
   return out;

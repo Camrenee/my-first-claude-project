@@ -3,6 +3,7 @@
 // Ported from the US6 spike (docs/us6-spike/requirements.mjs), where it was checked on real postings.
 import { isBoilerplate } from './job-text.js';
 import { isResumeHeading } from './skills.js';
+import { joinWrappedLines, TRAILING_DATES } from './resume-parse.js';
 
 const decode = (s) =>
   s
@@ -73,10 +74,10 @@ export const MAX_RESUME_LINES = 40;
  */
 export function resumeEvidenceLines(lines = []) {
   const out = [];
-  for (const raw of lines) {
+  for (const raw of joinWrappedLines(lines)) {
     const line = String(raw).replace(/^\s*[•▪●◦*–-]\s*/, '').trim();
     if (line.length < 25 || isResumeHeading(line) || CONTACT.test(line)) continue;
-    if (DATE_RANGE.test(line) && line.length < 90) continue; // job title / dates line
+    if ((DATE_RANGE.test(line) || TRAILING_DATES.test(line)) && line.length < 140 && !/^\s*[•▪●◦*–-]/.test(raw)) continue; // job title / dates line
     if (/^(skills?|tools|technologies|languages|certifications?)\s*:/i.test(line)) continue;
     if (!out.includes(line)) out.push(line);
     if (out.length >= MAX_RESUME_LINES) break;
