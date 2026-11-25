@@ -32,10 +32,11 @@ Maven Clinic, Modern Treasury.
   returns per company are lower than the original list (0.06 vs 0.09 matching jobs / week each).
 - Adding boards costs nothing at runtime beyond a few seconds of fetching; Claude is only needed
   when the list is refreshed (e.g. quarterly, ~$3 each time).
-- Ashby boards don't name the company, so short slugs (19 flagged in
-  `data/companies-proposed.json`) should be eyeballed once before adding.
+- Ashby boards don't name the company, so short slugs should be checked once
+  before adding (done for this batch; see below).
 - Bigger gains would need other sources (Workday companies, or a job-search API such as Adzuna, V2).
 
-## Proposed list
-`data/companies-proposed.json`: 117 companies (name, job board, slug, link, segment, review note).
-Not merged into `data/companies.json` until reviewed.
+## Decision (PM, 2026-11-25): merged
+All 117 were added to `data/companies.json` (now 290: 164 Greenhouse, 18 Lever, 108 Ashby).
+The 19 short-slug boards were checked first: every one's postings name the expected company
+(e.g. `figure` = Figure Lending, `warp` = Warp the HR platform, `patch` = Patch.com).
