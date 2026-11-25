@@ -1,0 +1,13 @@
+{
+  "name": "job-finder",
+  "private": true,
+  "type": "module",
+  "description": "Job Finder: one swipe feed of NYC / remote PM roles. Static site, no backend.",
+  "scripts": {
+    "test": "node --test \"scripts/**/*.test.mjs\" \"tests/unit/*.test.mjs\"",
+    "test:e2e": "node tests/e2e/us1-profile.e2e.mjs && node tests/e2e/us3-tailor.e2e.mjs && node tests/e2e/us2-feed.e2e.mjs && node tests/e2e/us5-fit.e2e.mjs && node tests/e2e/us4-tracking.e2e.mjs && node tests/e2e/us6-smart.e2e.mjs",
+    "fetch-jobs": "node scripts/fetch-jobs.mjs",
+    "data-report": "node scripts/data-report.mjs > docs/data-test.md"
+  },
+  "engines": { "node": ">=22" }
+}
