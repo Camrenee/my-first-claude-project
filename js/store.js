@@ -5,7 +5,7 @@ const KEYS = {
   meta: 'jf.meta',
   jobs: 'jf.jobs.cache', // last jobs.json, so the feed works offline
   decisions: 'jf.decisions', // { byId: {jobId: {action, at, postedAt}}, byKey: {roleKey: same} }
-  tracker: 'jf.tracker', // { jobId: {job, queuedAt?, removedAt?, appliedAt?, referral?: {status, by, at, updatedAt}} }
+  tracker: 'jf.tracker', // { jobId: {job, queuedAt?, removedAt?, appliedAt?, referral?: {status, by, at, updatedAt}, tailored?: {at, items, size, fileName, changed}} }
   deck: 'jf.deck', // { date, dealt: [{id, at, updated?}] }
   undo: 'jf.undo', // last decisions, newest last
   smart: 'jf.smart', // { enabled } — US6 smart matching switch
@@ -196,6 +196,15 @@ export function setReferral(job, patch) {
   else e.referral = { ...(e.referral ?? { status: 'in_progress', by: '', at: now }), ...patch, updatedAt: now };
   tracker[job.id] = e;
   if (patch !== null) markDecided(job, 'referred');
+  return write(KEYS.tracker, tracker).ok;
+}
+
+// ---------- US3: tailored resume ----------
+
+/** Remember the tailored resume saved for a job (the lines as printed, so it can be re-downloaded). */
+export function saveTailored(job, tailored) {
+  const tracker = loadTracker();
+  tracker[job.id] = { ...(tracker[job.id] ?? {}), job: tracker[job.id]?.job ?? snapshot(job), tailored };
   return write(KEYS.tracker, tracker).ok;
 }
 

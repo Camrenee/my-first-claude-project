@@ -7,6 +7,7 @@ import { QUEUE_MAX, formatSalary, formatLocation, companyInitial } from './feed-
 import { TABS, REFERRAL_STATUSES, entriesForTab, weeklyGoal, shortDate, weekLabel } from './tracking.js';
 import { toast } from './toast.js';
 import { trackingFor, appliedMessage } from './track-actions.js';
+import { openTailor } from './tailor-ui.js';
 
 const $ = (s) => document.querySelector(s);
 const TAB_KEY = 'jf.trackerTab';
@@ -144,6 +145,7 @@ function itemEl(entry) {
       <button type="button" class="track-btn qi-applied" aria-pressed="false"><span class="tb-icon" aria-hidden="true">✓</span> Applied</button>
       <button type="button" class="track-btn qi-referred" aria-pressed="false"><span class="tb-icon" aria-hidden="true">✓</span> Referred</button>
     </div>
+    <button type="button" class="btn btn-block qi-tailor"></button>
     <div class="btn-row qi-actions">
       <button type="button" class="btn btn-ghost qi-details">Details</button>
       <a class="btn btn-ghost qi-link" target="_blank" rel="noopener noreferrer">View posting<span class="visually-hidden"> (opens in a new tab)</span> ↗</a>
@@ -177,6 +179,13 @@ function itemEl(entry) {
 
   el.querySelector('.qi-details').addEventListener('click', () => openDetails(entry));
 
+  // US3: tailor the resume for this job. Primary while it's waiting in the queue and not tailored yet.
+  const tailorBtn = el.querySelector('.qi-tailor');
+  const waiting = entry.queuedAt && !entry.appliedAt && !entry.removedAt;
+  tailorBtn.textContent = entry.tailored ? 'Tailored ✓ · Open' : 'Tailor resume';
+  tailorBtn.classList.add(waiting && !entry.tailored ? 'btn-primary' : 'btn-ghost');
+  tailorBtn.addEventListener('click', () => tailor(entry, '.qi-tailor'));
+
   const removeBtn = el.querySelector('.qi-remove');
   if (tab !== 'to_apply') removeBtn.remove();
   else armTwoTap(removeBtn, 'Remove', 'Tap again to remove', () => {
@@ -190,6 +199,7 @@ function itemEl(entry) {
 function datesLine(e) {
   const parts = [];
   if (e.queuedAt) parts.push(`Saved ${shortDate(e.queuedAt)}`);
+  if (e.tailored) parts.push(`Tailored ${shortDate(e.tailored.at)}`);
   if (e.appliedAt) parts.push(`Applied ${shortDate(e.appliedAt)}`);
   if (e.referral) {
     const status = REFERRAL_STATUSES.find((s) => s.id === e.referral.status)?.label ?? 'In progress';
@@ -276,9 +286,20 @@ function openDetails(entry) {
     fit,
     getFit: () => fitFor(job),
     tracking: trackingFor(job),
+    onTailor: () => tailor(entry, '.qi-tailor'),
     onClose: () => {
       showTracker();
       focusLater(entry.id, '.qi-details');
+    },
+  });
+}
+
+function tailor(entry, focusSel) {
+  const job = loadJobsCache()?.jobs?.find((j) => j.id === entry.id) ?? entry.job;
+  openTailor(job, {
+    onClose: () => {
+      showTracker();
+      focusLater(entry.id, focusSel);
     },
   });
 }

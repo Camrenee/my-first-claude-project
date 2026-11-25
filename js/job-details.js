@@ -37,9 +37,9 @@ function ensureDialog() {
 
 /**
  * @param job normalized job
- * @param opts {score?, fit?: {reasons, gaps, smart?}, getFit?: () => fit (for live smart updates), actions?: {onPass, onSave, saveBlocked?}, tracking?: {applied(), referred(), toggleApplied(), toggleReferred()}, onClose?}
+ * @param opts {score?, fit?: {reasons, gaps, smart?}, getFit?: () => fit (for live smart updates), actions?: {onPass, onSave, saveBlocked?}, tracking?: {applied(), referred(), toggleApplied(), toggleReferred()}, onTailor?: () => void (US3; closes the sheet first), onClose?}
  */
-export function openJobDetails(job, { score, fit, getFit, actions, tracking, onClose } = {}) {
+export function openJobDetails(job, { score, fit, getFit, actions, tracking, onTailor, onClose } = {}) {
   const d = ensureDialog();
   onCloseCb = onClose ?? null;
   current = { job, getFit };
@@ -54,6 +54,9 @@ export function openJobDetails(job, { score, fit, getFit, actions, tracking, onC
 
   renderFit(d, fit, job);
   renderTracking(d, tracking);
+  const tailorBtn = d.querySelector('.js-tailor');
+  tailorBtn.hidden = !onTailor;
+  tailorBtn.onclick = onTailor ? () => close(onTailor) : null;
 
   const body = d.querySelector('.js-description');
   const safe = job.descriptionHtml ? sanitizeHtml(job.descriptionHtml) : null;

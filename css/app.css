@@ -1941,3 +1941,296 @@ h1 {
 .did-list li::marker {
   color: var(--accent);
 }
+
+/* =====================================================================
+   US3: Tailor sheet (copy + paste, review)
+   ===================================================================== */
+.qi-tailor {
+  margin-top: 10px;
+}
+
+.js-tailor[hidden],
+.tailor-sheet [hidden] {
+  display: none !important;
+}
+
+.tailor-step {
+  color: var(--card-text-muted);
+  font-size: 15px;
+  font-weight: 800;
+  padding-right: 6px;
+}
+
+.tailor-job {
+  margin: 0;
+  color: var(--card-text-muted);
+  font-weight: 700;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.tailor-sheet .sheet-title {
+  margin-top: -6px;
+}
+
+.tailor-hint {
+  margin: 2px 0 10px;
+  color: var(--card-text-muted);
+  font-size: 15px;
+}
+
+.tailor-done,
+.tailor-auto {
+  padding: 16px;
+  border-radius: 22px;
+  background: var(--tint-fit);
+}
+
+.tailor-done p {
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+
+.tailor-auto .sheet-section {
+  margin-top: 0;
+}
+
+.tailor-or {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 0;
+  color: var(--card-text-muted);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.tailor-or::before,
+.tailor-or::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--tint-badge);
+}
+
+.tailor-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.tailor-steps > li {
+  position: relative;
+  padding-left: 44px;
+  counter-increment: step;
+}
+
+.tailor-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--tint-chip);
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.tailor-steps h3 {
+  margin: 3px 0 0;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.tailor-steps h3 label {
+  cursor: pointer;
+}
+
+.tailor-steps .textarea {
+  min-height: 140px;
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.tailor-prompt {
+  margin-top: 8px;
+}
+
+.tailor-prompt summary {
+  min-height: var(--touch);
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tailor-prompt .textarea {
+  min-height: 200px;
+  font-size: 13px;
+}
+
+.tailor-counts {
+  margin: 0;
+  color: var(--card-text-muted);
+  font-weight: 700;
+}
+
+.tailor-review .switch-row {
+  padding: 4px 0;
+}
+
+.tailor-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tailor-notes:empty {
+  display: none;
+}
+
+.tailor-notes li {
+  padding: 10px 14px;
+  border-radius: var(--radius-field);
+  background: var(--tint-fit);
+  color: var(--card-text-muted);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* The resume preview: a sheet of paper, black text, like the PDF. */
+.paper {
+  padding: 20px 18px;
+  border: 1px solid var(--tint-badge);
+  border-radius: 12px;
+  background: #fff;
+  color: #000;
+  font-family: Arimo, Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.t-line {
+  margin: 0 0 3px;
+}
+
+.t-text {
+  margin: 0;
+}
+
+.t-name .t-text,
+.t-role .t-text {
+  font-weight: 700;
+}
+
+.t-role {
+  margin-top: 8px;
+}
+
+.t-heading {
+  margin: 14px 0 6px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #000;
+}
+
+.t-heading .t-text {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.t-bullet .t-text {
+  position: relative;
+  padding-left: 14px;
+}
+
+.t-bullet .t-text::before {
+  content: '•';
+  position: absolute;
+  left: 2px;
+}
+
+/* Changed lines: accent text on the fit tint, with a bar at the left. */
+.t-line.is-changed {
+  margin: 6px -8px;
+  padding: 6px 8px;
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: var(--tint-fit);
+}
+
+.t-line.is-changed > .t-text {
+  color: var(--accent);
+}
+
+.t-line.is-kept {
+  margin: 6px -8px;
+  padding: 6px 8px;
+  border-left: 4px solid var(--tint-badge);
+  border-radius: 8px;
+}
+
+.t-orig,
+.t-note,
+.t-warn {
+  margin: 4px 0 0;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.t-orig {
+  color: var(--card-text-muted);
+}
+
+.t-note {
+  color: var(--card-text-muted);
+}
+
+.t-warn {
+  color: #8a4b00; /* AA on white and on the fit tint */
+}
+
+.is-trimmed del,
+.t-orig del {
+  color: var(--card-text-muted);
+}
+
+.t-toggle {
+  min-height: 36px;
+  padding: 0;
+  font-family: var(--font);
+  font-size: 14px;
+}
+
+@media (pointer: coarse) {
+  .t-toggle {
+    min-height: var(--touch);
+  }
+}
+
+@font-face {
+  font-family: Arimo;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../vendor/arimo/Arimo-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: Arimo;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../vendor/arimo/Arimo-Bold.ttf') format('truetype');
+}

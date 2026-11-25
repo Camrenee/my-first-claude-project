@@ -237,3 +237,55 @@ export function setSmartEnabled(on) {
   resetSmartStatus();
   window.dispatchEvent(new CustomEvent('jf:smart-status', { detail: status }));
 }
+
+// ---------- US3: one-tap tailoring with the same key ----------
+
+const TAILOR_SCHEMA = {
+  type: 'object',
+  properties: {
+    summary: { type: 'string' },
+    changes: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { line: { type: 'integer' }, text: { type: 'string' } },
+        required: ['line', 'text'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['summary', 'changes'],
+  additionalProperties: false,
+};
+
+/**
+ * Send the same prompt the person would paste into Claude; returns Claude's reply text (JSON).
+ * The app checks the reply exactly as it checks a pasted one. Errors carry a `userMessage`.
+ */
+export async function tailorWithClaude(prompt) {
+  if (!loadApiKey()) throw Object.assign(new Error('no key'), { userMessage: 'Save your Claude key in Profile → Smart matching first.' });
+  try {
+    const c = await client();
+    const response = await c.beta.messages.create({
+      model: MODEL,
+      max_tokens: 8000,
+      betas: ['server-side-fallback-2026-07-01'],
+      fallbacks: 'default',
+      messages: [{ role: 'user', content: prompt }],
+      output_config: { format: { type: 'json_schema', schema: TAILOR_SCHEMA } },
+    });
+    if (response.stop_reason === 'refusal') throw Object.assign(new Error('refusal'), { kind: 'refusal' });
+    return response.content.find((b) => b.type === 'text')?.text ?? '';
+  } catch (err) {
+    const s = err?.status;
+    const userMessage =
+      s === 401 || s === 403
+        ? 'Your Claude key didn’t work. Check it in Profile → Smart matching, or use copy and paste below.'
+        : s === 429
+          ? 'Claude is busy or your key hit its spending limit. Try again later, or use copy and paste below.'
+          : s === undefined && err?.kind !== 'refusal'
+            ? 'Couldn’t reach Claude. Check your connection, or use copy and paste below.'
+            : 'Claude couldn’t tailor this right now. Try again, or use copy and paste below.';
+    throw Object.assign(err instanceof Error ? err : new Error(String(err)), { userMessage });
+  }
+}

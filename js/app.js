@@ -4,6 +4,7 @@ import { loadProfile, isProfileComplete } from './store.js';
 import { initFeed, showToday } from './feed.js';
 import { showTracker } from './tracker.js';
 import { isDetailsOpen } from './job-details.js';
+import { isTailorOpen } from './tailor-ui.js';
 import { initSmartSettings, showSmartSettings } from './smart-settings.js';
 
 const ROUTES = {
@@ -22,9 +23,10 @@ function currentRoute() {
 }
 
 function render() {
-  // "#job" means the job details sheet is open over the current screen; leave the screen as is.
-  if (location.hash === '#job') {
-    if (!isDetailsOpen()) history.replaceState(null, '', location.pathname + location.search);
+  // "#job" / "#tailor" mean a sheet is open over the current screen; leave the screen as is.
+  const sheetOpen = { '#job': isDetailsOpen, '#tailor': isTailorOpen }[location.hash];
+  if (sheetOpen) {
+    if (!sheetOpen()) history.replaceState(null, '', location.pathname + location.search);
     else return;
   }
   const route = currentRoute();

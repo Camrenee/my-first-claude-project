@@ -10,10 +10,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/tokens.css?v=202611242259" />
-    <link rel="stylesheet" href="css/app.css?v=202611242259" />
-    <script type="importmap">{"imports":{"./js/app.js":"./js/app.js?v=202611242259","./js/feed-logic.js":"./js/feed-logic.js?v=202611242259","./js/feed.js":"./js/feed.js?v=202611242259","./js/feedback.js":"./js/feedback.js?v=202611242259","./js/fit.js":"./js/fit.js?v=202611242259","./js/job-details.js":"./js/job-details.js?v=202611242259","./js/job-text.js":"./js/job-text.js?v=202611242259","./js/match.js":"./js/match.js?v=202611242259","./js/profile.js":"./js/profile.js?v=202611242259","./js/requirements.js":"./js/requirements.js?v=202611242259","./js/resume-parse.js":"./js/resume-parse.js?v=202611242259","./js/skills.js":"./js/skills.js?v=202611242259","./js/smart-fit.js":"./js/smart-fit.js?v=202611242259","./js/smart-settings.js":"./js/smart-settings.js?v=202611242259","./js/store.js":"./js/store.js?v=202611242259","./js/toast.js":"./js/toast.js?v=202611242259","./js/track-actions.js":"./js/track-actions.js?v=202611242259","./js/tracker.js":"./js/tracker.js?v=202611242259","./js/tracking.js":"./js/tracking.js?v=202611242259"}}</script>
-    <script type="module" src="js/app.js?v=202611242259"></script>
+    <link rel="stylesheet" href="css/tokens.css?v=202611250147" />
+    <link rel="stylesheet" href="css/app.css?v=202611250147" />
+    <script type="importmap">{"imports":{"./js/app.js":"./js/app.js?v=202611250147","./js/feed-logic.js":"./js/feed-logic.js?v=202611250147","./js/feed.js":"./js/feed.js?v=202611250147","./js/feedback.js":"./js/feedback.js?v=202611250147","./js/fit.js":"./js/fit.js?v=202611250147","./js/job-details.js":"./js/job-details.js?v=202611250147","./js/job-text.js":"./js/job-text.js?v=202611250147","./js/match.js":"./js/match.js?v=202611250147","./js/profile.js":"./js/profile.js?v=202611250147","./js/requirements.js":"./js/requirements.js?v=202611250147","./js/resume-parse.js":"./js/resume-parse.js?v=202611250147","./js/resume-pdf.js":"./js/resume-pdf.js?v=202611250147","./js/skills.js":"./js/skills.js?v=202611250147","./js/smart-fit.js":"./js/smart-fit.js?v=202611250147","./js/smart-settings.js":"./js/smart-settings.js?v=202611250147","./js/store.js":"./js/store.js?v=202611250147","./js/tailor-ui.js":"./js/tailor-ui.js?v=202611250147","./js/tailor.js":"./js/tailor.js?v=202611250147","./js/toast.js":"./js/toast.js?v=202611250147","./js/track-actions.js":"./js/track-actions.js?v=202611250147","./js/tracker.js":"./js/tracker.js?v=202611250147","./js/tracking.js":"./js/tracking.js?v=202611250147"}}</script>
+    <script type="module" src="js/app.js?v=202611250147"></script>
   </head>
   <body>
     <!-- ============ Today: swipe deck (US2) ============ -->
@@ -250,6 +250,7 @@
             <button type="button" class="track-btn js-track-applied" aria-pressed="false"><span class="tb-icon" aria-hidden="true">✓</span> Applied</button>
             <button type="button" class="track-btn js-track-referred" aria-pressed="false"><span class="tb-icon" aria-hidden="true">✓</span> Referred</button>
           </div>
+          <button type="button" class="btn btn-primary btn-block js-tailor" hidden>Tailor resume</button>
           <section class="sheet-fit js-fit" aria-labelledby="fit-h">
             <h3 class="sheet-section" id="fit-h">Why you're a great fit</h3>
             <p class="fit-source js-fit-source"></p>
@@ -269,6 +270,87 @@
           <div class="sheet-buttons">
             <button type="button" class="btn btn-secondary js-pass">Pass</button>
             <button type="button" class="btn btn-primary js-save">Save to apply</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- ============ Tailor sheet (US3): copy + paste, then review ============ -->
+    <dialog id="tailor-sheet" class="sheet tailor-sheet" aria-labelledby="tailor-title">
+      <div class="sheet-inner">
+        <div class="sheet-bar">
+          <button type="button" class="sheet-close" data-close>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+            <span>Back</span>
+          </button>
+          <span class="tailor-step js-t-step">Step 1 of 2</span>
+        </div>
+        <div class="sheet-scroll">
+          <p class="tailor-job js-t-job"></p>
+          <h2 class="sheet-title js-t-title" id="tailor-title">Tailor your resume</h2>
+
+          <div class="tailor-paste js-t-paste">
+            <div class="tailor-done js-t-done" hidden>
+              <p class="js-t-done-text"></p>
+              <button type="button" class="btn btn-ghost js-t-redownload">Download PDF again</button>
+            </div>
+            <p class="notice is-error js-t-noresume"></p>
+
+            <section class="tailor-auto js-t-auto" aria-labelledby="t-auto-h" hidden>
+              <h3 class="sheet-section" id="t-auto-h">Let Claude do it</h3>
+              <p class="tailor-hint">Uses the Claude key you saved in Profile. Costs a few cents.</p>
+              <button type="button" class="btn btn-primary js-t-auto-btn">Tailor with Claude</button>
+              <p class="notice js-t-auto-notice" role="status" aria-live="polite"></p>
+              <p class="tailor-or"><span>or copy and paste</span></p>
+            </section>
+
+            <ol class="tailor-steps">
+              <li>
+                <h3>Copy the prompt</h3>
+                <p class="tailor-hint">It has your resume, this job and the rules: reword only, nothing made up, one page.</p>
+                <div class="btn-row">
+                  <button type="button" class="btn btn-primary js-t-copy">Copy prompt</button>
+                </div>
+                <details class="tailor-prompt">
+                  <summary>See the prompt</summary>
+                  <label class="visually-hidden" for="t-prompt">Prompt for Claude</label>
+                  <textarea id="t-prompt" class="textarea js-t-prompt" readonly></textarea>
+                </details>
+              </li>
+              <li>
+                <h3>Paste it into Claude</h3>
+                <p class="tailor-hint">A new chat in the Claude app or at claude.ai.</p>
+                <a class="btn btn-ghost" href="https://claude.ai/new" target="_blank" rel="noopener noreferrer">Open Claude<span class="visually-hidden"> (opens in a new tab)</span> ↗</a>
+              </li>
+              <li>
+                <h3><label for="t-answer">Paste Claude's reply here</label></h3>
+                <textarea id="t-answer" class="textarea js-t-answer" placeholder="Paste Claude's whole reply" spellcheck="false"></textarea>
+                <p class="notice is-error js-t-error" role="alert"></p>
+              </li>
+            </ol>
+          </div>
+
+          <div class="tailor-review js-t-review" hidden>
+            <p class="tailor-counts js-t-counts"></p>
+            <label class="switch-row" for="t-orig">
+              <span class="switch-text">Show original<small>See what each changed line said before.</small></span>
+              <span class="switch">
+                <input id="t-orig" type="checkbox" role="switch" class="js-t-orig" />
+                <span class="track" aria-hidden="true"></span>
+              </span>
+            </label>
+            <ul class="tailor-notes js-t-notes"></ul>
+            <div class="paper js-t-paper" role="region" aria-label="Your tailored resume"></div>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <p class="sheet-blocked js-t-status" role="status" aria-live="polite"></p>
+          <div class="sheet-buttons js-t-paste-actions">
+            <button type="button" class="btn btn-primary js-t-review-btn">Review changes</button>
+          </div>
+          <div class="sheet-buttons js-t-review-actions" hidden>
+            <button type="button" class="btn btn-ghost js-t-again">Start again</button>
+            <button type="button" class="btn btn-primary js-t-save">Save PDF</button>
           </div>
         </div>
       </div>

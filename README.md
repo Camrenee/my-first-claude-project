@@ -21,8 +21,9 @@ python3 -m http.server 8000     # then open http://localhost:8000
 | US2 Swipe feed: daily deck, match score, queue of 5, undo, pull to refresh | PR #3 |
 | US5 Why I fit: reasons tied to resume lines on the card and in details | PR #4 |
 | US4 Tracking: Applied / Referred, tabs, weekly goal | PR #5 |
-| US6 Smart matching: Claude pairs requirements with resume lines (opt-in, your own key) | ✅ this branch |
-| US3 Tailoring | next |
+| US6 Smart matching: Claude pairs requirements with resume lines (opt-in, your own key) | PR #6 |
+| Company discovery: +117 companies found by Claude, checked against the job boards (290 total) | `claude/job-finder-company-discovery` |
+| US3 Tailoring: copy prompt → paste Claude's reply → review highlighted changes → one-page Arimo PDF | ✅ this branch |
 
 ## Layout
 ```
@@ -38,6 +39,9 @@ js/match.js         match score: share of a posting's skills your resume shows
 js/skills.js        PM skills lexicon used by the match score
 js/tracker.js       US4 Tracker: tabs, weekly goal, Applied / Referred, referral details
 js/tracking.js      US4 rules: tabs, Monday–Sunday weeks, goal and streak (pure, unit-tested)
+js/tailor.js        US3 rules: prompt, reading Claude's reply, honesty checks, one-page trimming (pure, unit-tested)
+js/tailor-ui.js     US3 Tailor sheet: copy + paste, review with Show original, save PDF
+js/resume-pdf.js    US3 PDF layout: Arimo 11 / 10.5 pt, black, one column (vendor/jspdf, vendor/arimo)
 js/track-actions.js Applied / Referred actions shared by the Tracker and job details
 js/toast.js         short confirmation messages, also read out to screen readers
 js/smart-fit.js     US6: asks Claude for "They want → You did" pairs; cache, errors, fallback
